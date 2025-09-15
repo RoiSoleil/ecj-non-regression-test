@@ -1,0 +1,10 @@
+https://github.com/google/guava.git
+https://github.com/mockito/mockito.git
+https://github.com/FasterXML/jackson-databind.git
+https://github.com/junit-team/junit5.git
+https://github.com/spring-projects/spring-framework.git
+https://github.com/apache/commons-lang.git
+https://github.com/apache/logging-log4j2.git
+https://github.com/square/okhttp.git
+https://github.com/google/auto.git
+https://github.com/hibernate/hibernate-orm.git
