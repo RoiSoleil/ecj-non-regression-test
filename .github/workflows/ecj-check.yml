@@ -1,0 +1,58 @@
+name: ECJ Commit Watcher
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # every 6 hours
+  workflow_dispatch:
+
+jobs:
+  check-ecj:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.changed }}
+    steps:
+      - name: Get latest ECJ commit
+        id: check
+        run: |
+          LATEST=$(git ls-remote https://github.com/eclipse-jdt/eclipse.jdt.core.git refs/heads/main | cut -f1)
+          echo "Latest commit: $LATEST"
+
+          mkdir -p .state
+          STATE_FILE=".state/latest-ecj-sha"
+
+          if [ -f "$STATE_FILE" ]; then
+            LAST=$(cat "$STATE_FILE")
+          else
+            LAST=""
+          fi
+
+          echo "last=$LAST" >> $GITHUB_OUTPUT
+          echo "current=$LATEST" >> $GITHUB_OUTPUT
+
+          if [ "$LATEST" != "$LAST" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+          # Save the latest SHA
+          echo "$LATEST" > "$STATE_FILE"
+
+      - name: Persist state
+        uses: actions/cache@v4
+        with:
+          path: .state
+          key: ecj-sha-${{ steps.check.outputs.current }}
+          restore-keys: ecj-sha-
+
+  trigger-build:
+    needs: check-ecj
+    if: needs.check-ecj.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger ECJ matrix build
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: ecj-matrix.yml
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
