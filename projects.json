@@ -1,0 +1,4 @@
+[
+  { "name": "JavaHarmcrest", "url": "https://github.com/hamcrest/JavaHamcrest.git", "type": "gradle", "cmd": "./gradlew clean build javadoc --info" },
+  { "name": "ApacheCommonsIO", "url": "https://github.com/apache/commons-io.git", "type": "maven", "cmd": "mvn -s ../ApacheCommonsIO-settings.xml -X -B compile test-compile -DskipTests" }
+]
