@@ -1,0 +1,33 @@
+diff --git a/pom.xml b/pom.xml
+index 16bccbfbb..8fe8a81ab 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -190,6 +190,28 @@ file comparators, endian transformation classes, and much more.
+       </plugins>
+     </pluginManagement>
+     <plugins>
++      <plugin>
++        <artifactId>maven-compiler-plugin</artifactId>
++        <version>${commons.compiler.version}</version>
++         <dependencies>
++          <dependency>
++            <groupId>org.codehaus.plexus</groupId>
++            <artifactId>plexus-compiler-eclipse</artifactId>
++            <version>2.15.0</version>
++          </dependency>
++          <dependency>
++            <groupId>org.eclipse.jdt</groupId>
++            <artifactId>ecj</artifactId>
++            <version>SNAPSHOT</version>
++          </dependency>
++        </dependencies>
++        <configuration combine.self="append">
++          <testIncludes>
++            <testInclude>**/*</testInclude>
++          </testIncludes>
++          <compilerId>eclipse</compilerId>
++        </configuration>
++      </plugin>
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-jar-plugin</artifactId>

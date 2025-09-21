@@ -1,0 +1,46 @@
+diff --git a/build.gradle b/build.gradle
+index 0a6791b..cc754de 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -1,6 +1,7 @@
+ plugins {
+     id "signing"
+     id "maven-publish"
++    id "host.anzo.gradle.ecj" version "1.7" apply false
+ }
+ apply from: "gradle/versioning.gradle"
+ 
+@@ -19,6 +20,7 @@ tasks.register("showVersion") {
+ subprojects {
+     apply plugin: 'checkstyle'
+     apply plugin: 'java-library'
++    apply plugin: 'host.anzo.gradle.ecj'
+ 
+     group = rootProject.group
+     version = rootProject.version
+@@ -28,7 +30,12 @@ subprojects {
+         targetCompatibility = JavaVersion.VERSION_1_8
+     }
+ 
++    dependencies {
++        ecj("org.eclipse.jdt:ecj:SNAPSHOT")
++    }
++
+     repositories {
++        mavenLocal()
+         mavenCentral()
+     }
+ 
+@@ -76,12 +83,6 @@ subprojects {
+     }
+ }
+ 
+-allprojects {
+-    tasks.withType(JavaCompile) {
+-        options.compilerArgs << '-Xlint:-options'
+-    }
+-}
+-
+ def pomConfigurationFor(String pomName, String pomDescription) {
+     return {
+         name = pomName

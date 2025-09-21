@@ -1,0 +1,29 @@
+diff --git a/pom.xml b/pom.xml
+index da101025..059e4f0a 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -487,6 +487,24 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
+         </pluginManagement>
+ 
+         <plugins>
++            <plugin>
++              <artifactId>maven-compiler-plugin</artifactId>
++              <dependencies>
++               <dependency>
++                 <groupId>org.codehaus.plexus</groupId>
++                 <artifactId>plexus-compiler-eclipse</artifactId>
++                 <version>2.15.0</version>
++               </dependency>
++               <dependency>
++                 <groupId>org.eclipse.jdt</groupId>
++                 <artifactId>ecj</artifactId>
++                 <version>SNAPSHOT</version>
++               </dependency>
++             </dependencies>
++               <configuration>
++                 <compilerId>eclipse</compilerId>
++               </configuration>
++           </plugin>
+             <plugin>
+                 <artifactId>maven-checkstyle-plugin</artifactId>
+             </plugin>

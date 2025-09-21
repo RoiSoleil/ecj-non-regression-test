@@ -1,4 +1,7 @@
 [
-  { "name": "JavaHarmcrest", "url": "https://github.com/hamcrest/JavaHamcrest.git", "type": "gradle", "cmd": "./gradlew clean build javadoc --info" },
-  { "name": "ApacheCommonsIO", "url": "https://github.com/apache/commons-io.git", "type": "maven", "cmd": "mvn -s ../ApacheCommonsIO-settings.xml -X -B compile test-compile -DskipTests" }
+  { "name": "JavaHamcrest", "url": "https://github.com/hamcrest/JavaHamcrest.git", "cmd": "./gradlew compileJava compileTestJava" },
+  { "name": "xwiki", "url": "https://github.com/xwiki/xwiki-commons.git", "cmd": "mvn -B compile test-compile -DskipTests" },
+  { "name": "JacksonDatabind", "url": "https://github.com/FasterXML/jackson-databind.git", "cmd": "mvn -B compile test-compile -DskipTests" },
+  { "name": "Eclipse-Collections", "url": "https://github.com/eclipse-collections/eclipse-collections.git", "cmd": "cat -n eclipse-collections-code-generator/src/main/resources/impl/list/immutable/immutablePrimitiveArrayList.stg && mvn -B compile test-compile -DskipTests" },
+  { "name": "ApacheCommonsIO", "url": "https://github.com/apache/commons-io.git", "cmd": "mvn -B compile test-compile -DskipTests" }
 ]

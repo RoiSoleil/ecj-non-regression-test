@@ -1,4 +1,4 @@
-name: ECJ Non-regression Tests
+name: ECJ Non-regression Builds
 
 on:
   workflow_dispatch:
@@ -6,8 +6,6 @@ on:
       ecj_sha:
         description: "ECJ commit SHA to test"
         required: false
-#  schedule:
-#    - cron: "0 */6 * * *"   # every 6 hours
 
 jobs:
   build-ecj:
@@ -82,9 +80,6 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.setup-matrix.outputs.matrix) }}
     steps:
-      - name: Install xmlstarlet
-        run: sudo apt-get update && sudo apt-get install -y xmlstarlet
-
       - name: Checkout ECJ test harness
         uses: actions/checkout@v5
 
@@ -110,7 +105,7 @@ jobs:
               -Dpackaging=jar
 
       - name: Run ECJ compilation
-        run: bash scripts/run-build.sh "${{ matrix.name }}" "${{ matrix.url }}" "${{ matrix.type }}" "${{ matrix.cmd }}"
+        run: bash scripts/run-build.sh "${{ matrix.name }}" "${{ matrix.url }}" "${{ matrix.cmd }}"
 
       - name: Upload partial result
         uses: actions/upload-artifact@v4.6.2

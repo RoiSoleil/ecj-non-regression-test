@@ -1,0 +1,28 @@
+diff --git a/pom.xml b/pom.xml
+index 1b79a6aa88..8635d1393a 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -2299,10 +2299,23 @@
+           <artifactId>maven-compiler-plugin</artifactId>
+           <!-- Lock down plugin version for build reproducibility -->
+           <version>${maven.compiler.version}</version>
++          <dependencies>
++           <dependency>
++             <groupId>org.codehaus.plexus</groupId>
++             <artifactId>plexus-compiler-eclipse</artifactId>
++             <version>2.15.0</version>
++           </dependency>
++           <dependency>
++             <groupId>org.eclipse.jdt</groupId>
++             <artifactId>ecj</artifactId>
++             <version>SNAPSHOT</version>
++           </dependency>
++         </dependencies>
+           <configuration>
+             <release>${xwiki.java.version}</release>
+             <!-- Avoid surprises. If a module needs annotation processing, it can enable it easily -->
+             <proc>none</proc>
++            <compilerId>eclipse</compilerId>
+           </configuration>
+         </plugin>
+         <plugin>
