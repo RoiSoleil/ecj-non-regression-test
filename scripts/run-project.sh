@@ -23,14 +23,24 @@ DIR="$ROOT/work/$NAME-$LABEL"
 : > "$LOG"
 
 rm -rf "$DIR"
-git init -q "$DIR"
-git -C "$DIR" remote add origin "$URL"
-if ! git -C "$DIR" fetch -q --depth 1 origin "${REF:-HEAD}" >>"$LOG" 2>&1; then
-  echo "clone failed" > "$ROOT/results/$NAME-$LABEL.status"
-  exit 0
+if [ -n "$URL" ]; then
+  git init -q "$DIR"
+  git -C "$DIR" remote add origin "$URL"
+  if ! git -C "$DIR" fetch -q --depth 1 origin "${REF:-HEAD}" >>"$LOG" 2>&1; then
+    echo "clone failed" > "$ROOT/results/$NAME-$LABEL.status"
+    exit 0
+  fi
+  git -C "$DIR" checkout -q FETCH_HEAD >>"$LOG" 2>&1
+  git -C "$DIR" log --oneline -1 >> "$LOG"
+else
+  # projects without a repository (the JDK sources) work in an empty directory
+  mkdir -p "$DIR"
 fi
-git -C "$DIR" checkout -q FETCH_HEAD >>"$LOG" 2>&1
-git -C "$DIR" log --oneline -1 >> "$LOG"
+
+# the ECJ jar itself, for projects that run the batch compiler directly
+ECJ_JAR="$HOME/.m2/repository/org/eclipse/jdt/ecj/$ECJ_VERSION/ecj-$ECJ_VERSION.jar"
+[ -f "$ECJ_JAR" ] || mvn -B -q dependency:get -Dartifact="org.eclipse.jdt:ecj:$ECJ_VERSION" >>"$LOG" 2>&1
+export ECJ_JAR ROOT
 cd "$DIR/${SUBDIR:-.}"
 
 if [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; then

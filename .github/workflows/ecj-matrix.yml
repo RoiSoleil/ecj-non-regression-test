@@ -77,6 +77,8 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
         with: { distribution: temurin, java-version: 21 }
+      - name: Free disk space
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
       - uses: actions/download-artifact@v5
         with: { name: ecj-HEAD.jar }
       - name: Install the head ECJ in the local Maven repository

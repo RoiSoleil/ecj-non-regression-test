@@ -1,5 +1,12 @@
 [
   {
+    "name": "JDK",
+    "url": "",
+    "ref": "",
+    "cmd": "bash $ROOT/scripts/compile-jdk.sh",
+    "optional": false
+  },
+  {
     "name": "ApacheCommonsIO",
     "url": "https://github.com/apache/commons-io.git",
     "ref": "eb839ade32c870faceba08c395f7fadc6e976bc3",
