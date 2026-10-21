@@ -130,6 +130,15 @@ jobs:
           echo "Head ECJ: eclipse.jdt.core $ECJ_SHA" >> "$GITHUB_STEP_SUMMARY"
           python3 scripts/compare.py artifacts/results baseline head | tee -a "$GITHUB_STEP_SUMMARY"
           exit "${PIPESTATUS[0]}"
+      - name: Status of every project
+        if: always()
+        run: |
+          python3 scripts/readme-status.py artifacts/results baseline head README.md > status.md
+          { echo; echo "### Status"; echo; cat status.md; } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: always()
-        with: { name: all-results, path: artifacts }
+        with:
+          name: all-results
+          path: |
+            artifacts
+            README.md
