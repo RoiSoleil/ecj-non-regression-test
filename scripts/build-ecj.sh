@@ -12,7 +12,8 @@ mkdir -p "$WORK/classes"
   cd "$SRC"
   # the Ant adapter needs Ant on the classpath and is not needed by plexus-compiler-eclipse
   find src -name '*.java' | grep -v -e JDTCompilerAdapter -e /antadapter/ > "$WORK/sources.txt"
-  javac -nowarn -proc:none -encoding UTF-8 -d "$WORK/classes" @"$WORK/sources.txt"
+  # -source/-target (not --release): the apt classes use newer JDK APIs, while older Maven versions cannot read class files newer than Java 21
+  javac -source 21 -target 21 -nowarn -proc:none -encoding UTF-8 -d "$WORK/classes" @"$WORK/sources.txt"
   (cd src && find . -type f ! -name '*.java' -exec cp --parents {} "$WORK/classes/" \;)
 )
 printf 'Main-Class: org.eclipse.jdt.internal.compiler.batch.Main\n' > "$WORK/manifest.txt"

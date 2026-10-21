@@ -7,6 +7,20 @@
     "optional": false
   },
   {
+    "name": "ApacheCommonsCollections",
+    "url": "https://github.com/apache/commons-collections.git",
+    "ref": "68af493c1b1b2c03031a976436fed7eb6530783b",
+    "cmd": "mvn -B -q compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip",
+    "optional": false
+  },
+  {
+    "name": "ApacheCommonsLang",
+    "url": "https://github.com/apache/commons-lang.git",
+    "ref": "09a5310be6a5b9531e94b585cd251bd279ad2eb7",
+    "cmd": "mvn -B -q compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip",
+    "optional": false
+  },
+  {
     "name": "JacksonDatabind",
     "url": "https://github.com/FasterXML/jackson-databind.git",
     "ref": "7520abab34b926c4ff7773e524fcaa9b4342d7ed",
@@ -24,7 +38,7 @@
     "name": "Eclipse-Collections",
     "url": "https://github.com/eclipse-collections/eclipse-collections.git",
     "ref": "3c39ccd2d49b259c60b3dede3b9d46e6d04a858b",
-    "cmd": "mvn -B compile test-compile -DskipTests",
+    "cmd": "mvn -B -q install -DskipTests -Dmaven.javadoc.skip=true -Dcheckstyle.skip -Dspotbugs.skip",
     "optional": false
   },
   {
