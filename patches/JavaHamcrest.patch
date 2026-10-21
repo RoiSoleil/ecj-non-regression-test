@@ -23,7 +23,7 @@ index 0a6791b..cc754de 100644
      }
  
 +    dependencies {
-+        ecj("org.eclipse.jdt:ecj:SNAPSHOT")
++        ecj("org.eclipse.jdt:ecj:@ECJ_VERSION@")
 +    }
 +
      repositories {

@@ -35,7 +35,7 @@ cd "$DIR/${SUBDIR:-.}"
 
 if [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; then
   # hand written patches name the ECJ version SNAPSHOT
-  sed "s/<version>SNAPSHOT<\/version>/<version>$ECJ_VERSION<\/version>/" "$ROOT/patches/$PATCH" > "$DIR/ecj.patch"
+  sed -e "s/<version>SNAPSHOT<\/version>/<version>$ECJ_VERSION<\/version>/" -e "s/@ECJ_VERSION@/$ECJ_VERSION/" "$ROOT/patches/$PATCH" > "$DIR/ecj.patch"
   if ! git -C "$DIR" apply "$DIR/ecj.patch" >>"$LOG" 2>&1; then
     echo "patch failed" > "$ROOT/results/$NAME-$LABEL.status"
     exit 0
