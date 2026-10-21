@@ -114,8 +114,9 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
    (`results/<project>-<label>.status`) and one normalized line per compile error (`.errors`). A Maven build that never
    printed `Compiling with eclipse` is reported as `ecj not used`.
 4. `scripts/compare.py` compares the `baseline` and `head` runs. It fails when the head ECJ gives errors the baseline
-   does not, when a project that builds with the baseline does not build with head, or when a project was not tested
-   at all (clone or patch failure).
+   does not, when a project that builds with the baseline does not build with head.
+   A project that does not build with the baseline ECJ, or that was not tested at all
+   (clone or patch failure), is shown with `⚠️` in the table but does not fail the run: only new problems do.
 
 The workflow `ECJ Non-regression Builds` (`.github/workflows/ecj-matrix.yml`) runs two jobs per project (baseline and head ECJ, in parallel) and a final `compare` job. The
 `ECJ Commit Watcher` workflow (`ecj-check.yml`) runs it every night when `eclipse.jdt.core` has a new commit; a

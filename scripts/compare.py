@@ -28,9 +28,10 @@ for status_file in sorted(results.glob(f'*-{head}.status')):
     fixed = sorted(errors_base - errors_head)
     # anything but success or a failing build (clone failed, patch failed, missing) means the project was not tested
     untested = status_head not in ('success', 'build failed') or status_base not in ('success', 'build failed')
-    regression = bool(new) or untested or (status_base == 'success' and status_head != 'success')
+    # a project that is not tested (or that already fails with the baseline) is shown in the table but is not a regression
+    regression = bool(new) or (status_base == 'success' and status_head != 'success')
     regressions += regression
-    rows.append(f'| {name} | {status_base} | {status_head} | {len(errors_base)} | {len(errors_head)} | {len(new)} | {len(fixed)} | {"⚠️ not tested" if untested else "❌" if regression else "✅"} |')
+    rows.append(f'| {name} | {status_base} | {status_head} | {len(errors_base)} | {len(errors_head)} | {len(new)} | {len(fixed)} | {"❌" if regression else "⚠️ not tested" if untested else "✅"} |')
     for title, lines in (('New errors', new), ('Errors that disappeared', fixed)):
         if lines:
             details.append(f'<details><summary>{name}: {title.lower()} ({len(lines)})</summary>\n\n```\n' + '\n'.join(lines[:200]) + '\n```\n</details>\n')
