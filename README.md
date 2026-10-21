@@ -18,3 +18,11 @@ request). The watcher workflow runs every night when `eclipse.jdt.core` has a ne
 The pinned revisions keep the known errors stable; update them in a pull request.
 
 This repository was written with the help of Claude (AI).
+
+## Known limits
+
+- Only the root `pom.xml` is switched to ECJ. A module that sets its own `compilerId` (or a profile-scoped compiler plugin) still compiles with javac; the run only checks that at least one module reported `Compiling with eclipse`.
+- Gradle projects (JavaHamcrest) are not checked for ECJ use.
+- Errors are compared as `path:line message`; a reworded diagnostic shows as one new and one gone error.
+- A project that already fails with the baseline ECJ only detects *new compile error lines*, not new crashes.
+- The head ECJ is built from the batch compiler sources only, with a fake version `3.99.0`.

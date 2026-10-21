@@ -34,7 +34,7 @@ jobs:
 
   record:
     needs: [check, run]
-    if: always() && needs.run.result != 'skipped' && needs.run.result != 'cancelled'
+    if: needs.run.result == 'success'   # a failing run is retried every night until it is fixed
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -43,5 +43,5 @@ jobs:
       - env:
           SHA: ${{ needs.check.outputs.sha }}
         run: |
-          git tag "tested/$SHA"
-          git push origin "tested/$SHA"
+          git tag -f "tested/$SHA"
+          git push -f origin "tested/$SHA"

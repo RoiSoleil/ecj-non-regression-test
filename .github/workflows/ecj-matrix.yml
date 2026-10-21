@@ -59,7 +59,7 @@ jobs:
           REF: ${{ github.event.inputs.ecj_ref || inputs.ecj_ref }}
         run: |
           git clone --filter=blob:none https://github.com/eclipse-jdt/eclipse.jdt.core.git ecj
-          [ -z "$REF" ] || git -C ecj checkout "$REF"
+          [ -z "$REF" ] || { git -C ecj fetch -q origin "$REF" && git -C ecj checkout -q FETCH_HEAD; }
           echo "sha=$(git -C ecj rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           bash scripts/build-ecj.sh ecj ecj-HEAD.jar
       - uses: actions/upload-artifact@v4
