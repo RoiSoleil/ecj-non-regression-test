@@ -53,7 +53,8 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
-        with: { distribution: temurin, java-version: 21 }
+        # the annotation processing classes of ECJ need the JDK 25 API; the jar still targets Java 21
+        with: { distribution: temurin, java-version: 25 }
       - id: build
         env:
           REF: ${{ github.event.inputs.ecj_ref || inputs.ecj_ref }}
