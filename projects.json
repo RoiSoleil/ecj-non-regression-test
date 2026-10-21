@@ -61,20 +61,104 @@
     "url": "https://github.com/quarkusio/quarkus.git",
     "ref": "58f93d849c5f857f129465ba2a4449a6c3f15597",
     "cmd": "./mvnw -B -fae -Dquickly -DskipTests -DskipITs install",
-    "optional": true
+    "optional": false
   },
   {
     "name": "Camel",
     "url": "https://github.com/apache/camel.git",
     "ref": "7437e9805efb89340124af7290c13beb1d66a5a8",
     "cmd": "./mvnw -B -fae -Pquick install -DskipTests",
-    "optional": true
+    "optional": false
   },
   {
     "name": "WildFly",
     "url": "https://github.com/wildfly/wildfly.git",
     "ref": "8e67d2bc8d70b4a2d29338c820c3eb8edfff80c6",
     "cmd": "mvn -B -fae install -DskipTests",
-    "optional": true
+    "optional": false
+  },
+  {
+    "name": "Guava",
+    "url": "https://github.com/google/guava.git",
+    "ref": "e641f0717a6122550231e89c4416513cc72bed72",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip",
+    "optional": false
+  },
+  {
+    "name": "Gson",
+    "url": "https://github.com/google/gson.git",
+    "ref": "e2292f9c9f2e07a4791827e8eea34aa7d80545d6",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip",
+    "optional": false
+  },
+  {
+    "name": "Guice",
+    "url": "https://github.com/google/guice.git",
+    "ref": "b8cab7e4e947adb82e343586c267c5c367cf5cf1",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip",
+    "optional": false
+  },
+  {
+    "name": "AssertJ",
+    "url": "https://github.com/assertj/assertj.git",
+    "ref": "055eb8aaa2dd0c9eede5aeeba9273202a6834030",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip",
+    "optional": false
+  },
+  {
+    "name": "JodaTime",
+    "url": "https://github.com/JodaOrg/joda-time.git",
+    "ref": "5ffcf3c2bce34c95207ef2746229a40a932afeee",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip",
+    "optional": false
+  },
+  {
+    "name": "ApacheCommonsMath",
+    "url": "https://github.com/apache/commons-math.git",
+    "ref": "a0df91d88eef1a124d0a93ea13c230de39e7b6cf",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip",
+    "optional": false
+  },
+  {
+    "name": "ApacheCommonsCompress",
+    "url": "https://github.com/apache/commons-compress.git",
+    "ref": "be13953fc467dad1e9bc83c727b79e070e9ad339",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip",
+    "optional": false
+  },
+  {
+    "name": "ApacheCommonsCodec",
+    "url": "https://github.com/apache/commons-codec.git",
+    "ref": "bbcb88433ebf69310774c07f26bbb8b2762795f1",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip",
+    "optional": false
+  },
+  {
+    "name": "Netty",
+    "url": "https://github.com/netty/netty.git",
+    "ref": "19e950b3eb58b6b69785b80e9a4497d509e15d08",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip",
+    "optional": false
+  },
+  {
+    "name": "ApacheMaven",
+    "url": "https://github.com/apache/maven.git",
+    "ref": "9e7a17eb8b12336c51ad5e92fb450b521e052c80",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip",
+    "optional": false
+  },
+  {
+    "name": "Jsoup",
+    "url": "https://github.com/jhy/jsoup.git",
+    "ref": "bcf979840fdc986893cce9eb54b88cabe74b18ff",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip",
+    "optional": false
+  },
+  {
+    "name": "Jetty",
+    "url": "https://github.com/jetty/jetty.project.git",
+    "ref": "5e0a2a8ee6e5b9608b61e318d93174308fcb93c1",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip",
+    "optional": false
   }
 ]

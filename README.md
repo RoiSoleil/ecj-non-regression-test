@@ -6,15 +6,15 @@ the compiler's own test suite does not: valid code in the wild that a recent cha
 
 ## What is built
 
-| Project | How | Default |
-|---|---|---|
-| JDK (`java.base`, `java.xml`, `java.net.http`, `java.desktop`) | batch compiler on the sources of the runner's JDK (`src.zip`) | yes |
-| Apache Commons IO, Lang, Collections | Maven | yes |
-| Jackson Databind | Maven | yes |
-| XWiki Commons | Maven | yes |
-| Eclipse Collections | Maven (`install`) | yes |
-| JavaHamcrest | Gradle (ECJ Gradle plugin, see `patches/`) | yes |
-| Quarkus, Camel, WildFly | Maven | no: hours of build, name them in the `projects` input |
+| Project | How |
+|---|---|
+| JDK (`java.base`, `java.xml`, `java.net.http`, `java.desktop`) | batch compiler on the sources of the runner's JDK (`src.zip`) |
+| Apache Commons IO, Lang, Collections, Math, Compress, Codec | Maven |
+| Jackson Databind, Gson, Guava, Guice, AssertJ, Joda-Time, jsoup, Jetty, Netty, Apache Maven | Maven |
+| XWiki Commons | Maven |
+| Eclipse Collections | Maven (`install`) |
+| JavaHamcrest | Gradle (ECJ Gradle plugin, see `patches/`) |
+| Quarkus, Camel, WildFly | Maven (`install`, several hours: the baseline and the head ECJ run in two parallel jobs) |
 
 Every project is pinned to a commit (`projects.json`), so the known errors stay the same from one run to the next.
 Update the pins in a pull request.
@@ -32,7 +32,7 @@ Update the pins in a pull request.
    does not, when a project that builds with the baseline does not build with head, or when a project was not tested
    at all (clone or patch failure).
 
-The workflow `ECJ Non-regression Builds` (`.github/workflows/ecj-matrix.yml`) runs one job per project. The
+The workflow `ECJ Non-regression Builds` (`.github/workflows/ecj-matrix.yml`) runs two jobs per project (baseline and head ECJ, in parallel) and a final `compare` job. The
 `ECJ Commit Watcher` workflow (`ecj-check.yml`) runs it every night when `eclipse.jdt.core` has a new commit; a
 successfully tested commit gets a `tested/<sha>` tag, a failing run is retried the next night.
 
@@ -43,7 +43,7 @@ successfully tested commit gets a `tested/<sha>` tag, a failing run is retried t
 * `ecj_ref`: branch, tag or commit of `eclipse.jdt.core` (a pull request head works: `refs/pull/<n>/head`).
   Default: `master`.
 * `baseline`: released ECJ version to compare with (default: the latest release on Maven Central).
-* `projects`: comma separated names, for example `Quarkus,Camel`. Default: all projects that are not optional.
+* `projects`: comma separated names, for example `Quarkus,Camel`. Default: all projects.
 
 The summary of each job shows the table of the run and, for each project, the new and the vanished errors.
 
@@ -71,6 +71,5 @@ The JDK project needs a JDK with `lib/src.zip`; otherwise set `JDK_SRC_DIR` to a
   detects new compile error lines, not new crashes.
 * The head ECJ is built from the batch compiler sources only, with a fake version `3.99.0`. The annotation processing
   classes are compiled with JDK 25 and run on JDK 21.
-* Quarkus, Camel and WildFly are defined but have not been run in this repository yet.
 
 This repository was written with the help of Claude (AI).
