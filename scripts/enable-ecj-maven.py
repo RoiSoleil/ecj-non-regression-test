@@ -3,11 +3,13 @@
 
 usage: enable-ecj-maven.py <pom.xml> <ecj version>
 """
+import re
 import sys
 import xml.etree.ElementTree as ET
 
 POM, ECJ_VERSION = sys.argv[1], sys.argv[2]
 PLEXUS_ECLIPSE = "2.15.0"
+COMPILER_PLUGIN = "3.13.0"
 
 ns = ET.parse(POM).getroot().tag.partition('}')[0].lstrip('{')
 ET.register_namespace('', ns)
@@ -43,6 +45,19 @@ def add_ecj(plugin):
     for old in configuration.findall(q('compilerId')):
         configuration.remove(old)
     text(configuration, 'compilerId', 'eclipse')
+    # a recent compiler plugin: old ones fail with plexus-compiler-eclipse (API incompatibility, or version 4.0.0-beta resolved)
+    version = plugin.find(q('version'))
+    if version is None:
+        text(plugin, 'version', COMPILER_PLUGIN)
+    elif version.text and not version.text.startswith('${') and tuple(int(x) for x in re.findall(r'\d+', version.text)[:3] + [0, 0, 0])[:3] < (3, 13, 0):
+        version.text = COMPILER_PLUGIN
+    for fail in configuration.findall(q('failOnWarning')):
+        fail.text = 'false'
+    # javac only options that the ECJ batch compiler rejects
+    for args in plugin.iter(q('compilerArgs')):
+        for arg in list(args):
+            if (arg.text or '').startswith(('--should-stop', '-Xplugin', '-XDcompilePolicy', '-Werror', '-Xlint', '-Xdoclint')):
+                args.remove(arg)
 
 def compiler_plugins(plugins):
     return [p for p in plugins.findall(q('plugin')) if p.findtext(q('artifactId')) == 'maven-compiler-plugin']

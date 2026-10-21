@@ -51,7 +51,10 @@ if [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; then
     exit 0
   fi
 elif [ -f pom.xml ]; then
-  python3 "$ROOT/scripts/enable-ecj-maven.py" pom.xml "$ECJ_VERSION" >>"$LOG" 2>&1
+  # every pom: the modules do not always inherit from the root pom
+  find . -name pom.xml -not -path '*/src/*' -not -path '*/target/*' | while read -r pom; do
+    python3 "$ROOT/scripts/enable-ecj-maven.py" "$pom" "$ECJ_VERSION" >>"$LOG" 2>&1
+  done
 fi
 
 echo "== $NAME with ECJ $ECJ_VERSION ($LABEL): $CMD" | tee -a "$LOG"
