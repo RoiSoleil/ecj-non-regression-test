@@ -20,6 +20,90 @@ the compiler's own test suite does not: valid code in the wild that a recent cha
 Every project is pinned to a commit (`projects.json`), so the known errors stay the same from one run to the next.
 Update the pins in a pull request.
 
+## Status
+
+The goal is that every project compiles with ECJ without any compile error. The table says, for each project, whether
+it compiles today (`❌` lists compile errors of the compiler itself, `⚠️` a build problem that is not a compile error,
+for example a plugin that fails before the compilation). Each failing case has to be analysed one by one: a build
+configuration problem is fixed in `projects.json` or in the scripts, a real ECJ bug gets an issue.
+Regenerate the table with `python3 scripts/readme-status.py results baseline head` after a run.
+
+<!-- status:start -->
+| Project | Released ECJ | Head ECJ |
+|---|---|---|
+| JDK | ❌ 1 compile errors | ❌ 1 compile errors |
+| ApacheCommonsIO | ✅ compiles | ✅ compiles |
+| ApacheCommonsCollections | ✅ compiles | ✅ compiles |
+| ApacheCommonsLang | ✅ compiles | ✅ compiles |
+| JacksonDatabind | ✅ compiles | ✅ compiles |
+| xwiki | ✅ compiles | ✅ compiles |
+| Eclipse-Collections | ❌ 1 compile errors | ❌ 1 compile errors |
+| JavaHamcrest | ✅ compiles | ✅ compiles |
+| Quarkus | ⚠️ not run | ⚠️ not run |
+| Camel | ⚠️ not run | ⚠️ not run |
+| WildFly | ⚠️ not run | ⚠️ not run |
+| Guava | ⚠️ not run | ⚠️ not run |
+| Gson | ❌ 30 compile errors | ⚠️ not run |
+| Guice | ⚠️ not run | ⚠️ not run |
+| AssertJ | ⚠️ not run | ⚠️ not run |
+| ApacheCommonsMath | ⚠️ not run | ⚠️ not run |
+| ApacheCommonsCompress | ⚠️ not run | ⚠️ not run |
+| ApacheCommonsCodec | ⚠️ not run | ⚠️ not run |
+| Netty | ⚠️ not run | ⚠️ not run |
+| ApacheMaven | ⚠️ not run | ⚠️ not run |
+| Jsoup | ⚠️ not run | ⚠️ not run |
+| Jetty | ⚠️ not run | ⚠️ not run |
+| CommonsBeanutils | ⚠️ not run | ⚠️ not run |
+| CommonsCli | ⚠️ not run | ⚠️ not run |
+| CommonsCsv | ⚠️ not run | ⚠️ not run |
+| CommonsText | ⚠️ not run | ⚠️ not run |
+| CommonsNet | ⚠️ not run | ⚠️ not run |
+| CommonsPool | ⚠️ not run | ⚠️ not run |
+| CommonsDbcp | ⚠️ not run | ⚠️ not run |
+| CommonsValidator | ⚠️ not run | ⚠️ not run |
+| CommonsJexl | ⚠️ not run | ⚠️ not run |
+| CommonsConfiguration | ⚠️ not run | ⚠️ not run |
+| CommonsFileupload | ⚠️ not run | ⚠️ not run |
+| CommonsVfs | ⚠️ not run | ⚠️ not run |
+| CommonsBcel | ⚠️ not run | ⚠️ not run |
+| CommonsExec | ⚠️ not run | ⚠️ not run |
+| CommonsImaging | ⚠️ not run | ⚠️ not run |
+| CommonsRng | ⚠️ not run | ⚠️ not run |
+| CommonsNumbers | ⚠️ not run | ⚠️ not run |
+| CommonsStatistics | ⚠️ not run | ⚠️ not run |
+| CommonsGeometry | ⚠️ not run | ⚠️ not run |
+| CommonsLogging | ⚠️ not run | ⚠️ not run |
+| CommonsEmail | ⚠️ not run | ⚠️ not run |
+| CommonsDigester | ⚠️ not run | ⚠️ not run |
+| LoggingLog4j2 | ⚠️ not run | ⚠️ not run |
+| Shiro | ⚠️ not run | ⚠️ not run |
+| Curator | ⚠️ not run | ⚠️ not run |
+| JacksonCore | ⚠️ not run | ⚠️ not run |
+| JacksonAnnotations | ⚠️ not run | ⚠️ not run |
+| Mybatis3 | ⚠️ not run | ⚠️ not run |
+| JSqlParser | ⚠️ not run | ⚠️ not run |
+| Javaparser | ⚠️ not run | ⚠️ not run |
+| Pmd | ⚠️ not run | ⚠️ not run |
+| Junit4 | ⚠️ not run | ⚠️ not run |
+| Slf4j | ❌ 419 compile errors | ⚠️ not run |
+| Logback | ⚠️ not run | ⚠️ not run |
+| H2database | ⚠️ not run | ⚠️ not run |
+| Dropwizard | ⚠️ not run | ⚠️ not run |
+| Jdbi | ⚠️ not run | ⚠️ not run |
+| RestAssured | ⚠️ not run | ⚠️ not run |
+| Pdfbox | ⚠️ not run | ⚠️ not run |
+| Activemq | ⚠️ not run | ⚠️ not run |
+| Avro | ⚠️ not run | ⚠️ not run |
+| MavenSurefire | ⚠️ not run | ⚠️ not run |
+| HttpcomponentsClient | ⚠️ not run | ⚠️ not run |
+| HttpcomponentsCore | ✅ compiles | ⚠️ not run |
+| Zookeeper | ⚠️ not run | ⚠️ not run |
+| Tika | ⚠️ not run | ⚠️ not run |
+| VelocityEngine | ⚠️ not run | ⚠️ not run |
+| HibernateValidator | ⚠️ not run | ⚠️ not run |
+| Checkstyle | ✅ compiles | ⚠️ not run |
+<!-- status:end -->
+
 ## How it works
 
 1. `scripts/build-ecj.sh` compiles the ECJ batch compiler of an `eclipse.jdt.core` checkout into a jar (a few
