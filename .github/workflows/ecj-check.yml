@@ -2,57 +2,26 @@ name: ECJ Commit Watcher
 
 on:
   schedule:
-    - cron: "0 */6 * * *"   # every 6 hours
+    - cron: "0 3 * * *"   # every night, only when eclipse.jdt.core has a new commit
   workflow_dispatch:
 
 jobs:
-  check-ecj:
+  check:
     runs-on: ubuntu-latest
     outputs:
-      should_run: ${{ steps.check.outputs.changed }}
+      changed: ${{ steps.check.outputs.changed }}
     steps:
-      - name: Get latest ECJ commit
-        id: check
+      - id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          LATEST=$(git ls-remote https://github.com/eclipse-jdt/eclipse.jdt.core.git refs/heads/main | cut -f1)
-          echo "Latest commit: $LATEST"
+          LATEST=$(git ls-remote https://github.com/eclipse-jdt/eclipse.jdt.core.git refs/heads/master | cut -f1)
+          # the last tested commit is the one of the last successful run of the matrix workflow
+          LAST=$(gh api "repos/${{ github.repository }}/actions/workflows/ecj-matrix.yml/runs?status=completed&per_page=1" --jq '.workflow_runs[0].display_title // ""' || true)
+          echo "latest=$LATEST last_run_title=$LAST"
+          if [[ "$LAST" == *"$LATEST"* ]]; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
 
-          mkdir -p .state
-          STATE_FILE=".state/latest-ecj-sha"
-
-          if [ -f "$STATE_FILE" ]; then
-            LAST=$(cat "$STATE_FILE")
-          else
-            LAST=""
-          fi
-
-          echo "last=$LAST" >> $GITHUB_OUTPUT
-          echo "current=$LATEST" >> $GITHUB_OUTPUT
-
-          if [ "$LATEST" != "$LAST" ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-          else
-            echo "changed=false" >> $GITHUB_OUTPUT
-          fi
-
-          # Save the latest SHA
-          echo "$LATEST" > "$STATE_FILE"
-
-      - name: Persist state
-        uses: actions/cache@v4.2.4
-        with:
-          path: .state
-          key: ecj-sha-${{ steps.check.outputs.current }}
-          restore-keys: ecj-sha-
-
-  trigger-build:
-    needs: check-ecj
-    if: needs.check-ecj.outputs.should_run == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger ECJ matrix build
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: ecj-matrix.yml
-          ref: main
-          token: ${{ secrets.GITHUB_TOKEN }}
+  run:
+    needs: check
+    if: needs.check.outputs.changed == 'true'
+    uses: ./.github/workflows/ecj-matrix.yml

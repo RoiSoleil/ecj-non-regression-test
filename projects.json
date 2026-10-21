@@ -1,7 +1,59 @@
 [
-  { "name": "JavaHamcrest", "url": "https://github.com/hamcrest/JavaHamcrest.git", "cmd": "./gradlew compileJava compileTestJava" },
-  { "name": "xwiki", "url": "https://github.com/xwiki/xwiki-commons.git", "cmd": "mvn -B compile test-compile -DskipTests" },
-  { "name": "JacksonDatabind", "url": "https://github.com/FasterXML/jackson-databind.git", "cmd": "mvn -B compile test-compile -DskipTests" },
-  { "name": "Eclipse-Collections", "url": "https://github.com/eclipse-collections/eclipse-collections.git", "cmd": "cat -n eclipse-collections-code-generator/src/main/resources/impl/list/immutable/immutablePrimitiveArrayList.stg && mvn -B compile test-compile -DskipTests" },
-  { "name": "ApacheCommonsIO", "url": "https://github.com/apache/commons-io.git", "cmd": "mvn -B compile test-compile -DskipTests" }
+  {
+    "name": "ApacheCommonsIO",
+    "url": "https://github.com/apache/commons-io.git",
+    "ref": "eb839ade32c870faceba08c395f7fadc6e976bc3",
+    "cmd": "mvn -B -q compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip",
+    "optional": false
+  },
+  {
+    "name": "JacksonDatabind",
+    "url": "https://github.com/FasterXML/jackson-databind.git",
+    "ref": "7520abab34b926c4ff7773e524fcaa9b4342d7ed",
+    "cmd": "mvn -B compile test-compile -DskipTests",
+    "optional": false
+  },
+  {
+    "name": "xwiki",
+    "url": "https://github.com/xwiki/xwiki-commons.git",
+    "ref": "cec018c2636383277f50aac7096aeaa5d439022e",
+    "cmd": "mvn -B compile test-compile -DskipTests",
+    "optional": false
+  },
+  {
+    "name": "Eclipse-Collections",
+    "url": "https://github.com/eclipse-collections/eclipse-collections.git",
+    "ref": "3c39ccd2d49b259c60b3dede3b9d46e6d04a858b",
+    "cmd": "mvn -B compile test-compile -DskipTests",
+    "optional": false
+  },
+  {
+    "name": "JavaHamcrest",
+    "url": "https://github.com/hamcrest/JavaHamcrest.git",
+    "ref": "3d58e993a5d12e65ec1309497cf8fab4bf5f3645",
+    "cmd": "./gradlew compileJava compileTestJava",
+    "optional": false,
+    "patch": "JavaHamcrest.patch"
+  },
+  {
+    "name": "Quarkus",
+    "url": "https://github.com/quarkusio/quarkus.git",
+    "ref": "58f93d849c5f857f129465ba2a4449a6c3f15597",
+    "cmd": "./mvnw -B -Dquickly -DskipTests -DskipITs install",
+    "optional": true
+  },
+  {
+    "name": "Camel",
+    "url": "https://github.com/apache/camel.git",
+    "ref": "7437e9805efb89340124af7290c13beb1d66a5a8",
+    "cmd": "./mvnw -B -Pquick install -DskipTests",
+    "optional": true
+  },
+  {
+    "name": "WildFly",
+    "url": "https://github.com/wildfly/wildfly.git",
+    "ref": "8e67d2bc8d70b4a2d29338c820c3eb8edfff80c6",
+    "cmd": "mvn -B install -DskipTests",
+    "optional": true
+  }
 ]
