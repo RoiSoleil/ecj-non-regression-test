@@ -51,6 +51,11 @@ else
   echo "build failed" > "$ROOT/results/$NAME-$LABEL.status"
 fi
 
+# A Maven build that never says it compiled with ECJ was silently built with javac and would prove nothing.
+if [ -z "$PATCH" ] && [ -f "$DIR/${SUBDIR:-.}/pom.xml" ] && ! grep -q "Compiling with eclipse" "$LOG"; then
+  echo "ecj not used" > "$ROOT/results/$NAME-$LABEL.status"
+fi
+
 # One normalized line per compile error: "<path relative to the project>:<line> <message>".
 # Maven prints "[ERROR] /path/File.java:[12,5] message", ECJ itself prints "ERROR in /path/File.java (at line 12)".
 {

@@ -19,6 +19,7 @@ mkdir -p "$WORK/classes"
 # plexus-compiler-eclipse needs a real version in the messages and the JavaCompiler service entry
 # (without them the build reports no errors but silently produces incomplete output)
 sed -i "s/^compiler.version = .*/compiler.version = v$(date +%Y%m%d-%H%M), 3.99.0/" "$WORK/classes/org/eclipse/jdt/internal/compiler/batch/messages.properties"
+grep -q '^compiler.version = v' "$WORK/classes/org/eclipse/jdt/internal/compiler/batch/messages.properties" || { echo "compiler.version was not set" >&2; exit 1; }
 mkdir -p "$WORK/classes/META-INF/services"
 echo org.eclipse.jdt.internal.compiler.tool.EclipseCompiler > "$WORK/classes/META-INF/services/javax.tools.JavaCompiler"
 printf 'Main-Class: org.eclipse.jdt.internal.compiler.batch.Main\n' > "$WORK/manifest.txt"

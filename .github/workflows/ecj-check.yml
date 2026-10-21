@@ -10,18 +10,38 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       changed: ${{ steps.check.outputs.changed }}
+      sha: ${{ steps.check.outputs.sha }}
     steps:
+      - uses: actions/checkout@v5
       - id: check
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           LATEST=$(git ls-remote https://github.com/eclipse-jdt/eclipse.jdt.core.git refs/heads/master | cut -f1)
-          # the last tested commit is the one of the last successful run of the matrix workflow
-          LAST=$(gh api "repos/${{ github.repository }}/actions/workflows/ecj-matrix.yml/runs?status=completed&per_page=1" --jq '.workflow_runs[0].display_title // ""' || true)
-          echo "latest=$LATEST last_run_title=$LAST"
-          if [[ "$LAST" == *"$LATEST"* ]]; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+          [ -n "$LATEST" ] || { echo "cannot read the eclipse.jdt.core master commit"; exit 1; }
+          echo "sha=$LATEST" >> "$GITHUB_OUTPUT"
+          # a tag tested/<sha> marks a commit that was already tested
+          if git ls-remote --exit-code --tags origin "refs/tags/tested/$LATEST" >/dev/null 2>&1; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
 
   run:
     needs: check
     if: needs.check.outputs.changed == 'true'
     uses: ./.github/workflows/ecj-matrix.yml
+    with:
+      ecj_ref: ${{ needs.check.outputs.sha }}
+
+  record:
+    needs: [check, run]
+    if: always() && needs.run.result != 'skipped' && needs.run.result != 'cancelled'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - env:
+          SHA: ${{ needs.check.outputs.sha }}
+        run: |
+          git tag "tested/$SHA"
+          git push origin "tested/$SHA"
