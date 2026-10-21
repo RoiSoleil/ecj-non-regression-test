@@ -45,7 +45,7 @@
     "name": "JavaHamcrest",
     "url": "https://github.com/hamcrest/JavaHamcrest.git",
     "ref": "3d58e993a5d12e65ec1309497cf8fab4bf5f3645",
-    "cmd": "./gradlew compileJava compileTestJava",
+    "cmd": "git tag -f 3.0 && ./gradlew --no-daemon compileJava compileTestJava",
     "optional": false,
     "patch": "JavaHamcrest.patch"
   },
