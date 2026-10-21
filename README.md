@@ -64,6 +64,8 @@ The JDK project needs a JDK with `lib/src.zip`; otherwise set `JDK_SRC_DIR` to a
 
 ## Known limits
 
+* Joda-Time is not tested: its sources are Java 1.5, which a current ECJ no longer accepts.
+
 * Only the root `pom.xml` is switched to ECJ. A module that sets its own `compilerId` (or a profile-scoped compiler
   plugin) still compiles with javac; the run only checks that at least one module reported `Compiling with eclipse`.
 * Gradle projects (JavaHamcrest) are not checked for ECJ use.

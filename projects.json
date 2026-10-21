@@ -448,5 +448,54 @@
     "ref": "ab7ce2fdf38aa53d63e8d0fbaab65e8facab54fe",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
+  },
+  {
+    "name": "HttpcomponentsClient",
+    "url": "https://github.com/apache/httpcomponents-client.git",
+    "ref": "acb0cd33fd77d1f4164c4848ae607000b557ac8c",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "optional": false
+  },
+  {
+    "name": "HttpcomponentsCore",
+    "url": "https://github.com/apache/httpcomponents-core.git",
+    "ref": "fbf8ebde6adb9f430a9b2985dadffb5cbd49aa32",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "optional": false
+  },
+  {
+    "name": "Zookeeper",
+    "url": "https://github.com/apache/zookeeper.git",
+    "ref": "777b3723f56456524a052b79f73649e99da1f1aa",
+    "cmd": "mvn -B -fae install -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "optional": false
+  },
+  {
+    "name": "Tika",
+    "url": "https://github.com/apache/tika.git",
+    "ref": "3a9f5e4da7181cd37c8fde05b9aa06bd257107fa",
+    "cmd": "mvn -B -fae install -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "optional": false
+  },
+  {
+    "name": "VelocityEngine",
+    "url": "https://github.com/apache/velocity-engine.git",
+    "ref": "6f6290c32d44a403b5afe58af268cb43db69d951",
+    "cmd": "mvn -B -fae install -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "optional": false
+  },
+  {
+    "name": "HibernateValidator",
+    "url": "https://github.com/hibernate/hibernate-validator.git",
+    "ref": "7f81240513bbb522327d8b477b6a4b5e78d4d8a1",
+    "cmd": "mvn -B -fae install -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "optional": false
+  },
+  {
+    "name": "Checkstyle",
+    "url": "https://github.com/checkstyle/checkstyle.git",
+    "ref": "bfb514b0b6ec40040cb93e618fd9b453e580e168",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "optional": false
   }
 ]
