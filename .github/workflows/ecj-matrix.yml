@@ -81,6 +81,11 @@ jobs:
         run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
       - uses: actions/download-artifact@v5
         with: { name: ecj-HEAD.jar }
+      - name: Use Maven 3.9.9
+        # newer Maven versions break Tycho based projects (Eclipse Collections: "No implementation for MavenTargetLocationFactory")
+        run: |
+          curl -fsSL https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz | tar xz -C "$HOME"
+          echo "$HOME/apache-maven-3.9.9/bin" >> "$GITHUB_PATH"
       - name: Install the head ECJ in the local Maven repository
         run: mvn -B -q install:install-file -Dfile=ecj-HEAD.jar -DgroupId=org.eclipse.jdt -DartifactId=ecj -Dversion=HEAD-SNAPSHOT -Dpackaging=jar
       - name: Build with the baseline ECJ
