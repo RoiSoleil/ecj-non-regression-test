@@ -86,7 +86,7 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | Pmd | ❌ 608 compile errors | ❌ 608 compile errors |
 | Junit4 | ✅ compiles | ✅ compiles |
 | Slf4j | ✅ compiles | ✅ compiles |
-| Logback | ❌ 469 compile errors | ❌ 469 compile errors |
+| Logback | ✅ compiles | ✅ compiles |
 | H2database | ✅ compiles | ✅ compiles |
 | Dropwizard | ✅ compiles | ✅ compiles |
 | Jdbi | ❌ 1 compile errors | ❌ 1 compile errors |
