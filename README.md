@@ -29,8 +29,6 @@ configuration problem is fixed in `projects.json` or in the scripts, a real ECJ 
 Regenerate the table with `python3 scripts/readme-status.py results baseline head` after a run.
 
 <!-- status:start -->
-_Status of the run of 2026-10-21 (branch v3). A few `build failed` cells without compile error come from network failures and may differ from one run to the next._
-
 | Project | Released ECJ | Head ECJ |
 |---|---|---|
 | JDK | ❌ 5 compile errors | ❌ 5 compile errors |
@@ -77,7 +75,7 @@ _Status of the run of 2026-10-21 (branch v3). A few `build failed` cells without
 | CommonsLogging | ✅ compiles | ✅ compiles |
 | CommonsEmail | ✅ compiles | ✅ compiles |
 | CommonsDigester | ✅ compiles | ✅ compiles |
-| LoggingLog4j2 | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| LoggingLog4j2 | ✅ compiles | ✅ compiles |
 | Shiro | ❌ 54 compile errors | ❌ 54 compile errors |
 | Curator | ❌ 3 compile errors | ❌ 3 compile errors |
 | JacksonCore | ❌ 47 compile errors | ❌ 47 compile errors |
@@ -87,18 +85,18 @@ _Status of the run of 2026-10-21 (branch v3). A few `build failed` cells without
 | Javaparser | ❌ 1 compile errors | ❌ 1 compile errors |
 | Pmd | ❌ 608 compile errors | ❌ 608 compile errors |
 | Junit4 | ✅ compiles | ✅ compiles |
-| Slf4j | ❌ 419 compile errors | ❌ 419 compile errors |
-| Logback | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
-| H2database | ⚠️ build failed (no compile error) | ✅ compiles |
+| Slf4j | ✅ compiles | ✅ compiles |
+| Logback | ❌ 469 compile errors | ❌ 469 compile errors |
+| H2database | ✅ compiles | ✅ compiles |
 | Dropwizard | ✅ compiles | ✅ compiles |
-| Jdbi | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
+| Jdbi | ❌ 1 compile errors | ❌ 1 compile errors |
 | RestAssured | ✅ compiles | ✅ compiles |
-| Pdfbox | ⚠️ build failed (no compile error) | ✅ compiles |
+| Pdfbox | ✅ compiles | ✅ compiles |
 | Activemq | ❌ 1 compile errors | ❌ 1 compile errors |
 | Avro | ✅ compiles | ✅ compiles |
 | MavenSurefire | ❌ 57 compile errors | ❌ 57 compile errors |
-| HttpcomponentsClient | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
-| HttpcomponentsCore | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
+| HttpcomponentsClient | ✅ compiles | ✅ compiles |
+| HttpcomponentsCore | ✅ compiles | ✅ compiles |
 | Zookeeper | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
 | Tika | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
 | VelocityEngine | ✅ compiles | ✅ compiles |
