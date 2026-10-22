@@ -46,7 +46,7 @@ export ECJ_JAR ROOT
 [ -z "$OVERRIDE_ARGS" ] || export ECJ_OVERRIDE_COMPILER_ARGS=1
 [ -z "$NO_MODULE_PATH" ] || export ECJ_NO_MODULE_PATH=1
 # projects that ask for a toolchain (HttpComponents wants a JDK 8) get the running JDK
-if [ -n "${JAVA_HOME:-}" ]; then
+if [ -n "${CI:-}" ] && [ -n "${JAVA_HOME:-}" ]; then # only on CI: this file also tells Tycho which JDK to use on a developer machine
   mkdir -p "$HOME/.m2"
   {
     echo '<toolchains>'
