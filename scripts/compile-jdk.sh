@@ -18,7 +18,7 @@ for m in $MODULES; do
   echo "== $m ($(wc -l < "files-$m.txt") files)"
   [ -s "files-$m.txt" ] || { echo "no sources found for $m" >&2; exit 1; }
   # -proceedOnError keeps going after the first error; the default limit of 100 problems per unit would hide errors
-  java -Xmx4g -cp "$ECJ_JAR" org.eclipse.jdt.internal.compiler.batch.Main "-$RELEASE" -nowarn -maxProblems 1000000 \
+  java -Xmx4g ${JFR_OPTS:-} -cp "$ECJ_JAR" org.eclipse.jdt.internal.compiler.batch.Main "-$RELEASE" -nowarn -maxProblems 1000000 \
     -proceedOnError --patch-module "$m=src/$m" -d none "@files-$m.txt" || status=1
 done
 exit $status

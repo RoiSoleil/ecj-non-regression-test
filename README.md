@@ -143,6 +143,12 @@ successfully tested commit gets a `tested/<sha>` tag, a failing run is retried t
   Default: `master`.
 * `baseline`: released ECJ version to compare with (default: the latest release on Maven Central).
 * `projects`: comma separated names, for example `Quarkus,Camel`. Default: all projects.
+* `jfr`: `true` (default) records a [Java Flight Recording](https://dev.java/learn/jvm/jfr/) of each build with the head ECJ.
+
+Each head job uploads its recording as the artifact `jfr-<project>` (kept 14 days, at most 100 MB per project,
+default settings, about 1% overhead). Download it from the run page and open it with JDK Mission Control or
+`jfr print --events jdk.ExecutionSample <file>.jfr`. ECJ runs inside the Maven JVM (and inside the `java` process of the
+JDK project); the Gradle project (JavaHamcrest) is not recorded.
 
 The summary of each job shows the table of the run and, for each project, the new and the vanished errors.
 

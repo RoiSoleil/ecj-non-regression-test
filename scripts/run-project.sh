@@ -75,6 +75,13 @@ fi
 
 # a command that prepares the project (Logback needs the SNAPSHOT of SLF4J it is developed with)
 if [ -n "$PRE" ]; then (eval "$PRE") >>"$LOG" 2>&1 || echo "pre command failed" >>"$LOG"; fi
+# Java Flight Recorder: ECJ runs inside the Maven JVM (and inside the java process of the JDK project).
+# JFR_FILE is the recording to write; the default settings cost about 1% and the size is capped.
+if [ -n "${JFR_FILE:-}" ]; then
+  mkdir -p "$(dirname "$JFR_FILE")"
+  export JFR_OPTS="-XX:StartFlightRecording=filename=$JFR_FILE,settings=default,dumponexit=true,maxsize=${JFR_MAX_SIZE:-100M}"
+  export MAVEN_OPTS="${MAVEN_OPTS:-} $JFR_OPTS"
+fi
 echo "== $NAME with ECJ $ECJ_VERSION ($LABEL): $CMD" | tee -a "$LOG"
 if (eval "$CMD") >>"$LOG" 2>&1; then
   echo "success" > "$ROOT/results/$NAME-$LABEL.status"
