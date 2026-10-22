@@ -55,6 +55,10 @@ def add_ecj(plugin):
         for old in configuration.findall(q('testExcludes')):
             configuration.remove(old)
         text(ET.SubElement(configuration, q('testExcludes')), 'testExclude', '**/module-info.java')
+        # the main module-info.java too: its dependencies are on the class path, so the module cannot read them
+        for old in configuration.findall(q('excludes')):
+            configuration.remove(old)
+        text(ET.SubElement(configuration, q('excludes')), 'exclude', '**/module-info.java')
     if os.environ.get('ECJ_OVERRIDE_COMPILER_ARGS'):
         # javac only arguments that a remote parent pom sets in the executions (Log4j: ErrorProne options): replace them
         executions = child(plugin, 'executions')
