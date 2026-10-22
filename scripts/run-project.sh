@@ -16,6 +16,8 @@ REF="$(field ref)"
 CMD="$(field cmd)"
 SUBDIR="$(field dir)"
 PATCH="$(field patch)"
+OVERRIDE_ARGS="$(field override_compiler_args)"
+NO_MODULE_PATH="$(field no_module_path)"
 
 mkdir -p "$ROOT/logs" "$ROOT/results" "$ROOT/work"
 LOG="$ROOT/logs/$NAME-$LABEL.log"
@@ -41,6 +43,8 @@ fi
 ECJ_JAR="$HOME/.m2/repository/org/eclipse/jdt/ecj/$ECJ_VERSION/ecj-$ECJ_VERSION.jar"
 [ -f "$ECJ_JAR" ] || mvn -B -q dependency:get -Dartifact="org.eclipse.jdt:ecj:$ECJ_VERSION" >>"$LOG" 2>&1
 export ECJ_JAR ROOT
+[ -z "$OVERRIDE_ARGS" ] || export ECJ_OVERRIDE_COMPILER_ARGS=1
+[ -z "$NO_MODULE_PATH" ] || export ECJ_NO_MODULE_PATH=1
 # projects that ask for a toolchain (HttpComponents wants a JDK 8) get the running JDK
 if [ -n "${JAVA_HOME:-}" ]; then
   mkdir -p "$HOME/.m2"

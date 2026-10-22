@@ -313,7 +313,8 @@
     "url": "https://github.com/apache/logging-log4j2.git",
     "ref": "a38a2f5d0c9f25031f206ba08442a3c545e00eb6",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "override_compiler_args": true
   },
   {
     "name": "Shiro",
@@ -383,14 +384,16 @@
     "url": "https://github.com/qos-ch/slf4j.git",
     "ref": "69d28be9fba7a9c0072dfbac8cbee8e40bb965d5",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "no_module_path": true
   },
   {
     "name": "Logback",
     "url": "https://github.com/qos-ch/logback.git",
     "ref": "c74b5f592959c2df6740b3a3cf1c951f561d02b3",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "no_module_path": true
   },
   {
     "name": "H2database",

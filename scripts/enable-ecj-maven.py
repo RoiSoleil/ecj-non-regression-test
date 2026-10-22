@@ -3,6 +3,7 @@
 
 usage: enable-ecj-maven.py <pom.xml> <ecj version>
 """
+import os
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -45,6 +46,23 @@ def add_ecj(plugin):
     for old in configuration.findall(q('compilerId')):
         configuration.remove(old)
     text(configuration, 'compilerId', 'eclipse')
+    if os.environ.get('ECJ_NO_MODULE_PATH'):
+        # plexus-compiler-eclipse does not patch the tests into the module of the main code
+        for old in configuration.findall(q('useModulePath')):
+            configuration.remove(old)
+        text(configuration, 'useModulePath', 'false')
+    if os.environ.get('ECJ_OVERRIDE_COMPILER_ARGS'):
+        # javac only arguments that a remote parent pom sets in the executions (Log4j: ErrorProne options): replace them
+        executions = child(plugin, 'executions')
+        for execution_id in ('default-compile', 'default-testCompile'):
+            execution = next((e for e in executions.findall(q('execution')) if e.findtext(q('id')) == execution_id), None)
+            if execution is None:
+                execution = ET.SubElement(executions, q('execution'))
+                text(execution, 'id', execution_id)
+            execution_configuration = child(execution, 'configuration')
+            for old in execution_configuration.findall(q('compilerArgs')):
+                execution_configuration.remove(old)
+            ET.SubElement(execution_configuration, q('compilerArgs'), {'combine.self': 'override'})
     # a recent compiler plugin: old ones fail with plexus-compiler-eclipse (API incompatibility, or version 4.0.0-beta resolved)
     version = plugin.find(q('version'))
     if version is None:
