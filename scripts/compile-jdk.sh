@@ -14,7 +14,7 @@ fi
 RELEASE="$(java -XshowSettings:properties -version 2>&1 | sed -n 's/.*java.specification.version = //p')"
 status=0
 for m in $MODULES; do
-  find "src/$m" -name '*.java' ! -name module-info.java > "files-$m.txt"
+  find "src/$m" -name '*.java' ! -name module-info.java ! -path '*/snippet-files/*' > "files-$m.txt"
   echo "== $m ($(wc -l < "files-$m.txt") files)"
   [ -s "files-$m.txt" ] || { echo "no sources found for $m" >&2; exit 1; }
   # -proceedOnError keeps going after the first error; the default limit of 100 problems per unit would hide errors
