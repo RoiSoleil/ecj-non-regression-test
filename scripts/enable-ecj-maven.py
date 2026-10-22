@@ -51,6 +51,10 @@ def add_ecj(plugin):
         for old in configuration.findall(q('useModulePath')):
             configuration.remove(old)
         text(configuration, 'useModulePath', 'false')
+        # test sources with their own module-info.java (Logback) are modules of their own: compile them as plain classes
+        for old in configuration.findall(q('testExcludes')):
+            configuration.remove(old)
+        text(ET.SubElement(configuration, q('testExcludes')), 'testExclude', '**/module-info.java')
     if os.environ.get('ECJ_OVERRIDE_COMPILER_ARGS'):
         # javac only arguments that a remote parent pom sets in the executions (Log4j: ErrorProne options): replace them
         executions = child(plugin, 'executions')
