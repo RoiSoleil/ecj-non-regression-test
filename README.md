@@ -29,9 +29,11 @@ configuration problem is fixed in `projects.json` or in the scripts, a real ECJ 
 Regenerate the table with `python3 scripts/readme-status.py results baseline head` after a run.
 
 <!-- status:start -->
+_Status of the run of 2026-10-21 (branch v3). A few `build failed` cells without compile error come from network failures and may differ from one run to the next._
+
 | Project | Released ECJ | Head ECJ |
 |---|---|---|
-| JDK | ❌ 1 compile errors | ❌ 1 compile errors |
+| JDK | ❌ 5 compile errors | ❌ 5 compile errors |
 | ApacheCommonsIO | ✅ compiles | ✅ compiles |
 | ApacheCommonsCollections | ✅ compiles | ✅ compiles |
 | ApacheCommonsLang | ✅ compiles | ✅ compiles |
@@ -39,69 +41,69 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | xwiki | ✅ compiles | ✅ compiles |
 | Eclipse-Collections | ❌ 1 compile errors | ❌ 1 compile errors |
 | JavaHamcrest | ✅ compiles | ✅ compiles |
-| Quarkus | ⚠️ not run | ⚠️ not run |
-| Camel | ⚠️ not run | ⚠️ not run |
-| WildFly | ⚠️ not run | ⚠️ not run |
-| Guava | ⚠️ not run | ⚠️ not run |
-| Gson | ❌ 30 compile errors | ⚠️ not run |
-| Guice | ⚠️ not run | ⚠️ not run |
-| AssertJ | ⚠️ not run | ⚠️ not run |
-| ApacheCommonsMath | ⚠️ not run | ⚠️ not run |
-| ApacheCommonsCompress | ⚠️ not run | ⚠️ not run |
-| ApacheCommonsCodec | ⚠️ not run | ⚠️ not run |
-| Netty | ⚠️ not run | ⚠️ not run |
-| ApacheMaven | ⚠️ not run | ⚠️ not run |
-| Jsoup | ⚠️ not run | ⚠️ not run |
-| Jetty | ⚠️ not run | ⚠️ not run |
-| CommonsBeanutils | ⚠️ not run | ⚠️ not run |
-| CommonsCli | ⚠️ not run | ⚠️ not run |
-| CommonsCsv | ⚠️ not run | ⚠️ not run |
-| CommonsText | ⚠️ not run | ⚠️ not run |
-| CommonsNet | ⚠️ not run | ⚠️ not run |
-| CommonsPool | ⚠️ not run | ⚠️ not run |
-| CommonsDbcp | ⚠️ not run | ⚠️ not run |
-| CommonsValidator | ⚠️ not run | ⚠️ not run |
-| CommonsJexl | ⚠️ not run | ⚠️ not run |
-| CommonsConfiguration | ⚠️ not run | ⚠️ not run |
-| CommonsFileupload | ⚠️ not run | ⚠️ not run |
-| CommonsVfs | ⚠️ not run | ⚠️ not run |
-| CommonsBcel | ⚠️ not run | ⚠️ not run |
-| CommonsExec | ⚠️ not run | ⚠️ not run |
-| CommonsImaging | ⚠️ not run | ⚠️ not run |
-| CommonsRng | ⚠️ not run | ⚠️ not run |
-| CommonsNumbers | ⚠️ not run | ⚠️ not run |
-| CommonsStatistics | ⚠️ not run | ⚠️ not run |
-| CommonsGeometry | ⚠️ not run | ⚠️ not run |
-| CommonsLogging | ⚠️ not run | ⚠️ not run |
-| CommonsEmail | ⚠️ not run | ⚠️ not run |
-| CommonsDigester | ⚠️ not run | ⚠️ not run |
-| LoggingLog4j2 | ⚠️ not run | ⚠️ not run |
-| Shiro | ⚠️ not run | ⚠️ not run |
-| Curator | ⚠️ not run | ⚠️ not run |
-| JacksonCore | ⚠️ not run | ⚠️ not run |
-| JacksonAnnotations | ⚠️ not run | ⚠️ not run |
-| Mybatis3 | ⚠️ not run | ⚠️ not run |
-| JSqlParser | ⚠️ not run | ⚠️ not run |
-| Javaparser | ⚠️ not run | ⚠️ not run |
-| Pmd | ⚠️ not run | ⚠️ not run |
-| Junit4 | ⚠️ not run | ⚠️ not run |
-| Slf4j | ❌ 419 compile errors | ⚠️ not run |
-| Logback | ⚠️ not run | ⚠️ not run |
-| H2database | ⚠️ not run | ⚠️ not run |
-| Dropwizard | ⚠️ not run | ⚠️ not run |
-| Jdbi | ⚠️ not run | ⚠️ not run |
-| RestAssured | ⚠️ not run | ⚠️ not run |
-| Pdfbox | ⚠️ not run | ⚠️ not run |
-| Activemq | ⚠️ not run | ⚠️ not run |
-| Avro | ⚠️ not run | ⚠️ not run |
-| MavenSurefire | ⚠️ not run | ⚠️ not run |
-| HttpcomponentsClient | ⚠️ not run | ⚠️ not run |
-| HttpcomponentsCore | ✅ compiles | ⚠️ not run |
-| Zookeeper | ⚠️ not run | ⚠️ not run |
-| Tika | ⚠️ not run | ⚠️ not run |
-| VelocityEngine | ⚠️ not run | ⚠️ not run |
-| HibernateValidator | ⚠️ not run | ⚠️ not run |
-| Checkstyle | ✅ compiles | ⚠️ not run |
+| Quarkus | ❌ 1360 compile errors | ❌ 1360 compile errors |
+| Camel | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| WildFly | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| Guava | ❌ 11 compile errors | ❌ 11 compile errors |
+| Gson | ❌ 30 compile errors | ❌ 30 compile errors |
+| Guice | ❌ 1 compile errors | ❌ 1 compile errors |
+| AssertJ | ❌ 53654 compile errors | ❌ 53654 compile errors |
+| ApacheCommonsMath | ✅ compiles | ✅ compiles |
+| ApacheCommonsCompress | ✅ compiles | ✅ compiles |
+| ApacheCommonsCodec | ✅ compiles | ✅ compiles |
+| Netty | ❌ 65 compile errors | ❌ 65 compile errors |
+| ApacheMaven | ❌ 245 compile errors | ❌ 245 compile errors |
+| Jsoup | ❌ 53 compile errors | ❌ 53 compile errors |
+| Jetty | ❌ 153 compile errors | ❌ 153 compile errors |
+| CommonsBeanutils | ✅ compiles | ✅ compiles |
+| CommonsCli | ✅ compiles | ✅ compiles |
+| CommonsCsv | ✅ compiles | ✅ compiles |
+| CommonsText | ✅ compiles | ✅ compiles |
+| CommonsNet | ✅ compiles | ✅ compiles |
+| CommonsPool | ✅ compiles | ✅ compiles |
+| CommonsDbcp | ✅ compiles | ✅ compiles |
+| CommonsValidator | ✅ compiles | ✅ compiles |
+| CommonsJexl | ✅ compiles | ✅ compiles |
+| CommonsConfiguration | ✅ compiles | ✅ compiles |
+| CommonsFileupload | ✅ compiles | ✅ compiles |
+| CommonsVfs | ✅ compiles | ✅ compiles |
+| CommonsBcel | ✅ compiles | ✅ compiles |
+| CommonsExec | ✅ compiles | ✅ compiles |
+| CommonsImaging | ✅ compiles | ✅ compiles |
+| CommonsRng | ✅ compiles | ✅ compiles |
+| CommonsNumbers | ✅ compiles | ✅ compiles |
+| CommonsStatistics | ✅ compiles | ✅ compiles |
+| CommonsGeometry | ✅ compiles | ✅ compiles |
+| CommonsLogging | ✅ compiles | ✅ compiles |
+| CommonsEmail | ✅ compiles | ✅ compiles |
+| CommonsDigester | ✅ compiles | ✅ compiles |
+| LoggingLog4j2 | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| Shiro | ❌ 54 compile errors | ❌ 54 compile errors |
+| Curator | ❌ 3 compile errors | ❌ 3 compile errors |
+| JacksonCore | ❌ 47 compile errors | ❌ 47 compile errors |
+| JacksonAnnotations | ✅ compiles | ✅ compiles |
+| Mybatis3 | ✅ compiles | ✅ compiles |
+| JSqlParser | ❌ 15938 compile errors | ❌ 15938 compile errors |
+| Javaparser | ❌ 1 compile errors | ❌ 1 compile errors |
+| Pmd | ❌ 608 compile errors | ❌ 608 compile errors |
+| Junit4 | ✅ compiles | ✅ compiles |
+| Slf4j | ❌ 419 compile errors | ❌ 419 compile errors |
+| Logback | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
+| H2database | ⚠️ build failed (no compile error) | ✅ compiles |
+| Dropwizard | ✅ compiles | ✅ compiles |
+| Jdbi | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
+| RestAssured | ✅ compiles | ✅ compiles |
+| Pdfbox | ⚠️ build failed (no compile error) | ✅ compiles |
+| Activemq | ❌ 1 compile errors | ❌ 1 compile errors |
+| Avro | ✅ compiles | ✅ compiles |
+| MavenSurefire | ❌ 57 compile errors | ❌ 57 compile errors |
+| HttpcomponentsClient | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
+| HttpcomponentsCore | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
+| Zookeeper | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
+| Tika | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| VelocityEngine | ✅ compiles | ✅ compiles |
+| HibernateValidator | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| Checkstyle | ✅ compiles | ✅ compiles |
 <!-- status:end -->
 
 ## How it works
