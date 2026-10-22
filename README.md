@@ -104,6 +104,19 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | Checkstyle | ✅ compiles | ✅ compiles |
 <!-- status:end -->
 
+### Analysis of the failing projects
+
+| Project | Cause | ECJ issue |
+|---|---|---|
+| JDK | generics inference bugs found with this project | [#5583](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5583) to [#5586](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5586) |
+| Javaparser, Jdbi | a resource directory named like a test class: "The type X collides with a package" | [#4413](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/4413) |
+| ActiveMQ | `Outer.this.field` read in a lambda: bogus "blank final field may not have been initialized" | [#5593](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5593) |
+| Curator | anonymous class overriding with the erasure of a type argument: name clash | [#5594](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5594) |
+| Guava | a private nested class used by a static field before its declaration is not resolved; no small reproducer yet | to be reported |
+| Guice | method not applicable with captured `? extends TypeLiteral<?>` arguments; to be reduced | to be reported |
+| Eclipse Collections | `$deserializeLambda$` exceeds 64 KB | to be reported |
+| Logback, AssertJ, Jackson core, Quarkus, Camel, WildFly, Tika, ZooKeeper, Hibernate Validator, and the other projects with errors | not analysed yet (missing generated sources, module path, annotation processing, or ECJ bugs) | |
+
 ## How it works
 
 1. `scripts/build-ecj.sh` compiles the ECJ batch compiler of an `eclipse.jdt.core` checkout into a jar (a few
