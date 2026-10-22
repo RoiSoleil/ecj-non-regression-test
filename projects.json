@@ -103,8 +103,7 @@
     "url": "https://github.com/assertj/assertj.git",
     "ref": "055eb8aaa2dd0c9eede5aeeba9273202a6834030",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false,
-    "no_module_path": true
+    "optional": false
   },
   {
     "name": "ApacheCommonsMath",
@@ -336,8 +335,7 @@
     "url": "https://github.com/FasterXML/jackson-core.git",
     "ref": "8155a6fb0832523909ea8fd8dd617334eb5d617a",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false,
-    "no_module_path": true
+    "optional": false
   },
   {
     "name": "JacksonAnnotations",

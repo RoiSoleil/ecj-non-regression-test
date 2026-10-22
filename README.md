@@ -31,7 +31,7 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 <!-- status:start -->
 | Project | Released ECJ | Head ECJ |
 |---|---|---|
-| JDK | ❌ 5 compile errors | ❌ 5 compile errors |
+| JDK | ❌ 2 compile errors | ❌ 2 compile errors |
 | ApacheCommonsIO | ✅ compiles | ✅ compiles |
 | ApacheCommonsCollections | ✅ compiles | ✅ compiles |
 | ApacheCommonsLang | ✅ compiles | ✅ compiles |
