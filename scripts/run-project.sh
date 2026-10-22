@@ -18,6 +18,7 @@ SUBDIR="$(field dir)"
 PATCH="$(field patch)"
 OVERRIDE_ARGS="$(field override_compiler_args)"
 NO_MODULE_PATH="$(field no_module_path)"
+PRE="$(field pre)"
 
 mkdir -p "$ROOT/logs" "$ROOT/results" "$ROOT/work"
 LOG="$ROOT/logs/$NAME-$LABEL.log"
@@ -72,6 +73,8 @@ elif [ -f pom.xml ]; then
   done
 fi
 
+# a command that prepares the project (Logback needs the SNAPSHOT of SLF4J it is developed with)
+if [ -n "$PRE" ]; then (eval "$PRE") >>"$LOG" 2>&1 || echo "pre command failed" >>"$LOG"; fi
 echo "== $NAME with ECJ $ECJ_VERSION ($LABEL): $CMD" | tee -a "$LOG"
 if (eval "$CMD") >>"$LOG" 2>&1; then
   echo "success" > "$ROOT/results/$NAME-$LABEL.status"

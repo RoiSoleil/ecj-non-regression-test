@@ -393,7 +393,8 @@
     "ref": "c74b5f592959c2df6740b3a3cf1c951f561d02b3",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false,
-    "no_module_path": true
+    "no_module_path": true,
+    "pre": "git clone -q https://github.com/qos-ch/slf4j.git ../slf4j-dep && git -C ../slf4j-dep checkout -q 69d28be9fba7a9c0072dfbac8cbee8e40bb965d5 && (cd ../slf4j-dep && mvn -B -q install -DskipTests -Dmaven.javadoc.skip=true -Dcheckstyle.skip -Denforcer.skip)"
   },
   {
     "name": "H2database",
