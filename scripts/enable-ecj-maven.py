@@ -49,7 +49,7 @@ def add_ecj(plugin):
     version = plugin.find(q('version'))
     if version is None:
         text(plugin, 'version', COMPILER_PLUGIN)
-    elif version.text and not version.text.startswith('${') and tuple(int(x) for x in re.findall(r'\d+', version.text)[:3] + [0, 0, 0])[:3] < (3, 13, 0):
+    elif version.text and (version.text.startswith('${') or tuple(int(x) for x in re.findall(r'\d+', version.text)[:3] + [0, 0, 0])[:3] < (3, 13, 0)):
         version.text = COMPILER_PLUGIN
     for fail in configuration.findall(q('failOnWarning')):
         fail.text = 'false'
@@ -62,13 +62,14 @@ def add_ecj(plugin):
 def compiler_plugins(plugins):
     return [p for p in plugins.findall(q('plugin')) if p.findtext(q('artifactId')) == 'maven-compiler-plugin']
 
-managed = build.find(q('pluginManagement'))
-managed_plugins = managed.find(q('plugins')) if managed is not None else None
-declared = compiler_plugins(managed_plugins) if managed_plugins is not None else []
+# every maven-compiler-plugin of the pom: build, pluginManagement and profiles
+declared = [p for p in project.iter(q('plugin')) if p.findtext(q('artifactId')) == 'maven-compiler-plugin']
 plugins = child(build, 'plugins')
-declared += compiler_plugins(plugins)
 for plugin in declared:
     add_ecj(plugin)
+    # an execution (or a profile) that sets its own compiler would win over the plugin level setting
+    for compiler in plugin.iter(q('compilerId')):
+        compiler.text = 'eclipse'
 if not compiler_plugins(plugins):
     plugin = ET.SubElement(plugins, q('plugin'))
     text(plugin, 'groupId', 'org.apache.maven.plugins')

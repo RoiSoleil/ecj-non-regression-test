@@ -42,7 +42,7 @@ ECJ_JAR="$HOME/.m2/repository/org/eclipse/jdt/ecj/$ECJ_VERSION/ecj-$ECJ_VERSION.
 [ -f "$ECJ_JAR" ] || mvn -B -q dependency:get -Dartifact="org.eclipse.jdt:ecj:$ECJ_VERSION" >>"$LOG" 2>&1
 export ECJ_JAR ROOT
 # projects that ask for a toolchain (HttpComponents wants a JDK 8) get the running JDK
-if [ ! -f "$HOME/.m2/toolchains.xml" ] && [ -n "${JAVA_HOME:-}" ]; then
+if [ -n "${JAVA_HOME:-}" ]; then
   mkdir -p "$HOME/.m2"
   {
     echo '<toolchains>'
