@@ -106,16 +106,16 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 
 ### Analysis of the failing projects
 
-| Project | Cause | ECJ issue |
-|---|---|---|
-| JDK | generics inference bugs found with this project | [#5583](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5583) to [#5586](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5586) |
-| Javaparser, Jdbi | a resource directory named like a test class: "The type X collides with a package" | [#4413](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/4413) |
-| ActiveMQ | `Outer.this.field` read in a lambda: bogus "blank final field may not have been initialized" | [#5593](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5593) |
-| Curator | anonymous class overriding with the erasure of a type argument: name clash | [#5594](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5594) |
-| Guava | a private nested class used by a static field before its declaration is not resolved; no small reproducer yet | to be reported |
-| Guice | method not applicable with captured `? extends TypeLiteral<?>` arguments; to be reduced | to be reported |
-| Eclipse Collections | `$deserializeLambda$` exceeds 64 KB | to be reported |
-| Logback, AssertJ, Jackson core, Quarkus, Camel, WildFly, Tika, ZooKeeper, Hibernate Validator, and the other projects with errors | not analysed yet (missing generated sources, module path, annotation processing, or ECJ bugs) | |
+| Project | Cause | ECJ issue | Pull request |
+|---|---|---|---|
+| JDK | generics inference bugs found with this project | [#5583](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5583) to [#5586](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5586) | [#5590](https://github.com/eclipse-jdt/eclipse.jdt.core/pull/5590) (for [#5586](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5586)) |
+| Javaparser, Jdbi | a resource directory named like a test class: "The type X collides with a package" | [#4413](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/4413) |  |
+| ActiveMQ | `Outer.this.field` read in a lambda: bogus "blank final field may not have been initialized" | [#5593](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5593) |  |
+| Curator | anonymous class overriding with the erasure of a type argument: name clash | [#5594](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5594) |  |
+| Eclipse Collections | `$deserializeLambda$` exceeds 64 KB with fewer lambdas than javac | [#5595](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5595) | fix prepared, not published yet |
+| Guava | a private nested class is not resolved when a static import from a subclass and an enum annotation attribute are combined | [#5596](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5596) |  |
+| Guice | method with two generic parameters not applicable to capture variables bounded by a wildcard type | [#5597](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5597) |  |
+| Logback, AssertJ, Jackson core, Quarkus, Camel, WildFly, Tika, ZooKeeper, Hibernate Validator, and the other projects with errors | not analysed yet (missing generated sources, module path, annotation processing, or ECJ bugs) |  |  |
 
 ## How it works
 
