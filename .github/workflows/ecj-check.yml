@@ -28,6 +28,8 @@ jobs:
   run:
     needs: check
     if: needs.check.outputs.changed == 'true'
+    permissions:
+      contents: write   # the called workflow's compare job commits the README
     uses: ./.github/workflows/ecj-matrix.yml
     with:
       ecj_ref: ${{ needs.check.outputs.sha }}
