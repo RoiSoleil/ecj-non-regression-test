@@ -91,42 +91,89 @@ if [ -n "${JFR_FILE:-}" ]; then
   export JFR_OPTS="-XX:StartFlightRecording=filename=$JFR_FILE,settings=default,dumponexit=true,maxsize=${JFR_MAX_SIZE:-100M}"
   export MAVEN_OPTS="${MAVEN_OPTS:-} $JFR_OPTS"
 fi
-# The same maximum heap for every label and every project (the default is a quarter of the RAM, which differs between machines).
-# The JDK project sets its own -Xmx4g in compile-jdk.sh.
-export MAVEN_OPTS="${MAVEN_OPTS:-} ${HEAP_OPTS:--Xmx4g}"
-# GC log of every JVM of the build (the Maven JVM, or the java process of the JDK project): same flags for every label
-GC_DIR="$DIR/../$NAME-$LABEL-gc"
-rm -rf "$GC_DIR"; mkdir -p "$GC_DIR"
+# The same heap and collector for every label and every project: the defaults (a quarter of the RAM, SerialGC on a
+# runner with fewer than 2 CPUs) differ between machines. compile-jdk.sh uses the same HEAP_OPTS.
+export HEAP_OPTS="${HEAP_OPTS:--Xms4g -Xmx4g -XX:+UseG1GC}"
+export MAVEN_OPTS="${MAVEN_OPTS:-} $HEAP_OPTS"
+BASE_MAVEN_OPTS="$MAVEN_OPTS"
+# Maven (3.9 and later) reads these arguments from the environment: time stamps on every log line give the time spent
+# in the compiler plugin alone, and the measured builds run offline once a warm-up build has downloaded everything.
+BASE_MAVEN_ARGS="-Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss.SSS"
+RUNS="$DIR/../$NAME-$LABEL-runs"   # a directory per measured build (1, 2, ...): time, GC logs, Maven log, produced classes
+rm -rf "$RUNS"; mkdir -p "$RUNS"
 echo "== $NAME with ECJ $ECJ_VERSION ($LABEL): $CMD" | tee -a "$LOG"
-# Two builds: the first one downloads the dependencies and plugins (network time must not count), only the second is measured.
+
+clean_build() {
+  # drop the compiled classes so that the next build compiles everything again
+  find . -type d \( -path '*/target/classes' -o -path '*/target/test-classes' -o -path '*/build/classes' -o -path './out-java.*' -o -path '*/target/generated-sources/annotations' -o -path '*/target/generated-test-sources/test-annotations' \) -prune -exec rm -rf {} + 2>/dev/null
+}
+
 # Elapsed seconds, user and system CPU seconds and peak resident set size (KB) of the whole process tree.
-# A failed first build is not repeated (a failing project is not compared); its numbers are kept.
-TIME_FILE="$DIR/../$NAME-$LABEL.time"
-WARMED=0   # 1 when the measured build is the second one, after a warm-up build
-# the baseline run is only the reference of the compile errors: no warm-up build (the double cost of the long projects)
+# $1 = number of the run, $2 = 1 to run Maven offline. The result is the exit code of the build.
+measured_build() {
+  local rd="$RUNS/$1"
+  rm -rf "$rd"; mkdir -p "$rd"
+  export MAVEN_OPTS="$BASE_MAVEN_OPTS"
+  # gc: every pause; gc+cpu: the CPU time of the GC threads of every pause
+  export GC_OPTS="-Xlog:gc,gc+cpu:file=$rd/gc-%p.log:uptime:filecount=0"
+  export MAVEN_OPTS="$MAVEN_OPTS $GC_OPTS"
+  export MAVEN_ARGS="$BASE_MAVEN_ARGS"
+  [ "$2" != 1 ] || MAVEN_ARGS="$MAVEN_ARGS -o"
+  /usr/bin/time -f '%e %U %S %M' -o "$rd/time" bash -c "$CMD" >"$rd/run.log" 2>&1
+  local rc=$?
+  cat "$rd/run.log" >>"$LOG"
+  # the work done: number and size of the class files (ECJ does not print the number of source files it compiles)
+  find . \( -path '*/target/classes/*' -o -path '*/target/test-classes/*' -o -path '*/build/classes/*' -o -path './out-java.*' \) -name '*.class' -printf '%s\n' \
+    | awk '{n++; b+=$1} END{print n+0, b+0}' > "$rd/classes"
+  return $rc
+}
+
+# Two builds: the first one downloads the dependencies and plugins (network time must not count), then the measured ones.
+# The baseline run is only the reference of the compile errors: no warm-up build (the double cost of the long projects).
 [ "$LABEL" != baseline ] || WARMUP_BUILD="${WARMUP_BUILD:-0}"
 # a project whose reactor plugin is built by the build itself (Avro) cannot run twice after its classes were deleted
 [ -z "$NO_WARMUP" ] || WARMUP_BUILD=0
+WARMED=0   # 1 when the measured builds came after a warm-up build
+OFFLINE=0
+STATUS=0
+RUN_COUNT=1
 if [ "${WARMUP_BUILD:-1}" = 1 ]; then
   echo "== warm-up build (not measured)" >>"$LOG"
-  /usr/bin/time -f '%e %U %S %M' -o "$TIME_FILE" bash -c "$CMD" >>"$LOG" 2>&1
-  FIRST=$?
-  if [ "$FIRST" = 0 ]; then
-    WARMED=1
-    # drop the compiled classes so that the measured build compiles everything again
-    find . -type d \( -path '*/target/classes' -o -path '*/target/test-classes' -o -path '*/build/classes' -o -path './out-java.*' -o -path '*/target/generated-sources/annotations' -o -path '*/target/generated-test-sources/test-annotations' \) -prune -exec rm -rf {} + 2>/dev/null
-    echo "== measured build" >>"$LOG"
+  mkdir -p "$RUNS/1"
+  /usr/bin/time -f '%e %U %S %M' -o "$RUNS/1/time" bash -c "$CMD" >>"$LOG" 2>&1
+  STATUS=$?
+  if [ "$STATUS" = 0 ]; then
+    WARMED=1; OFFLINE=1
+    # a short build is measured several times (the median is reported), a long one once
+    WARM_SECONDS="$(awk '{print int($1)}' "$RUNS/1/time")"
+    if [ -n "${MEASURE_RUNS:-}" ]; then RUN_COUNT="$MEASURE_RUNS"
+    elif [ "$WARM_SECONDS" -lt "${SHORT_BUILD_SECONDS:-120}" ]; then RUN_COUNT=3; fi
+    rm -rf "$RUNS/1"
   fi
-else
-  FIRST=0
 fi
-if [ "$FIRST" = 0 ]; then
-  export GC_OPTS="-Xlog:gc:file=$GC_DIR/gc-%p.log:uptime:filecount=0"
-  export MAVEN_OPTS="${MAVEN_OPTS:-} $GC_OPTS"
-  /usr/bin/time -f '%e %U %S %M' -o "$TIME_FILE" bash -c "$CMD" >>"$LOG" 2>&1
-  FIRST=$?
+if [ "$STATUS" = 0 ]; then
+  for i in $(seq 1 "$RUN_COUNT"); do
+    [ "$WARMED" != 1 ] || clean_build   # without a warm-up build there is nothing to clean (and Avro needs its own classes)
+    echo "== measured build $i of $RUN_COUNT" >>"$LOG"
+    measured_build "$i" "$OFFLINE"
+    STATUS=$?
+    if [ "$STATUS" != 0 ] && [ "$OFFLINE" = 1 ] && grep -q "offline mode" "$RUNS/$i/run.log"; then
+      # something the warm-up build did not need: download it with an unmeasured online build, then measure again offline
+      echo "== offline build failed, online build to download, then measured build $i again" >>"$LOG"
+      clean_build
+      MAVEN_ARGS="$BASE_MAVEN_ARGS" bash -c "$CMD" >>"$LOG" 2>&1
+      clean_build
+      measured_build "$i" 1
+      STATUS=$?
+    fi
+    if [ "$STATUS" != 0 ]; then
+      # the numbers of a failed build are not mixed with those of the good ones
+      [ "$i" = 1 ] || rm -rf "$RUNS/$i"
+      break
+    fi
+  done
 fi
-if [ "$FIRST" = 0 ]; then
+if [ "$STATUS" = 0 ]; then
   echo "success" > "$ROOT/results/$NAME-$LABEL.status"
 else
   echo "build failed" > "$ROOT/results/$NAME-$LABEL.status"
@@ -140,10 +187,12 @@ fi
 # One normalized line per compile error: "<path relative to the project>:<line> <message>".
 # Maven prints "[ERROR] /path/File.java:[12,5] message", ECJ itself prints "ERROR in /path/File.java (at line 12)".
 {
-  sed -n -E "s#^([0-9:]+ )?\[ERROR\] $DIR/?([^:]*\.java):\[([0-9]+),[0-9]+\] (.*)#\2:\3 \4#p" "$LOG"
+  sed -n -E "s#^([0-9:.]+ )?\[ERROR\] $DIR/?([^:]*\.java):\[([0-9]+),[0-9]+\] (.*)#\2:\3 \4#p" "$LOG"
   sed -n -E "s#^$DIR/?([^:]*\.java):([0-9]+): error: (.*)#\1:\2 \3#p" "$LOG"
   awk -v d="$DIR/" '/^[0-9]+\. ERROR in /{sub(d,""); f=$4; l=$7; sub(/\)/,"",l); getline; getline; getline; print f ":" l " " $0}' "$LOG"
 } | sort -u > "$ROOT/results/$NAME-$LABEL.errors"
-python3 "$ROOT/scripts/metrics.py" "$DIR/../$NAME-$LABEL.time" "$GC_DIR" "$WARMED" > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
-rm -rf "$GC_DIR" "$DIR/../$NAME-$LABEL.time"
+# a failed warm-up build leaves no run directory: its time is the only measure
+[ -n "$(ls -A "$RUNS")" ] || { mkdir -p "$RUNS/1"; echo "0 0 0 0" > "$RUNS/1/time"; }
+python3 "$ROOT/scripts/metrics.py" "$WARMED" "$OFFLINE" "$RUNS"/* > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
+rm -rf "$RUNS"
 echo "$(wc -l < "$ROOT/results/$NAME-$LABEL.errors") compile errors, status $(cat "$ROOT/results/$NAME-$LABEL.status")"

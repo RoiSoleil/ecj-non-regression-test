@@ -22,15 +22,19 @@ Update the pins in a pull request.
 
 ## Performance: javac against ECJ
 
-Every project is also built untouched with the JDK's `javac` (label `javac`, no ECJ, no patch). Each build runs twice:
-the first one downloads the dependencies and is not measured, then the compiled classes are deleted and the second one
-is measured (wall and CPU time, peak memory, garbage collections from `-Xlog:gc`, see `scripts/metrics.py`).
+Every project is also built untouched with the JDK's `javac` (label `javac`, no ECJ, no patch). The javac and head runs
+build each project twice: the first build downloads the dependencies and is not measured. Then the compiled classes are
+deleted and the project is built again offline (`mvn -o`) with `-Xms4g -Xmx4g -XX:+UseG1GC`: three times when the first
+build took under 2 minutes (the median is reported, the minimum and maximum are kept), once otherwise.
+The baseline run has no warm-up build (it only gives the reference compile errors).
+
+Metrics (`scripts/metrics.py`): wall and CPU time, compile time (the time spent in the compiler plugin, from the time
+stamps of the Maven log), peak memory, garbage collections (`-Xlog:gc,gc+cpu`: pauses, CPU time of the GC threads,
+allocated memory) and the class files produced (the number says whether both compilers did the same work).
 `python3 scripts/perf-compare.py results javac head` prints, for every project that builds with both compilers, the
-figures of javac / ECJ and the fastest one (a difference under 5 % is a tie); with `--html report.html` it also writes a
-standalone report with a chart (the workflow uploads it as the `performance-report` artifact). Failing builds are not compared.
-Every Maven build gets `-Xmx4g` (`HEAP_OPTS` overrides it), so the figures do not depend on the RAM of the runner.
-The baseline run has no warm-up build (it is not measured). The head run also records a Java Flight Recording (about 1 % overhead).
-The table is also written in the summary of each workflow run. Shared CI runners are noisy: read it as a trend.
+figures and the fastest compiler (compile time when measured, a difference under 5 % is a tie); with `--html report.html`
+it also writes a standalone report with a chart (the workflow uploads it as the `performance-report` artifact).
+The Java Flight Recording (head run, about 1 % overhead) keeps the last measured build. Allocated memory is approximate (heap occupancy between collections). Failing builds are not compared. Shared CI runners are noisy: read the table as a trend.
 
 ## Status
 
