@@ -75,6 +75,14 @@ for row in rows:
 geo = {k: math.exp(sum(math.log(max(row['r'][k], 1e-6)) for row in rows) / len(rows)) for k, *_ in METRICS} if rows else {}
 
 # ---- Markdown (GitHub step summary) ----
+def warm(row):
+    """'yes' when both measured builds came after a warm-up build, 'no' when none did, else which one did."""
+    if 'warmup' not in row['j'] or 'warmup' not in row['e']:
+        return 'unknown'   # results written before the field existed
+    j, e = row['j']['warmup'], row['e']['warmup']
+    return 'yes' if j and e else 'no' if not j and not e else 'javac only' if j else 'ECJ only'
+
+
 ICON = {'javac': '🟦 javac', 'ECJ': '🟧 ECJ', 'tie': '⚪ tie'}
 print(f'## Performance: javac against ECJ `{ecj}`\n')
 if rows:
@@ -83,11 +91,11 @@ if rows:
     print('Overall (geometric mean, ECJ against javac): ' + ' · '.join(
         f'{title.lower()} {pct(geo[k])}' for k, title, *_ in METRICS) + '\n')
     print('A negative figure means ECJ needs less than javac (time, memory, GC), so lower is better for ECJ.\n')
-    print('| Project | Fastest | javac | ECJ | Wall time | CPU time | Memory | GC pauses |')
-    print('|---|---|--:|--:|--:|--:|--:|--:|')
+    print('| Project | Fastest | Warm-up | javac | ECJ | Wall time | CPU time | Memory | GC pauses |')
+    print('|---|---|---|--:|--:|--:|--:|--:|--:|')
     for row in rows:
         r = row['r']
-        print(f"| {row['name']} | {ICON[row['winner']]} | {row['j']['wall_s']:.1f} s | {row['e']['wall_s']:.1f} s | "
+        print(f"| {row['name']} | {ICON[row['winner']]} | {warm(row)} | {row['j']['wall_s']:.1f} s | {row['e']['wall_s']:.1f} s | "
               + ' | '.join(f"{pct(r[k])} {ICON[verdict(row['j'], row['e'], k)][0] if verdict(row['j'], row['e'], k) != 'tie' else ''}"
                             for k, *_ in METRICS) + ' |')
 if skipped:
@@ -128,6 +136,7 @@ if html_path:
     body = ''.join(
         f'<tr><th scope="row">{html.escape(row["name"])}</th>'
         f'<td><span class="chip {row["winner"]}">{row["winner"]}</span></td>'
+        f'<td>{warm(row)}</td>'
         + ''.join(cell(row, k, d, u) for k, _, u, d in METRICS) + '</tr>' for row in rows)
     head_cells = ''.join(f'<th>{t}</th>' for _, t, *_ in METRICS)
     overall = ''.join(f'<div class="stat"><b>{pct(geo[k])}</b><span>{t.lower()}</span></div>' for k, t, *_ in METRICS) if rows else ''
@@ -190,8 +199,9 @@ tbody th {{ font-weight:600; }}
 <h2>Overall, ECJ compared with javac (geometric mean; negative: ECJ needs less)</h2>
 <div class="stats">{overall}</div>
 <h2>All metrics (javac / ECJ, the better one underlined; lower is better)</h2>
-<div class="card scroll"><table><thead><tr><th>Project</th><th>Fastest</th>{head_cells}</tr></thead><tbody>{body}</tbody></table></div>
+<div class="card scroll"><table><thead><tr><th>Project</th><th>Fastest</th><th>Warm-up</th>{head_cells}</tr></thead><tbody>{body}</tbody></table></div>
 {skipped_note}
+<p class="note">Warm-up: <em>yes</em> means the build was run twice and only the second, with the dependencies already downloaded, was measured; <em>no</em> means one build, whose time includes the downloads (Avro, and the builds that failed).</p>
 <p class="note">Shared CI runners are noisy: differences under {TIE:.0%} are a tie, read the rest as a trend.</p>
 </main></body></html>
 ''')

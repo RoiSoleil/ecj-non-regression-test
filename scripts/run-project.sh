@@ -99,6 +99,7 @@ echo "== $NAME with ECJ $ECJ_VERSION ($LABEL): $CMD" | tee -a "$LOG"
 # Elapsed seconds, user and system CPU seconds and peak resident set size (KB) of the whole process tree.
 # A failed first build is not repeated (a failing project is not compared); its numbers are kept.
 TIME_FILE="$DIR/../$NAME-$LABEL.time"
+WARMED=0   # 1 when the measured build is the second one, after a warm-up build
 # the baseline run is only the reference of the compile errors: no warm-up build (the double cost of the long projects)
 [ "$LABEL" != baseline ] || WARMUP_BUILD="${WARMUP_BUILD:-0}"
 # a project whose reactor plugin is built by the build itself (Avro) cannot run twice after its classes were deleted
@@ -108,6 +109,7 @@ if [ "${WARMUP_BUILD:-1}" = 1 ]; then
   /usr/bin/time -f '%e %U %S %M' -o "$TIME_FILE" bash -c "$CMD" >>"$LOG" 2>&1
   FIRST=$?
   if [ "$FIRST" = 0 ]; then
+    WARMED=1
     # drop the compiled classes so that the measured build compiles everything again
     find . -type d \( -path '*/target/classes' -o -path '*/target/test-classes' -o -path '*/build/classes' -o -path './out-java.*' -o -path '*/target/generated-sources/annotations' -o -path '*/target/generated-test-sources/test-annotations' \) -prune -exec rm -rf {} + 2>/dev/null
     echo "== measured build" >>"$LOG"
@@ -139,6 +141,6 @@ fi
   sed -n -E "s#^$DIR/?([^:]*\.java):([0-9]+): error: (.*)#\1:\2 \3#p" "$LOG"
   awk -v d="$DIR/" '/^[0-9]+\. ERROR in /{sub(d,""); f=$4; l=$7; sub(/\)/,"",l); getline; getline; getline; print f ":" l " " $0}' "$LOG"
 } | sort -u > "$ROOT/results/$NAME-$LABEL.errors"
-python3 "$ROOT/scripts/metrics.py" "$DIR/../$NAME-$LABEL.time" "$GC_DIR" > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
+python3 "$ROOT/scripts/metrics.py" "$DIR/../$NAME-$LABEL.time" "$GC_DIR" "$WARMED" > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
 rm -rf "$GC_DIR" "$DIR/../$NAME-$LABEL.time"
 echo "$(wc -l < "$ROOT/results/$NAME-$LABEL.errors") compile errors, status $(cat "$ROOT/results/$NAME-$LABEL.status")"
