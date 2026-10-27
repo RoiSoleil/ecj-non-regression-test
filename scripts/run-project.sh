@@ -140,8 +140,15 @@ RUN_COUNT=1
 if [ "${WARMUP_BUILD:-1}" = 1 ]; then
   echo "== warm-up build (not measured)" >>"$LOG"
   mkdir -p "$RUNS/1"
-  /usr/bin/time -f '%e %U %S %M' -o "$RUNS/1/time" bash -c "$CMD" >>"$LOG" 2>&1
-  STATUS=$?
+  # A download that fails (Maven Central answers 502, a timeout...) is not a failure of the compiler: try again, up to 3 times.
+  for attempt in 1 2 3; do
+    /usr/bin/time -f '%e %U %S %M' -o "$RUNS/1/time" bash -c "$CMD" >"$RUNS.warmup.log" 2>&1
+    STATUS=$?
+    cat "$RUNS.warmup.log" >>"$LOG"
+    [ "$STATUS" != 0 ] && [ "$attempt" -lt 3 ] && grep -q -E 'Could not transfer artifact|status code: 5[0-9][0-9]|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length' "$RUNS.warmup.log" || break
+    echo "== warm-up build failed on a network error, attempt $((attempt + 1))" >>"$LOG"
+    sleep 20
+  done
   if [ "$STATUS" = 0 ]; then
     WARMED=1; OFFLINE=1
     # a short build is measured several times (the median is reported), a long one once
@@ -194,5 +201,5 @@ fi
 # a failed warm-up build leaves no run directory: its time is the only measure
 [ -n "$(ls -A "$RUNS")" ] || { mkdir -p "$RUNS/1"; echo "0 0 0 0" > "$RUNS/1/time"; }
 python3 "$ROOT/scripts/metrics.py" "$WARMED" "$OFFLINE" "$RUNS"/* > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
-rm -rf "$RUNS"
+rm -rf "$RUNS" "$RUNS.warmup.log"
 echo "$(wc -l < "$ROOT/results/$NAME-$LABEL.errors") compile errors, status $(cat "$ROOT/results/$NAME-$LABEL.status")"

@@ -26,6 +26,7 @@ Every project is also built untouched with the JDK's `javac` (label `javac`, no 
 build each project twice: the first build downloads the dependencies and is not measured. Then the compiled classes are
 deleted and the project is built again offline (`mvn -o`) with `-Xms4g -Xmx4g -XX:+UseG1GC`: three times when the first
 build took under 2 minutes (the median is reported, the minimum and maximum are kept), once otherwise.
+A warm-up build that fails on a network error (a 502 from Maven Central, a timeout) is tried again, up to 3 times.
 The baseline run has no warm-up build (it only gives the reference compile errors).
 
 Metrics (`scripts/metrics.py`): wall and CPU time, compile time (the time spent in the compiler plugin, from the time

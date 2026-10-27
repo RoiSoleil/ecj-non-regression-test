@@ -98,9 +98,10 @@ def runs(row):
 
 
 def classes(row):
-    """The classes produced by both compilers: a difference means they did not do exactly the same work."""
+    """The classes produced by both compilers. ECJ makes a few classes less than javac (synthetic ones), so only a large
+    difference, over 10 %, may mean that they did not do the same work."""
     j, e = row['j'].get('classes'), row['e'].get('classes')
-    return '–' if not j or not e else f'{j} / {e}' if j == e else f'{j} / {e} ⚠️'
+    return '–' if not j or not e else f'{j} / {e} ⚠️' if abs(j - e) > 0.1 * max(j, e) else f'{j} / {e}'
 
 
 ICON = {'javac': '🟦 javac', 'ECJ': '🟧 ECJ', 'tie': '⚪ tie'}
@@ -112,7 +113,7 @@ if rows:
         f'{title.lower()} {pct(geo[k])}' for k, title, *_ in shown) + '\n')
     print('A negative figure means ECJ needs less than javac (time, memory, GC), so lower is better for ECJ.')
     print('Fastest = the compile time of the compiler plugin when it was measured (Time of: compile), else the wall time of the whole build (Time of: build).')
-    print('Each figure is the median of the measured builds (Runs: javac / ECJ); the classes produced tell whether both did the same work.\n')
+    print('Each figure is the median of the measured builds (Runs: javac / ECJ); the classes produced tell whether both did the same work (⚠️: more than 10 % apart; ECJ makes a few classes less than javac).\n')
     print('| Project | Fastest | Time of | Warm-up | Runs | javac time | ECJ time | ' + ' | '.join(t for _, t, *_ in shown) + ' | Classes (javac / ECJ) |')
     print('|---|---|---|---|---|--:|--:|' + '--:|' * len(shown) + '--:|')
     for row in rows:
@@ -229,7 +230,7 @@ tbody th {{ font-weight:600; }}
 <p class="note">Warm-up: <em>yes</em> means the build was run twice and only the second, with the dependencies already downloaded, was measured; <em>no</em> means one build, whose time includes the downloads (Avro, and the builds that failed).</p>
 <p class="note">Runs: javac / ECJ builds measured; a short build is measured 3 times and the median is shown. The builds run offline with
 <code>-Xms4g -Xmx4g -XX:+UseG1GC</code>. Compile time is the time spent in the compiler plugin alone. Classes: the number of class files produced
-(⚠️: the two compilers did not produce the same number).</p>
+(⚠️: more than 10 % apart; ECJ makes a few less than javac, javac adds synthetic classes).</p>
 <p class="note">Shared CI runners are noisy: differences under {TIE:.0%} are a tie, read the rest as a trend.</p>
 </main></body></html>
 ''')
