@@ -99,17 +99,17 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | Mybatis3 | ✅ compiles | ✅ compiles |
 | JSqlParser | ❌ 15938 compile errors | ❌ 15938 compile errors |
 | Javaparser | ❌ 1 compile errors | ❌ 1 compile errors |
-| Pmd | ⚠️ ecj not used (no compile error) | ❌ 608 compile errors |
+| Pmd | ❌ 608 compile errors | ❌ 608 compile errors |
 | Junit4 | ✅ compiles | ✅ compiles |
 | Slf4j | ✅ compiles | ✅ compiles |
 | Logback | ✅ compiles | ✅ compiles |
 | H2database | ✅ compiles | ✅ compiles |
-| Dropwizard | ✅ compiles | ⚠️ build failed (no compile error) |
+| Dropwizard | ✅ compiles | ✅ compiles |
 | Jdbi | ❌ 1 compile errors | ❌ 1 compile errors |
 | RestAssured | ✅ compiles | ✅ compiles |
-| Pdfbox | ✅ compiles | ✅ compiles |
+| Pdfbox | ✅ compiles | ⚠️ build failed (no compile error) |
 | Activemq | ❌ 1 compile errors | ❌ 1 compile errors |
-| Avro | ✅ compiles | ⚠️ build failed (no compile error) |
+| Avro | ✅ compiles | ✅ compiles |
 | MavenSurefire | ❌ 57 compile errors | ❌ 57 compile errors |
 | HttpcomponentsClient | ✅ compiles | ✅ compiles |
 | HttpcomponentsCore | ✅ compiles | ✅ compiles |
