@@ -21,6 +21,7 @@ PATCH="$(field patch)"
 OVERRIDE_ARGS="$(field override_compiler_args)"
 NO_MODULE_PATH="$(field no_module_path)"
 PRE="$(field pre)"
+NO_WARMUP="$(field no_warmup)"
 
 mkdir -p "$ROOT/logs" "$ROOT/results" "$ROOT/work"
 LOG="$ROOT/logs/$NAME-$LABEL.log"
@@ -100,13 +101,15 @@ echo "== $NAME with ECJ $ECJ_VERSION ($LABEL): $CMD" | tee -a "$LOG"
 TIME_FILE="$DIR/../$NAME-$LABEL.time"
 # the baseline run is only the reference of the compile errors: no warm-up build (the double cost of the long projects)
 [ "$LABEL" != baseline ] || WARMUP_BUILD="${WARMUP_BUILD:-0}"
+# a project whose reactor plugin is built by the build itself (Avro) cannot run twice after its classes were deleted
+[ -z "$NO_WARMUP" ] || WARMUP_BUILD=0
 if [ "${WARMUP_BUILD:-1}" = 1 ]; then
   echo "== warm-up build (not measured)" >>"$LOG"
   /usr/bin/time -f '%e %U %S %M' -o "$TIME_FILE" bash -c "$CMD" >>"$LOG" 2>&1
   FIRST=$?
   if [ "$FIRST" = 0 ]; then
     # drop the compiled classes so that the measured build compiles everything again
-    find . -type d \( -path '*/target/classes' -o -path '*/target/test-classes' -o -path '*/build/classes' -o -path './out-java.*' \) -prune -exec rm -rf {} + 2>/dev/null
+    find . -type d \( -path '*/target/classes' -o -path '*/target/test-classes' -o -path '*/build/classes' -o -path './out-java.*' -o -path '*/target/generated-sources/annotations' -o -path '*/target/generated-test-sources/test-annotations' \) -prune -exec rm -rf {} + 2>/dev/null
     echo "== measured build" >>"$LOG"
   fi
 else

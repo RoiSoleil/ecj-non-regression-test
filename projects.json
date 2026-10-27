@@ -444,7 +444,8 @@
     "url": "https://github.com/apache/avro.git",
     "ref": "3a207fa6e87c535b95eafca4cf5a6ef524d77df2",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "no_warmup": true
   },
   {
     "name": "MavenSurefire",
