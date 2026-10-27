@@ -108,7 +108,7 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | Dropwizard | ✅ compiles | ✅ compiles |
 | Jdbi | ❌ 1 compile errors | ❌ 1 compile errors |
 | RestAssured | ✅ compiles | ✅ compiles |
-| Pdfbox | ✅ compiles | ⚠️ build failed (no compile error) |
+| Pdfbox | ✅ compiles | ✅ compiles |
 | Activemq | ❌ 1 compile errors | ❌ 1 compile errors |
 | Avro | ✅ compiles | ✅ compiles |
 | MavenSurefire | ❌ 57 compile errors | ❌ 57 compile errors |
