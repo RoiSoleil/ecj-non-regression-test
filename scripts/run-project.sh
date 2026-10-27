@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Builds one project with a given ECJ and records the status and the compile errors.
-# usage: run-project.sh <project name> <label> <ecj version in the local Maven repository>
+# usage: run-project.sh <project name> <label> <ecj version in the local Maven repository, or "javac">
+# With the version "javac" the project is built untouched with the running JDK's javac (no ECJ, no patch): it is the
+# reference for the performance comparison (scripts/perf-compare.py).
 # The project is described in projects.json (url, ref, cmd, optional patch).
 set -uo pipefail
 
@@ -41,8 +43,12 @@ else
 fi
 
 # the ECJ jar itself, for projects that run the batch compiler directly
-ECJ_JAR="$HOME/.m2/repository/org/eclipse/jdt/ecj/$ECJ_VERSION/ecj-$ECJ_VERSION.jar"
-[ -f "$ECJ_JAR" ] || mvn -B -q dependency:get -Dartifact="org.eclipse.jdt:ecj:$ECJ_VERSION" >>"$LOG" 2>&1
+if [ "$ECJ_VERSION" = javac ]; then
+  ECJ_JAR=""
+else
+  ECJ_JAR="$HOME/.m2/repository/org/eclipse/jdt/ecj/$ECJ_VERSION/ecj-$ECJ_VERSION.jar"
+  [ -f "$ECJ_JAR" ] || mvn -B -q dependency:get -Dartifact="org.eclipse.jdt:ecj:$ECJ_VERSION" >>"$LOG" 2>&1
+fi
 export ECJ_JAR ROOT
 [ -z "$OVERRIDE_ARGS" ] || export ECJ_OVERRIDE_COMPILER_ARGS=1
 [ -z "$NO_MODULE_PATH" ] || export ECJ_NO_MODULE_PATH=1
@@ -59,7 +65,9 @@ if [ -n "${CI:-}" ] && [ -n "${JAVA_HOME:-}" ]; then # only on CI: this file als
 fi
 cd "$DIR/${SUBDIR:-.}"
 
-if [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; then
+if [ "$ECJ_VERSION" = javac ]; then
+  : # untouched project: javac is the default compiler of every build
+elif [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; then
   # hand written patches name the ECJ version SNAPSHOT
   sed -e "s/<version>SNAPSHOT<\/version>/<version>$ECJ_VERSION<\/version>/" -e "s/@ECJ_VERSION@/$ECJ_VERSION/" "$ROOT/patches/$PATCH" > "$DIR/ecj.patch"
   if ! git -C "$DIR" apply "$DIR/ecj.patch" >>"$LOG" 2>&1; then
@@ -82,15 +90,42 @@ if [ -n "${JFR_FILE:-}" ]; then
   export JFR_OPTS="-XX:StartFlightRecording=filename=$JFR_FILE,settings=default,dumponexit=true,maxsize=${JFR_MAX_SIZE:-100M}"
   export MAVEN_OPTS="${MAVEN_OPTS:-} $JFR_OPTS"
 fi
+# GC log of every JVM of the build (the Maven JVM, or the java process of the JDK project): same flags for every label
+GC_DIR="$DIR/../$NAME-$LABEL-gc"
+rm -rf "$GC_DIR"; mkdir -p "$GC_DIR"
 echo "== $NAME with ECJ $ECJ_VERSION ($LABEL): $CMD" | tee -a "$LOG"
-if (eval "$CMD") >>"$LOG" 2>&1; then
+# Two builds: the first one downloads the dependencies and plugins (network time must not count), only the second is measured.
+# Elapsed seconds, user and system CPU seconds and peak resident set size (KB) of the whole process tree.
+# A failed first build is not repeated (a failing project is not compared); its numbers are kept.
+TIME_FILE="$DIR/../$NAME-$LABEL.time"
+# the baseline run is only the reference of the compile errors: no warm-up build (the double cost of the long projects)
+[ "$LABEL" != baseline ] || WARMUP_BUILD="${WARMUP_BUILD:-0}"
+if [ "${WARMUP_BUILD:-1}" = 1 ]; then
+  echo "== warm-up build (not measured)" >>"$LOG"
+  /usr/bin/time -f '%e %U %S %M' -o "$TIME_FILE" bash -c "$CMD" >>"$LOG" 2>&1
+  FIRST=$?
+  if [ "$FIRST" = 0 ]; then
+    # drop the compiled classes so that the measured build compiles everything again
+    find . -type d \( -path '*/target/classes' -o -path '*/target/test-classes' -o -path '*/build/classes' -o -path './out-java.*' \) -prune -exec rm -rf {} + 2>/dev/null
+    echo "== measured build" >>"$LOG"
+  fi
+else
+  FIRST=0
+fi
+if [ "$FIRST" = 0 ]; then
+  export GC_OPTS="-Xlog:gc:file=$GC_DIR/gc-%p.log:uptime:filecount=0"
+  export MAVEN_OPTS="${MAVEN_OPTS:-} $GC_OPTS"
+  /usr/bin/time -f '%e %U %S %M' -o "$TIME_FILE" bash -c "$CMD" >>"$LOG" 2>&1
+  FIRST=$?
+fi
+if [ "$FIRST" = 0 ]; then
   echo "success" > "$ROOT/results/$NAME-$LABEL.status"
 else
   echo "build failed" > "$ROOT/results/$NAME-$LABEL.status"
 fi
 
 # A Maven build that never says it compiled with ECJ was silently built with javac and would prove nothing.
-if [ -z "$PATCH" ] && [ -f "$DIR/${SUBDIR:-.}/pom.xml" ] && ! grep -q "Compiling with eclipse" "$LOG"; then
+if [ "$ECJ_VERSION" != javac ] && [ -z "$PATCH" ] && [ -f "$DIR/${SUBDIR:-.}/pom.xml" ] && ! grep -q "Compiling with eclipse" "$LOG"; then
   echo "ecj not used" > "$ROOT/results/$NAME-$LABEL.status"
 fi
 
@@ -98,6 +133,9 @@ fi
 # Maven prints "[ERROR] /path/File.java:[12,5] message", ECJ itself prints "ERROR in /path/File.java (at line 12)".
 {
   sed -n -E "s#^([0-9:]+ )?\[ERROR\] $DIR/?([^:]*\.java):\[([0-9]+),[0-9]+\] (.*)#\2:\3 \4#p" "$LOG"
+  sed -n -E "s#^$DIR/?([^:]*\.java):([0-9]+): error: (.*)#\1:\2 \3#p" "$LOG"
   awk -v d="$DIR/" '/^[0-9]+\. ERROR in /{sub(d,""); f=$4; l=$7; sub(/\)/,"",l); getline; getline; getline; print f ":" l " " $0}' "$LOG"
 } | sort -u > "$ROOT/results/$NAME-$LABEL.errors"
+python3 "$ROOT/scripts/metrics.py" "$DIR/../$NAME-$LABEL.time" "$GC_DIR" > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
+rm -rf "$GC_DIR" "$DIR/../$NAME-$LABEL.time"
 echo "$(wc -l < "$ROOT/results/$NAME-$LABEL.errors") compile errors, status $(cat "$ROOT/results/$NAME-$LABEL.status")"

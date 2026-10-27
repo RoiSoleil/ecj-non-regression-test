@@ -20,6 +20,16 @@ the compiler's own test suite does not: valid code in the wild that a recent cha
 Every project is pinned to a commit (`projects.json`), so the known errors stay the same from one run to the next.
 Update the pins in a pull request.
 
+## Performance: javac against ECJ
+
+Every project is also built untouched with the JDK's `javac` (label `javac`, no ECJ, no patch). Each build runs twice:
+the first one downloads the dependencies and is not measured, then the compiled classes are deleted and the second one
+is measured (wall and CPU time, peak memory, garbage collections from `-Xlog:gc`, see `scripts/metrics.py`).
+`python3 scripts/perf-compare.py results javac head` prints, for every project that builds with both compilers, the
+figures of javac / ECJ and the fastest one (a difference under 5 % is a tie). Failing builds are not compared.
+The baseline run has no warm-up build (it is not measured). The head run also records a Java Flight Recording (about 1 % overhead).
+The table is also written in the summary of each workflow run. Shared CI runners are noisy: read it as a trend.
+
 ## Status
 
 The goal is that every project compiles with ECJ without any compile error. The table says, for each project, whether

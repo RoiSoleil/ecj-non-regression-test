@@ -48,8 +48,8 @@ jobs:
           else
             FILTER='.'
           fi
-          # one job for the baseline and one for the head of each project: they run in parallel and do not share ~/.m2
-          echo "matrix={\"include\":$(jq -c --arg sel "$SEL" "$FILTER | [.[] | . as \$p | (\"baseline\",\"head\") as \$l | \$p + {label: \$l}]" projects.json)}" >> "$GITHUB_OUTPUT"
+          # one job for the baseline, one for the head and one for javac of each project: they run in parallel and do not share ~/.m2
+          echo "matrix={\"include\":$(jq -c --arg sel "$SEL" "$FILTER | [.[] | . as \$p | (\"baseline\",\"head\",\"javac\") as \$l | \$p + {label: \$l}]" projects.json)}" >> "$GITHUB_OUTPUT"
 
   build-ecj:
     runs-on: ubuntu-latest
@@ -106,6 +106,7 @@ jobs:
           PROJECT: ${{ matrix.name }}
         run: |
           VERSION="$BASELINE"
+          [ "$LABEL" != javac ] || VERSION=javac   # untouched project, built with the JDK's javac
           if [ "$LABEL" = head ]; then
             VERSION=HEAD-SNAPSHOT
             # the head ECJ is the one to profile (the baseline run is only the reference)
@@ -147,6 +148,9 @@ jobs:
           echo "Head ECJ: eclipse.jdt.core $ECJ_SHA" >> "$GITHUB_STEP_SUMMARY"
           python3 scripts/compare.py artifacts/results baseline head | tee -a "$GITHUB_STEP_SUMMARY"
           exit "${PIPESTATUS[0]}"
+      - name: Performance, javac against ECJ
+        if: always()
+        run: python3 scripts/perf-compare.py artifacts/results javac head | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Status of every project
         id: status
         if: always()
