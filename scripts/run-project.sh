@@ -91,6 +91,9 @@ if [ -n "${JFR_FILE:-}" ]; then
   export JFR_OPTS="-XX:StartFlightRecording=filename=$JFR_FILE,settings=default,dumponexit=true,maxsize=${JFR_MAX_SIZE:-100M}"
   export MAVEN_OPTS="${MAVEN_OPTS:-} $JFR_OPTS"
 fi
+# The same maximum heap for every label and every project (the default is a quarter of the RAM, which differs between machines).
+# The JDK project sets its own -Xmx4g in compile-jdk.sh.
+export MAVEN_OPTS="${MAVEN_OPTS:-} ${HEAP_OPTS:--Xmx4g}"
 # GC log of every JVM of the build (the Maven JVM, or the java process of the JDK project): same flags for every label
 GC_DIR="$DIR/../$NAME-$LABEL-gc"
 rm -rf "$GC_DIR"; mkdir -p "$GC_DIR"

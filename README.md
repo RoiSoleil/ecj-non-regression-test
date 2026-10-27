@@ -28,6 +28,7 @@ is measured (wall and CPU time, peak memory, garbage collections from `-Xlog:gc`
 `python3 scripts/perf-compare.py results javac head` prints, for every project that builds with both compilers, the
 figures of javac / ECJ and the fastest one (a difference under 5 % is a tie); with `--html report.html` it also writes a
 standalone report with a chart (the workflow uploads it as the `performance-report` artifact). Failing builds are not compared.
+Every Maven build gets `-Xmx4g` (`HEAP_OPTS` overrides it), so the figures do not depend on the RAM of the runner.
 The baseline run has no warm-up build (it is not measured). The head run also records a Java Flight Recording (about 1 % overhead).
 The table is also written in the summary of each workflow run. Shared CI runners are noisy: read it as a trend.
 
