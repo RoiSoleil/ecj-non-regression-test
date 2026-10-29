@@ -98,7 +98,7 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | JacksonCore | ❌ 47 compile errors | ❌ 47 compile errors |
 | JacksonAnnotations | ✅ compiles | ✅ compiles |
 | Mybatis3 | ✅ compiles | ✅ compiles |
-| JSqlParser | ❌ 15938 compile errors | ❌ 15938 compile errors |
+| JSqlParser | ❌ 15942 compile errors | ❌ 15942 compile errors |
 | Javaparser | ❌ 1 compile errors | ❌ 1 compile errors |
 | Pmd | ❌ 608 compile errors | ❌ 608 compile errors |
 | Junit4 | ✅ compiles | ✅ compiles |
