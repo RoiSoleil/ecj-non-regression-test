@@ -85,10 +85,20 @@ fi
 # a command that prepares the project (Logback needs the SNAPSHOT of SLF4J it is developed with)
 if [ -n "$PRE" ]; then (eval "$PRE") >>"$LOG" 2>&1 || echo "pre command failed" >>"$LOG"; fi
 # Java Flight Recorder: ECJ runs inside the Maven JVM (and inside the java process of the JDK project).
-# JFR_FILE is the recording to write; the default settings cost about 1% and the size is capped.
+# JFR_FILE is the recording to write. It collects as much as possible: the `profile` settings with a CPU sample every
+# JFR_CPU_PERIOD (default 5 ms, instead of 10 ms), up to JFR_ALLOC_THROTTLE allocation samples (default 1000/s, instead
+# of 300/s), stacks up to JFR_STACK_DEPTH frames (default 2048, instead of 64: the ECJ stacks are deep and a truncated
+# stack loses the callers), a 1 ms threshold for I/O, locks, parks and JIT compilations, a 10 ms native sample and
+# the old object samples (their path to the GC roots, JFR_GC_ROOTS=path-to-gc-roots=true, walks the whole heap when the JVM
+# exits: off by default, it can be slow on the multi-GB builds). The size is capped by JFR_MAX_SIZE.
 if [ -n "${JFR_FILE:-}" ]; then
   mkdir -p "$(dirname "$JFR_FILE")"
-  export JFR_OPTS="-XX:StartFlightRecording=filename=$JFR_FILE,settings=default,dumponexit=true,maxsize=${JFR_MAX_SIZE:-100M}"
+  JFR_EVENTS="jdk.ExecutionSample#period=${JFR_CPU_PERIOD:-5ms},jdk.NativeMethodSample#period=10ms"
+  JFR_EVENTS="$JFR_EVENTS,jdk.ObjectAllocationSample#throttle=${JFR_ALLOC_THROTTLE:-1000/s}"
+  JFR_EVENTS="$JFR_EVENTS,jdk.FileRead#threshold=1ms,jdk.FileWrite#threshold=1ms,jdk.SocketRead#threshold=1ms,jdk.SocketWrite#threshold=1ms"
+  JFR_EVENTS="$JFR_EVENTS,jdk.JavaMonitorEnter#threshold=1ms,jdk.JavaMonitorWait#threshold=1ms,jdk.ThreadPark#threshold=1ms"
+  JFR_EVENTS="$JFR_EVENTS,jdk.Compilation#threshold=1ms,jdk.OldObjectSample#cutoff=infinity"
+  export JFR_OPTS="-XX:FlightRecorderOptions:stackdepth=${JFR_STACK_DEPTH:-2048},memorysize=256m -XX:StartFlightRecording=filename=$JFR_FILE,settings=profile,$JFR_EVENTS,${JFR_GC_ROOTS:-path-to-gc-roots=false},dumponexit=true,maxsize=${JFR_MAX_SIZE:-300M}"
   export MAVEN_OPTS="${MAVEN_OPTS:-} $JFR_OPTS"
 fi
 # The same heap and collector for every label and every project: the defaults (a quarter of the RAM, SerialGC on a

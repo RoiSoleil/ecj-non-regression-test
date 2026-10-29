@@ -162,8 +162,10 @@ successfully tested commit gets a `tested/<sha>` tag, a failing run is retried t
 * `projects`: comma separated names, for example `Quarkus,Camel`. Default: all projects.
 * `jfr`: `true` (default) records a [Java Flight Recording](https://dev.java/learn/jvm/jfr/) of each build with the head ECJ.
 
-Each head job uploads its recording as the artifact `jfr-<project>` (kept 14 days, at most 100 MB per project,
-default settings, about 1% overhead). Download it from the run page and open it with JDK Mission Control or
+Each head job uploads its recording as the artifact `jfr-<project>` (kept 14 days, at most 300 MB per project,
+`profile` settings raised to the maximum: CPU sample every 5 ms, 1000 allocation samples per second, stacks of 2048 frames,
+1 ms thresholds for I/O, locks and JIT, old object samples; see `scripts/run-project.sh` and its `JFR_*` environment
+variables; the overhead has not been measured yet, expect a few %). Download it from the run page and open it with JDK Mission Control or
 `jfr print --events jdk.ExecutionSample <file>.jfr`. ECJ runs inside the Maven JVM (and inside the `java` process of the
 JDK project); the Gradle project (JavaHamcrest) is not recorded.
 
