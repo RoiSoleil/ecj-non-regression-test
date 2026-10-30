@@ -13,12 +13,15 @@ POM, ECJ_VERSION = sys.argv[1], sys.argv[2]
 PLEXUS_ECLIPSE = "2.15.0"
 COMPILER_PLUGIN = "3.13.0"
 
-ns = ET.parse(POM).getroot().tag.partition('}')[0].lstrip('{')
-ET.register_namespace('', ns)
+# keep the comments: some builds read them (Camel's camel-package-maven-plugin looks for "<!-- camel ...: START -->"
+# markers in parent/pom.xml and fails with a NullPointerException without them)
+tree = ET.parse(POM, parser=ET.XMLParser(target=ET.TreeBuilder(insert_comments=True, insert_pis=True)))
+project = tree.getroot()
+ns = project.tag[1:].partition('}')[0] if project.tag.startswith('{') else ''  # a pom may have no namespace
+if ns:
+    ET.register_namespace('', ns)
 ET.register_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
 q = lambda tag: f'{{{ns}}}{tag}' if ns else tag
-tree = ET.parse(POM)
-project = tree.getroot()
 
 def child(parent, tag):
     found = parent.find(q(tag))
@@ -47,6 +50,7 @@ def ecj_compiler_args():
 ECJ_ARGS = ecj_compiler_args()
 # the compiler plugins of the pluginManagement sections: the ECJ arguments go to the plugins of the builds only
 MANAGED = {plugin for management in project.iter(q('pluginManagement')) for plugin in management.iter(q('plugin'))}
+IN_PROFILES = {plugin for profile in project.iter(q('profile')) for plugin in profile.iter(q('plugin'))}
 
 def add_ecj(plugin):
     """Adds the ECJ dependencies and compilerId to a compiler plugin, keeping its other configuration."""
@@ -65,7 +69,8 @@ def add_ecj(plugin):
         configuration.remove(old)
     text(configuration, 'compilerId', 'eclipse')
     if os.environ.get('ECJ_NO_MODULE_PATH'):
-        # plexus-compiler-eclipse does not patch the tests into the module of the main code
+        # ECJ's javax.tools compiler ignores --patch-module (EclipseCompilerImpl.setPaths does not call handlePatchModule),
+        # so the tests are not patched into the module of the main code
         for old in configuration.findall(q('useModulePath')):
             configuration.remove(old)
         text(configuration, 'useModulePath', 'false')
@@ -100,7 +105,7 @@ def add_ecj(plugin):
     # javac only options that the ECJ batch compiler rejects
     for args in plugin.iter(q('compilerArgs')):
         for arg in list(args):
-            if (arg.text or '').startswith(('--should-stop', '-Xplugin', '-XDcompilePolicy', '-Werror', '-Xlint', '-Xdoclint')):
+            if isinstance(arg.tag, str) and (arg.text or '').startswith(('--should-stop', '-Xplugin', '-XDcompilePolicy', '-Werror', '-Xlint', '-Xdoclint')):
                 args.remove(arg)
     if ECJ_ARGS and plugin not in MANAGED:
         add_ecj_args(plugin, configuration)
@@ -124,19 +129,30 @@ def add_ecj_args(plugin, configuration):
 def compiler_plugins(plugins):
     return [p for p in plugins.findall(q('plugin')) if p.findtext(q('artifactId')) == 'maven-compiler-plugin']
 
+def new_compiler(plugins):
+    plugin = ET.SubElement(plugins, q('plugin'))
+    text(plugin, 'groupId', 'org.apache.maven.plugins')
+    text(plugin, 'artifactId', 'maven-compiler-plugin')
+    return plugin
+
 # every maven-compiler-plugin of the pom: build, pluginManagement and profiles
 declared = [p for p in project.iter(q('plugin')) if p.findtext(q('artifactId')) == 'maven-compiler-plugin']
-plugins = child(build, 'plugins')
 for plugin in declared:
     add_ecj(plugin)
     # an execution (or a profile) that sets its own compiler would win over the plugin level setting
     for compiler in plugin.iter(q('compilerId')):
         compiler.text = 'eclipse'
-if not compiler_plugins(plugins):
-    plugin = ET.SubElement(plugins, q('plugin'))
-    text(plugin, 'groupId', 'org.apache.maven.plugins')
-    text(plugin, 'artifactId', 'maven-compiler-plugin')
-    add_ecj(plugin)
-ET.register_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
+# A pom packaging (a parent or an aggregator) compiles nothing: a compiler plugin in its build would run the compiler
+# executions it inherits (PMD's pmd-scala-common, whose sources the pmd-scala_2.1x modules compile), so the plugin goes
+# to its pluginManagement, which its children inherit (and every pom of the build is rewritten anyway).
+if (project.findtext(q('packaging')) or '').strip() == 'pom':
+    if all(plugin in IN_PROFILES for plugin in declared):
+        plugin = new_compiler(child(child(build, 'pluginManagement'), 'plugins'))
+        MANAGED.add(plugin)  # not a plugin of the build: no ECJ arguments
+        add_ecj(plugin)
+else:
+    plugins = child(build, 'plugins')
+    if not compiler_plugins(plugins):
+        add_ecj(new_compiler(plugins))
 tree.write(POM, encoding='UTF-8', xml_declaration=True)
 print(f'{POM}: compiling with ECJ {ECJ_VERSION}')
