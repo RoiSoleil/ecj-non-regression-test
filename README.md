@@ -57,8 +57,8 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | Eclipse-Collections | ❌ 1 compile errors | ❌ 1 compile errors |
 | JavaHamcrest | ✅ compiles | ✅ compiles |
 | Quarkus | ❌ 1360 compile errors | ❌ 1360 compile errors |
-| Camel | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| WildFly | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| Camel | ❌ 91 compile errors | ❌ 90 compile errors |
+| WildFly | ❌ 1 compile errors | ❌ 1 compile errors |
 | Guava | ❌ 11 compile errors | ❌ 11 compile errors |
 | Gson | ❌ 30 compile errors | ❌ 30 compile errors |
 | Guice | ❌ 1 compile errors | ❌ 1 compile errors |
@@ -98,9 +98,9 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | JacksonCore | ❌ 47 compile errors | ❌ 47 compile errors |
 | JacksonAnnotations | ✅ compiles | ✅ compiles |
 | Mybatis3 | ✅ compiles | ✅ compiles |
-| JSqlParser | ❌ 15942 compile errors | ❌ 15942 compile errors |
+| JSqlParser | ❌ 15938 compile errors | ❌ 15938 compile errors |
 | Javaparser | ❌ 1 compile errors | ❌ 1 compile errors |
-| Pmd | ❌ 608 compile errors | ❌ 608 compile errors |
+| Pmd | ❌ 6 compile errors | ❌ 6 compile errors |
 | Junit4 | ✅ compiles | ✅ compiles |
 | Slf4j | ✅ compiles | ✅ compiles |
 | Logback | ✅ compiles | ✅ compiles |
@@ -114,7 +114,7 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | MavenSurefire | ❌ 57 compile errors | ❌ 57 compile errors |
 | HttpcomponentsClient | ✅ compiles | ✅ compiles |
 | HttpcomponentsCore | ✅ compiles | ✅ compiles |
-| Zookeeper | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
+| Zookeeper | ✅ compiles | ✅ compiles |
 | Tika | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
 | VelocityEngine | ✅ compiles | ✅ compiles |
 | HibernateValidator | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
