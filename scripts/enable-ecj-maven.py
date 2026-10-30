@@ -3,6 +3,7 @@
 
 usage: enable-ecj-maven.py <pom.xml> <ecj version>
 """
+import json
 import os
 import re
 import sys
@@ -29,6 +30,23 @@ def text(parent, tag, value):
     ET.SubElement(parent, q(tag)).text = value
 
 build = child(project, 'build')
+
+def ecj_compiler_args():
+    """The projects.json field ecj_compiler_args: a JSON list of strings, or nothing."""
+    value = os.environ.get('ECJ_COMPILER_ARGS')
+    if not value:
+        return []
+    try:
+        args = json.loads(value)
+    except ValueError:
+        args = None
+    if not isinstance(args, list) or not all(isinstance(arg, str) for arg in args):
+        sys.exit(f'ecj_compiler_args must be a list of strings: {value}')
+    return args
+
+ECJ_ARGS = ecj_compiler_args()
+# the compiler plugins of the pluginManagement sections: the ECJ arguments go to the plugins of the builds only
+MANAGED = {plugin for management in project.iter(q('pluginManagement')) for plugin in management.iter(q('plugin'))}
 
 def add_ecj(plugin):
     """Adds the ECJ dependencies and compilerId to a compiler plugin, keeping its other configuration."""
@@ -84,6 +102,24 @@ def add_ecj(plugin):
         for arg in list(args):
             if (arg.text or '').startswith(('--should-stop', '-Xplugin', '-XDcompilePolicy', '-Werror', '-Xlint', '-Xdoclint')):
                 args.remove(arg)
+    if ECJ_ARGS and plugin not in MANAGED:
+        add_ecj_args(plugin, configuration)
+
+def add_ecj_args(plugin, configuration):
+    """Adds the projects.json ecj_compiler_args (WildFly: where the JBoss Logging processor looks for the translation
+    files; without it the processor asks Filer.getResource for a file that does not exist, which javac allows).
+
+    They are appended (Maven merges the <arg> lists of a pom and its parents by position), so every pom of a hierarchy
+    adds them once more: an argument must allow repetition. An execution with its own compilerArgs, the override of
+    override_compiler_args included, does not see the plugin level ones: it gets them too. The executions that a remote
+    parent defines with compilerArgs are not covered. compile and testCompile get the same arguments."""
+    lists = [configuration.find(q('compilerArgs'))]
+    if lists[0] is None:
+        lists = [ET.SubElement(configuration, q('compilerArgs'), {'combine.children': 'append'})]
+    lists += plugin.findall(f"{q('executions')}/{q('execution')}/{q('configuration')}/{q('compilerArgs')}")
+    for args in lists:
+        for value in ECJ_ARGS:
+            text(args, 'arg', value)
 
 def compiler_plugins(plugins):
     return [p for p in plugins.findall(q('plugin')) if p.findtext(q('artifactId')) == 'maven-compiler-plugin']

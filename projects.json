@@ -75,6 +75,7 @@
     "url": "https://github.com/wildfly/wildfly.git",
     "ref": "8e67d2bc8d70b4a2d29338c820c3eb8edfff80c6",
     "cmd": "mvn -B -fae install -DskipTests -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "ecj_compiler_args": ["-AtranslationFilesPath=${project.build.outputDirectory}/"],
     "optional": false
   },
   {
