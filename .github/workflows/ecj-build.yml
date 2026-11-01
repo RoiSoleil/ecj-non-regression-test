@@ -1,7 +1,7 @@
 name: ECJ build of one label
 
-# One matrix job per project for one label (baseline, head or javac). A matrix cannot generate more than 256 jobs, so
-# ecj-matrix.yml calls this workflow once per label instead of having one matrix of projects x labels.
+# One job per project of a shard for one label (baseline, head or javac). A matrix cannot generate more than 256 jobs,
+# so ecj-matrix.yml calls this workflow for each shard and label instead of having one matrix of projects x labels.
 on:
   workflow_call:
     inputs:

@@ -26,7 +26,8 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      projects: ${{ steps.projects.outputs.projects }}
+      shards: ${{ steps.projects.outputs.shards }}
+      shard_indexes: ${{ steps.projects.outputs.shard_indexes }}
       baseline: ${{ steps.baseline.outputs.version }}
     steps:
       - uses: actions/checkout@v5
@@ -48,7 +49,10 @@ jobs:
           else
             FILTER='.'
           fi
-          echo "projects=$(jq -c --arg sel "$SEL" "$FILTER | [.[].name]" projects.json)" >> "$GITHUB_OUTPUT"
+          # a matrix cannot generate more than 256 jobs: the projects are split in shards, each one a matrix of its own
+          SHARDS="$(jq -c --arg sel "$SEL" "$FILTER | [.[].name] | . as \$names | [range(0; length; 100) | \$names[.:.+100]]" projects.json)"
+          echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
+          echo "shard_indexes=$(jq -c '[range(0; length)]' <<< "$SHARDS")" >> "$GITHUB_OUTPUT"
 
   build-ecj:
     runs-on: ubuntu-latest
@@ -70,37 +74,25 @@ jobs:
       - uses: actions/upload-artifact@v4
         with: { name: ecj-HEAD.jar, path: ecj-HEAD.jar }
 
-  # one matrix per label, run in parallel, which do not share ~/.m2: a matrix cannot generate more than 256 jobs
-  build-baseline:
+  # baseline, head and javac run in parallel and do not share ~/.m2
+  build:
     needs: [setup, build-ecj]
+    strategy:
+      fail-fast: false
+      matrix:
+        label: [baseline, head, javac]
+        shard: ${{ fromJSON(needs.setup.outputs.shard_indexes) }}
+    name: ${{ matrix.label }} ${{ matrix.shard }}
     uses: ./.github/workflows/ecj-build.yml
     with:
-      projects: ${{ needs.setup.outputs.projects }}
-      label: baseline
-      baseline: ${{ needs.setup.outputs.baseline }}
-      jfr: ${{ github.event.inputs.jfr }}
-
-  build-head:
-    needs: [setup, build-ecj]
-    uses: ./.github/workflows/ecj-build.yml
-    with:
-      projects: ${{ needs.setup.outputs.projects }}
-      label: head
-      baseline: ${{ needs.setup.outputs.baseline }}
-      jfr: ${{ github.event.inputs.jfr }}
-
-  build-javac:
-    needs: [setup, build-ecj]
-    uses: ./.github/workflows/ecj-build.yml
-    with:
-      projects: ${{ needs.setup.outputs.projects }}
-      label: javac
+      projects: ${{ toJSON(fromJSON(needs.setup.outputs.shards)[matrix.shard]) }}
+      label: ${{ matrix.label }}
       baseline: ${{ needs.setup.outputs.baseline }}
       jfr: ${{ github.event.inputs.jfr }}
 
   compare:
-    needs: [build-ecj, build-baseline, build-head, build-javac]
-    if: always() && needs.build-head.result != 'skipped'
+    needs: [build-ecj, build]
+    if: always() && needs.build.result != 'skipped'
     runs-on: ubuntu-latest
     permissions:
       contents: write
