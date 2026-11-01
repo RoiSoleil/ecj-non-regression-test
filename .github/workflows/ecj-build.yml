@@ -1,0 +1,82 @@
+name: ECJ build of one label
+
+# One matrix job per project for one label (baseline, head or javac). A matrix cannot generate more than 256 jobs, so
+# ecj-matrix.yml calls this workflow once per label instead of having one matrix of projects x labels.
+on:
+  workflow_call:
+    inputs:
+      projects:
+        description: "JSON array of project names"
+        type: string
+        required: true
+      label:
+        description: "baseline, head or javac"
+        type: string
+        required: true
+      baseline:
+        description: "Baseline ECJ version from Maven Central"
+        type: string
+        required: true
+      jfr:
+        description: "'false' turns off the Java Flight Recording of the head builds"
+        type: string
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        name: ${{ fromJSON(inputs.projects) }}
+    name: build (${{ matrix.name }}, ${{ inputs.label }})
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with: { distribution: temurin, java-version: 21 }
+      - name: Free disk space
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+      - uses: actions/download-artifact@v5
+        with: { name: ecj-HEAD.jar }
+      - name: Use Maven 3.9.9
+        # newer Maven versions break Tycho based projects (Eclipse Collections: "No implementation for MavenTargetLocationFactory")
+        run: |
+          curl -fsSL https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz | tar xz -C "$HOME"
+          echo "$HOME/apache-maven-3.9.9/bin" >> "$GITHUB_PATH"
+      - name: Install the head ECJ in the local Maven repository
+        run: |
+          for i in 1 2 3; do
+            mvn -B -q install:install-file -Dfile=ecj-HEAD.jar -DgroupId=org.eclipse.jdt -DartifactId=ecj -Dversion=HEAD-SNAPSHOT -Dpackaging=jar && exit 0
+            sleep 15
+          done
+          exit 1
+      - name: Build ${{ matrix.name }} (${{ inputs.label }})
+        env:
+          BASELINE: ${{ inputs.baseline }}
+          JFR: ${{ inputs.jfr }}
+          LABEL: ${{ inputs.label }}
+          PROJECT: ${{ matrix.name }}
+        run: |
+          VERSION="$BASELINE"
+          [ "$LABEL" != javac ] || VERSION=javac   # untouched project, built with the JDK's javac
+          if [ "$LABEL" = head ]; then
+            VERSION=HEAD-SNAPSHOT
+            # the head ECJ is the one to profile (the baseline run is only the reference)
+            [ "$JFR" = false ] || export JFR_FILE="$PWD/jfr/$PROJECT.jfr"
+          fi
+          bash scripts/run-project.sh "$PROJECT" "$LABEL" "$VERSION"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: result-${{ matrix.name }}-${{ inputs.label }}
+          path: |
+            results
+            logs
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.label == 'head'
+        with:
+          name: jfr-${{ matrix.name }}
+          path: jfr/*.jfr
+          if-no-files-found: ignore
+          retention-days: 14
