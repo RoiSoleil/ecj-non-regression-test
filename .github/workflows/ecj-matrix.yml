@@ -16,6 +16,9 @@ on:
         description: "Record a Java Flight Recording of the build with the head ECJ (default: true)"
         required: false
         default: "true"
+      jdk:
+        description: "JDK of the builds, unless a project gives its own one (default: 27)"
+        required: false
   workflow_call:
     inputs:
       ecj_ref:
@@ -89,6 +92,7 @@ jobs:
       label: ${{ matrix.label }}
       baseline: ${{ needs.setup.outputs.baseline }}
       jfr: ${{ github.event.inputs.jfr }}
+      jdk: ${{ github.event.inputs.jdk }}
 
   compare:
     needs: [build-ecj, build]
@@ -130,7 +134,7 @@ jobs:
         if: >-
           always() && steps.status.outcome == 'success' && needs.build-ecj.result == 'success'
           && github.ref == 'refs/heads/main' && github.event.inputs.projects == ''
-          && github.event.inputs.ecj_ref == '' && github.event.inputs.baseline == ''
+          && github.event.inputs.ecj_ref == '' && github.event.inputs.baseline == '' && github.event.inputs.jdk == ''
         run: |
           git diff --quiet README.md && exit 0
           git config user.name "github-actions[bot]"

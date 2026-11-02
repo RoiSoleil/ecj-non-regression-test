@@ -306,7 +306,7 @@ JDK project); the Gradle project (JavaHamcrest) is not recorded.
 
 The summary of each job shows the table of the run and, for each project, the new and the vanished errors.
 
-Locally (JDK 21, Maven 3.9.9 or later, `jq`):
+Locally (JDK 27, or the JDK of the `jdk` field of the project, Maven 3.9.9 or later, `jq`):
 
 ```bash
 scripts/build-ecj.sh ~/git/eclipse.jdt.core ecj-head.jar
@@ -322,10 +322,12 @@ The JDK project needs a JDK with `lib/src.zip`; otherwise set `JDK_SRC_DIR` to a
 
 ## Known limits
 
-* A new project is added only if it builds with `javac` on this setup (JDK 21, no network service, no native toolchain).
-  Tried and not kept yet: needing JDK 25 (`release version 25 not supported`): Storm, Druid, Ditto, GraphHopper, Prometheus
-  client, Activiti; needing `install` instead of `compile` (`has not been packaged yet`): Karaf, MINA SSHD, OpenJPA, TomEE,
-  Maven Resolver, OpenWebBeans, MapStruct; other build problems with javac: see the history of `projects.json`.
+* The projects are built with JDK 27, or the JDK of their `jdk` field in `projects.json`: the JDK project compiles the
+  sources of JDK 25, since the baseline ECJ supports Java 26 at most.
+* A new project is added only if it builds with `javac` on this setup (no network service, no native toolchain).
+  Tried and not kept yet: needing `install` instead of `compile` (`has not been packaged yet`): Karaf, MINA SSHD,
+  OpenJPA, TomEE, Maven Resolver, OpenWebBeans, MapStruct; other build problems with javac: see the history of
+  `projects.json`.
 * Joda-Time is not tested: its sources are Java 1.5, which a current ECJ no longer accepts.
 
 * Only the root `pom.xml` is switched to ECJ. A module that sets its own `compilerId` (or a profile-scoped compiler
@@ -335,6 +337,6 @@ The JDK project needs a JDK with `lib/src.zip`; otherwise set `JDK_SRC_DIR` to a
 * A project that already fails with the baseline ECJ (Eclipse Collections: `$deserializeLambda$` exceeds 64 KB) only
   detects new compile error lines, not new crashes.
 * The head ECJ is built from the batch compiler sources only, with a fake version `3.99.0`. The annotation processing
-  classes are compiled with JDK 25 and run on JDK 21.
+  classes are compiled with JDK 25 and run on the JDK of the build.
 
 This repository was written with the help of Claude (AI).
