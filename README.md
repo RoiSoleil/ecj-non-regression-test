@@ -99,7 +99,7 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | JacksonCore | ❌ 47 compile errors | ❌ 47 compile errors |
 | JacksonAnnotations | ✅ compiles | ✅ compiles |
 | Mybatis3 | ✅ compiles | ✅ compiles |
-| JSqlParser | ❌ 15938 compile errors | ❌ 15938 compile errors |
+| JSqlParser | ❌ 15938 compile errors | ❌ 15942 compile errors |
 | Javaparser | ❌ 1 compile errors | ❌ 1 compile errors |
 | Pmd | ❌ 6 compile errors | ❌ 6 compile errors |
 | Junit4 | ✅ compiles | ✅ compiles |
@@ -120,6 +120,128 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | VelocityEngine | ✅ compiles | ✅ compiles |
 | HibernateValidator | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
 | Checkstyle | ✅ compiles | ✅ compiles |
+| SpringDataCommons | ✅ compiles | ✅ compiles |
+| SpringDataJpa | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| SpringDataMongodb | ❌ 1 compile errors | ❌ 1 compile errors |
+| SpringDataRedis | ❌ 4 compile errors | ✅ compiles |
+| SpringHateoas | ❌ 327 compile errors | ❌ 327 compile errors |
+| SpringAi | ✅ compiles | ✅ compiles |
+| SpringPetclinic | ✅ compiles | ✅ compiles |
+| Dubbo | ✅ compiles | ✅ compiles |
+| ShardingSphere | ❌ 112 compile errors | ❌ 112 compile errors |
+| Flume | ✅ compiles | ✅ compiles |
+| OpenNLP | ✅ compiles | ✅ compiles |
+| Batik | ❌ 2 compile errors | ❌ 2 compile errors |
+| Santuario | ❌ 2418 compile errors | ❌ 2418 compile errors |
+| Wss4j | ✅ compiles | ✅ compiles |
+| Jackrabbit | ❌ 216 compile errors | ❌ 216 compile errors |
+| Cayenne | ✅ compiles | ✅ compiles |
+| Jena | ❌ 468 compile errors | ❌ 468 compile errors |
+| Cxf | ✅ compiles | ✅ compiles |
+| Ignite | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| HBase | ✅ compiles | ✅ compiles |
+| Hadoop | ❌ 1 compile errors | ❌ 1 compile errors |
+| NiFi | ❌ 3 compile errors | ❌ 3 compile errors |
+| ShenYu | ❌ 13 compile errors | ❌ 12 compile errors |
+| MavenCompilerPlugin | ✅ compiles | ✅ compiles |
+| MavenShadePlugin | ✅ compiles | ✅ compiles |
+| MavenDependencyPlugin | ✅ compiles | ✅ compiles |
+| MavenAssemblyPlugin | ✅ compiles | ✅ compiles |
+| MavenMvnd | ✅ compiles | ✅ compiles |
+| CommonsCrypto | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| CommonsDbutils | ✅ compiles | ✅ compiles |
+| CommonsJxpath | ✅ compiles | ✅ compiles |
+| CommonsJcs | ❌ 2484 compile errors | ❌ 2484 compile errors |
+| CommonsRdf | ✅ compiles | ✅ compiles |
+| MyFaces | ✅ compiles | ✅ compiles |
+| Johnzon | ✅ compiles | ✅ compiles |
+| Jersey | ❌ 713 compile errors | ❌ 713 compile errors |
+| Grizzly | ❌ 1704 compile errors | ❌ 1704 compile errors |
+| Yasson | ❌ 1118 compile errors | ❌ 1118 compile errors |
+| Mojarra | ✅ compiles | ✅ compiles |
+| Milo | ✅ compiles | ✅ compiles |
+| Tycho | ✅ compiles | ✅ compiles |
+| Truth | ✅ compiles | ✅ compiles |
+| GoogleJavaFormat | ✅ compiles | ✅ compiles |
+| CompileTesting | ✅ compiles | ✅ compiles |
+| Jimfs | ✅ compiles | ✅ compiles |
+| GoogleHttpClient | ✅ compiles | ✅ compiles |
+| JacksonModulesJava8 | ✅ compiles | ✅ compiles |
+| JacksonDataformatsBinary | ❌ 4202 compile errors | ❌ 4202 compile errors |
+| JacksonDataformatsText | ❌ 2170 compile errors | ❌ 2170 compile errors |
+| Woodstox | ✅ compiles | ✅ compiles |
+| AaltoXml | ✅ compiles | ✅ compiles |
+| Fastjson2 | ❌ 661 compile errors | ❌ 661 compile errors |
+| AlibabaDruid | ✅ compiles | ✅ compiles |
+| Nacos | ✅ compiles | ✅ compiles |
+| Sentinel | ❌ 3 compile errors | ❌ 3 compile errors |
+| Canal | ✅ compiles | ✅ compiles |
+| Jedis | ✅ compiles | ✅ compiles |
+| Lettuce | ✅ compiles | ✅ compiles |
+| HikariCP | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| Liquibase | ❌ 1792 compile errors | ❌ 1792 compile errors |
+| Immutables | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| ModelMapper | ✅ compiles | ✅ compiles |
+| Javassist | ✅ compiles | ✅ compiles |
+| EasyMock | ✅ compiles | ✅ compiles |
+| Awaitility | ✅ compiles | ✅ compiles |
+| CucumberJvm | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| Karate | ❌ 1 compile errors | ✅ compiles |
+| Jmh | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| Jol | ✅ compiles | ✅ compiles |
+| Vavr | ❌ 73 compile errors | ❌ 73 compile errors |
+| StreamEx | ❌ 10 compile errors | ❌ 10 compile errors |
+| Failsafe | ❌ 3 compile errors | ❌ 3 compile errors |
+| Bucket4j | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| AsyncHttpClient | ✅ compiles | ✅ compiles |
+| Jsonschema2pojo | ❌ 678 compile errors | ❌ 678 compile errors |
+| JsonSchemaValidator | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| JsonJava | ✅ compiles | ✅ compiles |
+| Kryo | ✅ compiles | ✅ compiles |
+| XStream | ✅ compiles | ✅ compiles |
+| RESTEasy | ❌ 177 compile errors | ❌ 177 compile errors |
+| Undertow | ❌ 9 compile errors | ❌ 9 compile errors |
+| Thymeleaf | ✅ compiles | ✅ compiles |
+| HandlebarsJava | ❌ 2704 compile errors | ❌ 2704 compile errors |
+| Pebble | ✅ compiles | ✅ compiles |
+| FlexmarkJava | ✅ compiles | ✅ compiles |
+| CommonmarkJava | ❌ 670 compile errors | ❌ 670 compile errors |
+| Jjwt | ✅ compiles | ✅ compiles |
+| Pac4j | ❌ 1152 compile errors | ❌ 1152 compile errors |
+| Ebean | ❌ 546 compile errors | ❌ 546 compile errors |
+| Tablesaw | ✅ compiles | ✅ compiles |
+| Jts | ✅ compiles | ✅ compiles |
+| JCTools | ✅ compiles | ✅ compiles |
+| ChronicleQueue | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| Zip4j | ✅ compiles | ✅ compiles |
+| JnrFfi | ✅ compiles | ✅ compiles |
+| ThreeTenExtra | ✅ compiles | ✅ compiles |
+| JodaMoney | ❌ 885 compile errors | ❌ 885 compile errors |
+| JodaBeans | ❌ 8314 compile errors | ❌ 8314 compile errors |
+| Zipkin | ✅ compiles | ✅ compiles |
+| Brave | ❌ 6 compile errors | ❌ 6 compile errors |
+| DropwizardMetrics | ✅ compiles | ✅ compiles |
+| Oshi | ❌ 56 compile errors | ❌ 56 compile errors |
+| JFreeChart | ❌ 10577 compile errors | ❌ 10577 compile errors |
+| HtmlUnit | ❌ 31404 compile errors | ❌ 31404 compile errors |
+| JavaCV | ✅ compiles | ✅ compiles |
+| JavaCPP | ✅ compiles | ✅ compiles |
+| ZXing | ✅ compiles | ✅ compiles |
+| SwaggerParser | ✅ compiles | ✅ compiles |
+| OpenApiGenerator | ❌ 2451 compile errors | ❌ 2451 compile errors |
+| SpringdocOpenApi | ✅ compiles | ✅ compiles |
+| Debezium | ✅ compiles | ✅ compiles |
+| Apollo | ✅ compiles | ✅ compiles |
+| XxlJob | ✅ compiles | ✅ compiles |
+| MybatisPageHelper | ✅ compiles | ✅ compiles |
+| Flowable | ❌ 1 compile errors | ❌ 1 compile errors |
+| Jenkins | ❌ 285 compile errors | ❌ 285 compile errors |
+| PlexusUtils | ✅ compiles | ✅ compiles |
+| PlexusCompiler | ✅ compiles | ✅ compiles |
+| Pf4j | ❌ 2 compile errors | ❌ 2 compile errors |
+| SmallRyeConfig | ❌ 103 compile errors | ❌ 103 compile errors |
+| SmallRyeMutiny | ❌ 1 compile errors | ❌ 1 compile errors |
+| JanusGraph | ❌ 219 compile errors | ❌ 220 compile errors |
 <!-- status:end -->
 
 ### Analysis of the failing projects
