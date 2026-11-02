@@ -26,7 +26,8 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.matrix.outputs.matrix }}
+      shards: ${{ steps.projects.outputs.shards }}
+      shard_indexes: ${{ steps.projects.outputs.shard_indexes }}
       baseline: ${{ steps.baseline.outputs.version }}
     steps:
       - uses: actions/checkout@v5
@@ -38,7 +39,7 @@ jobs:
           [ -n "$V" ] || V=$(curl -fsS https://repo1.maven.org/maven2/org/eclipse/jdt/ecj/maven-metadata.xml | sed -n 's:.*<release>\(.*\)</release>.*:\1:p')
           [ -n "$V" ] || { echo "cannot determine the baseline ECJ version"; exit 1; }
           echo "version=$V" >> "$GITHUB_OUTPUT"
-      - id: matrix
+      - id: projects
         env:
           INPUT_PROJECTS: ${{ github.event.inputs.projects }}
         run: |
@@ -48,8 +49,10 @@ jobs:
           else
             FILTER='.'
           fi
-          # one job for the baseline, one for the head and one for javac of each project: they run in parallel and do not share ~/.m2
-          echo "matrix={\"include\":$(jq -c --arg sel "$SEL" "$FILTER | [.[] | . as \$p | (\"baseline\",\"head\",\"javac\") as \$l | \$p + {label: \$l}]" projects.json)}" >> "$GITHUB_OUTPUT"
+          # a matrix cannot generate more than 256 jobs: the projects are split in shards, each one a matrix of its own
+          SHARDS="$(jq -c --arg sel "$SEL" "$FILTER | [.[].name] | . as \$names | [range(0; length; 100) | \$names[.:.+100]]" projects.json)"
+          echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
+          echo "shard_indexes=$(jq -c '[range(0; length)]' <<< "$SHARDS")" >> "$GITHUB_OUTPUT"
 
   build-ecj:
     runs-on: ubuntu-latest
@@ -71,62 +74,21 @@ jobs:
       - uses: actions/upload-artifact@v4
         with: { name: ecj-HEAD.jar, path: ecj-HEAD.jar }
 
+  # baseline, head and javac run in parallel and do not share ~/.m2
   build:
     needs: [setup, build-ecj]
-    runs-on: ubuntu-latest
-    timeout-minutes: 350
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.setup.outputs.matrix) }}
-    name: build (${{ matrix.name }}, ${{ matrix.label }})
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-java@v5
-        with: { distribution: temurin, java-version: 21 }
-      - name: Free disk space
-        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
-      - uses: actions/download-artifact@v5
-        with: { name: ecj-HEAD.jar }
-      - name: Use Maven 3.9.9
-        # newer Maven versions break Tycho based projects (Eclipse Collections: "No implementation for MavenTargetLocationFactory")
-        run: |
-          curl -fsSL https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz | tar xz -C "$HOME"
-          echo "$HOME/apache-maven-3.9.9/bin" >> "$GITHUB_PATH"
-      - name: Install the head ECJ in the local Maven repository
-        run: |
-          for i in 1 2 3; do
-            mvn -B -q install:install-file -Dfile=ecj-HEAD.jar -DgroupId=org.eclipse.jdt -DartifactId=ecj -Dversion=HEAD-SNAPSHOT -Dpackaging=jar && exit 0
-            sleep 15
-          done
-          exit 1
-      - name: Build ${{ matrix.name }} (${{ matrix.label }})
-        env:
-          BASELINE: ${{ needs.setup.outputs.baseline }}
-          LABEL: ${{ matrix.label }}
-          PROJECT: ${{ matrix.name }}
-        run: |
-          VERSION="$BASELINE"
-          [ "$LABEL" != javac ] || VERSION=javac   # untouched project, built with the JDK's javac
-          if [ "$LABEL" = head ]; then
-            VERSION=HEAD-SNAPSHOT
-            # the head ECJ is the one to profile (the baseline run is only the reference)
-            [ "${{ github.event.inputs.jfr }}" = false ] || export JFR_FILE="$PWD/jfr/$PROJECT.jfr"
-          fi
-          bash scripts/run-project.sh "$PROJECT" "$LABEL" "$VERSION"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: result-${{ matrix.name }}-${{ matrix.label }}
-          path: |
-            results
-            logs
-      - uses: actions/upload-artifact@v4
-        if: always() && matrix.label == 'head'
-        with:
-          name: jfr-${{ matrix.name }}
-          path: jfr/*.jfr
-          if-no-files-found: ignore
-          retention-days: 14
+      matrix:
+        label: [baseline, head, javac]
+        shard: ${{ fromJSON(needs.setup.outputs.shard_indexes) }}
+    name: ${{ matrix.label }} ${{ matrix.shard }}
+    uses: ./.github/workflows/ecj-build.yml
+    with:
+      projects: ${{ toJSON(fromJSON(needs.setup.outputs.shards)[matrix.shard]) }}
+      label: ${{ matrix.label }}
+      baseline: ${{ needs.setup.outputs.baseline }}
+      jfr: ${{ github.event.inputs.jfr }}
 
   compare:
     needs: [build-ecj, build]
