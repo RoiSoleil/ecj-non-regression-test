@@ -102,13 +102,38 @@ def add_ecj(plugin):
         version.text = COMPILER_PLUGIN
     for fail in configuration.findall(q('failOnWarning')):
         fail.text = 'false'
-    # javac only options that the ECJ batch compiler rejects
     for args in plugin.iter(q('compilerArgs')):
-        for arg in list(args):
-            if isinstance(arg.tag, str) and (arg.text or '').startswith(('--should-stop', '-Xplugin', '-XDcompilePolicy', '-Werror', '-Xlint', '-Xdoclint')):
-                args.remove(arg)
+        clean_compiler_args(args)
     if ECJ_ARGS and plugin not in MANAGED:
         add_ecj_args(plugin, configuration)
+
+def clean_compiler_args(args):
+    """Adapts a compilerArgs list to the ECJ batch compiler, which rejects the javac only options."""
+    drop_value = False
+    for arg in list(args):
+        if not isinstance(arg.tag, str):  # a comment
+            continue
+        value = (arg.text or '').strip()
+        if drop_value:
+            drop_value = False
+            args.remove(arg)
+        elif value in ('-h', '-Xmaxerrs', '-Xmaxwarns'):  # the option and its value are two arguments
+            drop_value = True
+            args.remove(arg)
+        elif value.startswith(('--should-stop', '-Xplugin', '-XD', '-Werror', '-Xlint', '-Xdoclint')):
+            args.remove(arg)
+        elif value.startswith(('--add-exports=', '--add-reads=')):  # ECJ only knows the form with two arguments
+            option, _, module = value.partition('=')
+            arg.text = option
+            following = ET.Element(arg.tag)
+            following.text = module
+            following.tail = arg.tail
+            args.insert(list(args).index(arg) + 1, following)
+    # what stays of an emptied list (a comment, white space) reaches plexus-compiler-eclipse as a null argument (Jersey)
+    if not any(isinstance(arg.tag, str) for arg in args):
+        for arg in list(args):
+            args.remove(arg)
+        args.text = None
 
 def add_ecj_args(plugin, configuration):
     """Adds the projects.json ecj_compiler_args (WildFly: where the JBoss Logging processor looks for the translation

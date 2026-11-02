@@ -13,6 +13,7 @@ the compiler's own test suite does not: valid code in the wild that a recent cha
 | Jackson Databind, Gson, Guava, Guice, AssertJ, Joda-Time, jsoup, Jetty, Netty, Apache Maven | Maven |
 | XWiki Commons | Maven |
 | 49 more Maven projects: Apache Commons (BeanUtils, CLI, CSV, Text, Net, Pool, DBCP, Validator, JEXL, Configuration, FileUpload, VFS, BCEL, Exec, Imaging, RNG, Numbers, Statistics, Geometry, Logging, Email, Digester), HttpComponents, Log4j 2, Shiro, ZooKeeper, Curator, Velocity, Jackson core and annotations, MyBatis, Hibernate Validator, JSqlParser, JavaParser, Checkstyle, PMD, JUnit 4, SLF4J, Logback, H2, Dropwizard, JDBI, REST Assured, Tika, PDFBox, ActiveMQ, Avro, Maven Surefire | Maven (see `projects.json` for the exact list and commits) |
+| 122 more Maven projects: Spring Data, Spring AI, Dubbo, HBase, Hadoop, Ignite, NiFi, ShardingSphere, Jena, CXF, Jenkins, Debezium, Liquibase, Nacos, Sentinel, Apollo, Jedis, Lettuce, HikariCP, Vavr, Truth, google-java-format, JMH, Undertow, Thymeleaf, ZXing, JTS... | Maven (see `projects.json`) |
 | Eclipse Collections | Maven (`install`) |
 | JavaHamcrest | Gradle (ECJ Gradle plugin, see `patches/`) |
 | Quarkus, Camel, WildFly | Maven (`install`, several hours: the baseline and the head ECJ run in two parallel jobs) |
@@ -160,7 +161,7 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
    A project that does not build with the baseline ECJ, or that was not tested at all
    (clone or patch failure), is shown with `⚠️` in the table but does not fail the run: only new problems do.
 
-The workflow `ECJ Non-regression Builds` (`.github/workflows/ecj-matrix.yml`) runs two jobs per project (baseline and head ECJ, in parallel) and a final `compare` job. The
+The workflow `ECJ Non-regression Builds` (`.github/workflows/ecj-matrix.yml`) runs three jobs per project (baseline ECJ, head ECJ and javac, in parallel) and a final `compare` job. A matrix cannot generate more than 256 jobs, so the projects are split in shards of 100, one call of `ecj-build.yml` per shard and label: adding projects only takes `projects.json`. The
 `ECJ Commit Watcher` workflow (`ecj-check.yml`) runs it every night when `eclipse.jdt.core` has a new commit; a
 successfully tested commit gets a `tested/<sha>` tag, a failing run is retried the next night.
 
@@ -199,6 +200,10 @@ The JDK project needs a JDK with `lib/src.zip`; otherwise set `JDK_SRC_DIR` to a
 
 ## Known limits
 
+* A new project is added only if it builds with `javac` on this setup (JDK 21, no network service, no native toolchain).
+  Tried and not kept yet: needing JDK 25 (`release version 25 not supported`): Storm, Druid, Ditto, GraphHopper, Prometheus
+  client, Activiti; needing `install` instead of `compile` (`has not been packaged yet`): Karaf, MINA SSHD, OpenJPA, TomEE,
+  Maven Resolver, OpenWebBeans, MapStruct; other build problems with javac: see the history of `projects.json`.
 * Joda-Time is not tested: its sources are Java 1.5, which a current ECJ no longer accepts.
 
 * Only the root `pom.xml` is switched to ECJ. A module that sets its own `compilerId` (or a profile-scoped compiler
