@@ -328,6 +328,12 @@ The JDK project needs a JDK with `lib/src.zip`; otherwise set `JDK_SRC_DIR` to a
   Tried and not kept yet: needing `install` instead of `compile` (`has not been packaged yet`): Karaf, MINA SSHD,
   OpenJPA, TomEE, Maven Resolver, OpenWebBeans, MapStruct; other build problems with javac: see the history of
   `projects.json`.
+* 38 projects build with javac on JDK 21 only (`"jdk": "21"`). 115 candidates added on 2026-11-02 did not build with javac
+  on JDK 21 nor 27 and were removed (list in the history of `projects.json`).
+* With JDK 27, ECJ fails on projects that it compiles on JDK 21: APIs removed after the release of the project
+  ([#5660](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5660): javax.tools ignores `--release`, fixed by
+  [#5663](https://github.com/eclipse-jdt/eclipse.jdt.core/pull/5663)), and module errors ("The package ... conflicts with a
+  package accessible from another module", "... cannot be resolved to a module") not analysed yet.
 * Joda-Time is not tested: its sources are Java 1.5, which a current ECJ no longer accepts.
 
 * Only the root `pom.xml` is switched to ECJ. A module that sets its own `compilerId` (or a profile-scoped compiler

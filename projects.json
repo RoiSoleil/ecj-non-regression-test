@@ -55,7 +55,8 @@
     "ref": "3d58e993a5d12e65ec1309497cf8fab4bf5f3645",
     "cmd": "git tag -f 3.0 && ./gradlew --no-daemon compileJava compileTestJava",
     "optional": false,
-    "patch": "JavaHamcrest.patch"
+    "patch": "JavaHamcrest.patch",
+    "jdk": "21"
   },
   {
     "name": "Quarkus",
@@ -318,7 +319,8 @@
     "ref": "a38a2f5d0c9f25031f206ba08442a3c545e00eb6",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false,
-    "override_compiler_args": true
+    "override_compiler_args": true,
+    "jdk": "21"
   },
   {
     "name": "Shiro",
@@ -353,7 +355,8 @@
     "url": "https://github.com/mybatis/mybatis-3.git",
     "ref": "0a44c5fd1f9b247a70232f706c636b2cc942f2ed",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "JSqlParser",
@@ -413,7 +416,8 @@
     "url": "https://github.com/dropwizard/dropwizard.git",
     "ref": "7c510b51343e4d7a350445c96375cfb1385ae6bb",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "Jdbi",
@@ -540,14 +544,16 @@
     "url": "https://github.com/spring-projects/spring-hateoas.git",
     "ref": "d5d2c37e084b552a2a0d86f68c23a79fd55e718b",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "SpringAi",
     "url": "https://github.com/spring-projects/spring-ai.git",
     "ref": "102c28c7827bd7bdc9794ffbc58f31c8183c6c9d",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "SpringPetclinic",
@@ -561,14 +567,16 @@
     "url": "https://github.com/apache/dubbo.git",
     "ref": "7ca3e29f4b48544b24fdfff6ccb9bc1b81132d44",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "ShardingSphere",
     "url": "https://github.com/apache/shardingsphere.git",
     "ref": "84d1da0c2c08f9bf2f716fa94edbbdc2c14ec87a",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "Flume",
@@ -576,7 +584,8 @@
     "ref": "9b5f6ba1e66daf34809f549d29b7801c3c19bbe1",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false,
-    "override_compiler_args": true
+    "override_compiler_args": true,
+    "jdk": "21"
   },
   {
     "name": "OpenNLP",
@@ -639,7 +648,8 @@
     "url": "https://github.com/apache/ignite.git",
     "ref": "7b4a2a91fdaf29fabf6b56b119871b6b15da3117",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "HBase",
@@ -870,7 +880,8 @@
     "url": "https://github.com/alibaba/fastjson2.git",
     "ref": "35111f33d5e204c325c7fc6921a51096b5be9b44",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "AlibabaDruid",
@@ -891,7 +902,8 @@
     "url": "https://github.com/alibaba/Sentinel.git",
     "ref": "a3f40ba8e900c8489bd520274739f17235a7721c",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "Canal",
@@ -912,7 +924,8 @@
     "url": "https://github.com/redis/lettuce.git",
     "ref": "dc07b116261f33f78067f27dee63ec9fc18e9336",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "HikariCP",
@@ -961,7 +974,8 @@
     "url": "https://github.com/awaitility/awaitility.git",
     "ref": "4fc23ccbd610ec16d14c2e7728e0593bffa6ac64",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "CucumberJvm",
@@ -1116,14 +1130,16 @@
     "url": "https://github.com/jwtk/jjwt.git",
     "ref": "fb71496164c71442d08adec4571d9616ed5e1b8d",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "Pac4j",
     "url": "https://github.com/pac4j/pac4j.git",
     "ref": "8a26fb52cd93546d7c8abe80dda3dfd066601909",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "Ebean",
@@ -1214,7 +1230,8 @@
     "url": "https://github.com/dropwizard/metrics.git",
     "ref": "ab7e90480b931e64f1d1e37d7509466e6e0486cc",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "Oshi",
@@ -1242,7 +1259,8 @@
     "url": "https://github.com/bytedeco/javacv.git",
     "ref": "d6b38e57e0a767cb9ab0448f102b4e6396275d2e",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "JavaCPP",
@@ -1270,7 +1288,8 @@
     "url": "https://github.com/OpenAPITools/openapi-generator.git",
     "ref": "af12023b1e6c853162ac728c10d56f05787780e7",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "SpringdocOpenApi",
@@ -1371,20 +1390,6 @@
     "optional": false
   },
   {
-    "name": "Cglib",
-    "url": "https://github.com/cglib/cglib.git",
-    "ref": "9d67875290d269c9b1ff5e4f4bc578a9f05c392e",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Objenesis",
-    "url": "https://github.com/easymock/objenesis.git",
-    "ref": "59ee53be7aa4c40baf702ac1286b57f805e4e161",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "Spoon",
     "url": "https://github.com/INRIA/spoon.git",
     "ref": "b0574fecfea0b0f44c7ab8f201a6ac060a09ea44",
@@ -1406,23 +1411,9 @@
     "optional": false
   },
   {
-    "name": "Antlr4",
-    "url": "https://github.com/antlr/antlr4.git",
-    "ref": "45be27daf036f79eced0e3e215fdfee78b4b38d2",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "Stringtemplate4",
     "url": "https://github.com/antlr/stringtemplate4.git",
     "ref": "06c44e70ed265671802799ba69ff05fa2610eac1",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Jline3",
-    "url": "https://github.com/jline/jline3.git",
-    "ref": "fd71d44cc52ca1501f179f776516c93d8b8cfc71",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -1473,7 +1464,8 @@
     "url": "https://github.com/FasterXML/jackson-jr.git",
     "ref": "6ba6a7e81d9443f755246829fdd3fa0318cecd1e",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "JacksonDatatypeJoda",
@@ -1483,23 +1475,9 @@
     "optional": false
   },
   {
-    "name": "Feign",
-    "url": "https://github.com/OpenFeign/feign.git",
-    "ref": "cf8746eeba8a07b5de8a4f46aaf15e8032fa3130",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "Querydsl",
     "url": "https://github.com/querydsl/querydsl.git",
     "ref": "dd905aebf987599044e20b5822e7f035cee6a868",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Flyway",
-    "url": "https://github.com/flyway/flyway.git",
-    "ref": "d44cc17b6b4f7c02d00835b5ef08e378c1825fef",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -1525,30 +1503,9 @@
     "optional": false
   },
   {
-    "name": "ClickhouseJava",
-    "url": "https://github.com/ClickHouse/clickhouse-java.git",
-    "ref": "a73aac52a0af5ec9afec284a712b83136ccd6afa",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Hazelcast",
-    "url": "https://github.com/hazelcast/hazelcast.git",
-    "ref": "682d3d6ca008fc72fed05b795a77f86394610e0d",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "Helidon",
     "url": "https://github.com/helidon-io/helidon.git",
     "ref": "d1952b4ec06f6ee89e9a2c39db2d485f4b8c2825",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "VertX",
-    "url": "https://github.com/eclipse-vertx/vert.x.git",
-    "ref": "f4fa918c3256e4f9d3c4528e4f9550ef6db53c77",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -1560,37 +1517,9 @@
     "optional": false
   },
   {
-    "name": "Parsson",
-    "url": "https://github.com/eclipse-ee4j/parsson.git",
-    "ref": "2d01f006047e05cef49d13abe5ab25d66108f71a",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "AngusMail",
-    "url": "https://github.com/eclipse-ee4j/angus-mail.git",
-    "ref": "337607da7aad6936385ddf221e28c5f994a42aaf",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Tyrus",
-    "url": "https://github.com/eclipse-ee4j/tyrus.git",
-    "ref": "d6dc66cd3e858f852872a53059699755e97dc2e9",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "GlassfishHk2",
     "url": "https://github.com/eclipse-ee4j/glassfish-hk2.git",
     "ref": "322d865f7ec15505a8c23c5c640bb87b31d596ac",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Eclipselink",
-    "url": "https://github.com/eclipse-ee4j/eclipselink.git",
-    "ref": "701c322f364210f9d134e481a097b372045f8582",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -1644,13 +1573,6 @@
     "optional": false
   },
   {
-    "name": "SmallryeHealth",
-    "url": "https://github.com/smallrye/smallrye-health.git",
-    "ref": "30079851263182c051e7475ded0bd764b526d28d",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "JbossLogging",
     "url": "https://github.com/jboss-logging/jboss-logging.git",
     "ref": "812f69decbb284e48826021d0fe39bc6dded1227",
@@ -1665,23 +1587,9 @@
     "optional": false
   },
   {
-    "name": "WildflyCore",
-    "url": "https://github.com/wildfly/wildfly-core.git",
-    "ref": "0bef9cabf30f5e44f382d600548a9f6a7cfcc7f2",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "Xnio",
     "url": "https://github.com/xnio/xnio.git",
     "ref": "27bec13a1ed74b2dc1b5de91e71fe1fc17f6d8fd",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "WeldCore",
-    "url": "https://github.com/weld/core.git",
-    "ref": "082c0067fc949d94278c5b175ce92450487f278b",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -1696,20 +1604,6 @@
     "name": "Shrinkwrap",
     "url": "https://github.com/shrinkwrap/shrinkwrap.git",
     "ref": "c67c533a3ee3a1c4a0292c9d7199abfaddc7b272",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Deltaspike",
-    "url": "https://github.com/apache/deltaspike.git",
-    "ref": "caaaa0d0135e7053713a1cb18c75976dfb23de85",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "HibernateSearch",
-    "url": "https://github.com/hibernate/hibernate-search.git",
-    "ref": "b263ad4b891ad2a60ccaf14271a7bbfbeffa8d3f",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -1809,7 +1703,8 @@
     "url": "https://github.com/spring-cloud/spring-cloud-function.git",
     "ref": "d08aece5fa1c8ff0c39cf08032af171afa135dc8",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "SpringCloudNetflix",
@@ -1823,21 +1718,8 @@
     "url": "https://github.com/alibaba/spring-cloud-alibaba.git",
     "ref": "858aa8d58d2e902770ac4c6f5598808e125e695e",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "TransmittableThreadLocal",
-    "url": "https://github.com/alibaba/transmittable-thread-local.git",
-    "ref": "01639f2b93c91c79be10655edecd5c64dfc31cd2",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Arthas",
-    "url": "https://github.com/alibaba/arthas.git",
-    "ref": "2b6d0e59bd37162d1fd6abd0ad58e58c2b793b9a",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "Jetcache",
@@ -1847,23 +1729,9 @@
     "optional": false
   },
   {
-    "name": "Hutool",
-    "url": "https://github.com/chinabugotech/hutool.git",
-    "ref": "87ec11862baae72914df703e25939eb44a8a843c",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "SaToken",
     "url": "https://github.com/dromara/Sa-Token.git",
     "ref": "cb191342372cec5045a8c26f38c61a6ea2147ff8",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Rocketmq",
-    "url": "https://github.com/apache/rocketmq.git",
-    "ref": "592d59d12db356f8c98332d9e355a89d92590db3",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -1879,68 +1747,29 @@
     "url": "https://github.com/PowerJob/PowerJob.git",
     "ref": "d92ad66277ca54e14e2835b2e5a6aaf01f620684",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "MacrozhengMall",
     "url": "https://github.com/macrozheng/mall.git",
     "ref": "dcaa93b3150352e5044708d7211b5bed0af4509f",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "JavaDesignPatterns",
     "url": "https://github.com/iluwatar/java-design-patterns.git",
     "ref": "4cabb204f240240bea319605a5ffa46ded728001",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "TheAlgorithmsJava",
     "url": "https://github.com/TheAlgorithms/Java.git",
     "ref": "8b49bc5046c6df87441f85aabb1f110fc8c03be6",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Struts",
-    "url": "https://github.com/apache/struts.git",
-    "ref": "74af1ef2091a1a0d7161fd6d8c0b44580fe13b23",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Wicket",
-    "url": "https://github.com/apache/wicket.git",
-    "ref": "e34cad730a9d84e04ea22698901943f9f2007122",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "DirectoryLdapApi",
-    "url": "https://github.com/apache/directory-ldap-api.git",
-    "ref": "5f75e253107a5481adc3dc425219d88fae235000",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Mina",
-    "url": "https://github.com/apache/mina.git",
-    "ref": "7cb583db4ff9795ea7c98db16c36990e847d1899",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "MinaFtpserver",
-    "url": "https://github.com/apache/mina-ftpserver.git",
-    "ref": "3865deb64cf487baa81c86d3a380d3a5bd7f9a30",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "XmlgraphicsFop",
-    "url": "https://github.com/apache/xmlgraphics-fop.git",
-    "ref": "1301bcf7411d36ddb12dfadbb9fb4e85f78063f8",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -1952,37 +1781,9 @@
     "optional": false
   },
   {
-    "name": "ParquetJava",
-    "url": "https://github.com/apache/parquet-java.git",
-    "ref": "16932b3fae48866d141f91d4afa293c8b7ffbd2f",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Artemis",
-    "url": "https://github.com/apache/artemis.git",
-    "ref": "07a0ffcba6d1a312652c024616502228a0f94705",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "QpidJms",
     "url": "https://github.com/apache/qpid-jms.git",
     "ref": "739af81e102eb1eb65ddd6f143ae50007d256ade",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "RabbitmqJavaClient",
-    "url": "https://github.com/rabbitmq/rabbitmq-java-client.git",
-    "ref": "60227884e6bb4fa33806d8e93d74e49eac1f0f49",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "PahoMqttJava",
-    "url": "https://github.com/eclipse-paho/paho.mqtt.java.git",
-    "ref": "9c742c1d83e71132452e08d325e5a90d1631c302",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -1994,25 +1795,12 @@
     "optional": false
   },
   {
-    "name": "Leshan",
-    "url": "https://github.com/eclipse-leshan/leshan.git",
-    "ref": "8da3cde3e0f2a4c7c62d87c40d649224dc42cba1",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "KubernetesClient",
-    "url": "https://github.com/fabric8io/kubernetes-client.git",
-    "ref": "2b3adb979d7ad6a3ed03a302721762ae00e46ff7",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "DockerJava",
     "url": "https://github.com/docker-java/docker-java.git",
     "ref": "002b6eb7aa2b892be729c7c2a5e95f782924db38",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "ItextJava",
@@ -2050,23 +1838,9 @@
     "optional": false
   },
   {
-    "name": "Thumbnailator",
-    "url": "https://github.com/coobird/thumbnailator.git",
-    "ref": "e31168ca792b549966db090c51d4d671e393b2ab",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "JavaDiffUtils",
     "url": "https://github.com/java-diff-utils/java-diff-utils.git",
     "ref": "07a374624840a238e0c4e97dc94a30e0ac92ce28",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "JnrPosix",
-    "url": "https://github.com/jnr/jnr-posix.git",
-    "ref": "53a9a186cffbd1e870135746b76c9bcdb34e50a2",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2078,37 +1852,9 @@
     "optional": false
   },
   {
-    "name": "MustacheJava",
-    "url": "https://github.com/spullara/mustache.java.git",
-    "ref": "023374b250f41cc303dd9cfcb590ffb2fb375c0b",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "VelocityTools",
-    "url": "https://github.com/apache/velocity-tools.git",
-    "ref": "03bd638e66cb26f8692a13c94dbdaca9540da091",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "Jte",
     "url": "https://github.com/casid/jte.git",
     "ref": "18c5b94fdcf0a8478be904e20e4c97a2ba5bea74",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "SwaggerCore",
-    "url": "https://github.com/swagger-api/swagger-core.git",
-    "ref": "04558121268f1228d88c83291723cee416a990e4",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Protostuff",
-    "url": "https://github.com/protostuff/protostuff.git",
-    "ref": "f04d435941088ece1c63cee1b7f56fc030bd39fe",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2123,20 +1869,6 @@
     "name": "Instancio",
     "url": "https://github.com/instancio/instancio.git",
     "ref": "797a8f179a5b003ab8ffe90d6b8afcb57362595c",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Pitest",
-    "url": "https://github.com/hcoles/pitest.git",
-    "ref": "ddb0c3cb704108e2cb8c9b8d1a5eb6fdca998299",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Jacoco",
-    "url": "https://github.com/jacoco/jacoco.git",
-    "ref": "2fa50fafca911b1a0277951d97e5c78f19a4d754",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2162,23 +1894,9 @@
     "optional": false
   },
   {
-    "name": "Citrus",
-    "url": "https://github.com/citrusframework/citrus.git",
-    "ref": "76965778d0d1b9fb20f1074c0f1b17fb928f68c4",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "HdrHistogram",
     "url": "https://github.com/HdrHistogram/HdrHistogram.git",
     "ref": "de84b0a7de2378abfc405da503bf4898e84ea98e",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Javamelody",
-    "url": "https://github.com/javamelody/javamelody.git",
-    "ref": "8981a44838880fdb7905f0fb9f7d2e31b632d717",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2190,23 +1908,9 @@
     "optional": false
   },
   {
-    "name": "ApmAgentJava",
-    "url": "https://github.com/elastic/apm-agent-java.git",
-    "ref": "c7daf8b87e491b2d959fd76fd54ec34b0c79cb82",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "LogstashLogbackEncoder",
     "url": "https://github.com/logfellow/logstash-logback-encoder.git",
     "ref": "29c145253c35742a4dbb436a0b468a1a51a69f35",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Tinylog",
-    "url": "https://github.com/tinylog-org/tinylog.git",
-    "ref": "4e85b4e361e0ea24f942ef927de9cee5dfd4d9a2",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2222,7 +1926,8 @@
     "url": "https://github.com/OpenHFT/Chronicle-Map.git",
     "ref": "3b2373981142eaae989e68df726f914301cdaeaa",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "ChronicleWire",
@@ -2235,34 +1940,6 @@
     "name": "Juneau",
     "url": "https://github.com/apache/juneau.git",
     "ref": "26539faa2ad2de6f52162e4756ca855db5778afd",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "UimaUimaj",
-    "url": "https://github.com/apache/uima-uimaj.git",
-    "ref": "cadff4bfc2d5c1dac8c46acf6240754d3ebd0a8b",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Jspwiki",
-    "url": "https://github.com/apache/jspwiki.git",
-    "ref": "827c58dc31677000db2b4bc710c9bc546b0da273",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Syncope",
-    "url": "https://github.com/apache/syncope.git",
-    "ref": "dc7cfae33df32b5282a8f8b3d740bbdfc28286d1",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "AxisAxis2JavaCore",
-    "url": "https://github.com/apache/axis-axis2-java-core.git",
-    "ref": "2de28465467e0f59a8ca6d5c6f61eaf8b6362640",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2281,23 +1958,9 @@
     "optional": false
   },
   {
-    "name": "Bookkeeper",
-    "url": "https://github.com/apache/bookkeeper.git",
-    "ref": "7b66b5d7631cecc9198c5d555d8b2d28d3b6525d",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "CommonsScxml",
     "url": "https://github.com/apache/commons-scxml.git",
     "ref": "4cc059ff9d256454b1facc3a8b97192bd730220c",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "CommonsWeaver",
-    "url": "https://github.com/apache/commons-weaver.git",
-    "ref": "8e5515b28178a62d1442791482089bb5406eb78a",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2306,40 +1969,13 @@
     "url": "https://github.com/languagetool-org/languagetool.git",
     "ref": "2c9b51ea0746c341fd7edabfc753b1cff1f516c7",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "OpenmrsCore",
-    "url": "https://github.com/openmrs/openmrs-core.git",
-    "ref": "a5374b63a47b394774a599464766beb904e98bd3",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "SonarJava",
-    "url": "https://github.com/SonarSource/sonar-java.git",
-    "ref": "c4aab029ab79cc4d7bfbff4d727da77e99decbd4",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "KubernetesClientJava",
     "url": "https://github.com/kubernetes-client/java.git",
     "ref": "9872badf5f69ee7d3bdb5fb7dc6183d2da935821",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "JOOQ",
-    "url": "https://github.com/jOOQ/jOOQ.git",
-    "ref": "52d505e2dfe898818813e24b50e09c28af287753",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Redisson",
-    "url": "https://github.com/redisson/redisson.git",
-    "ref": "e71528b46804d6e33f3e6af7af7eef81f4a8f2fb",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2361,13 +1997,6 @@
     "name": "Rdf4j",
     "url": "https://github.com/eclipse-rdf4j/rdf4j.git",
     "ref": "ec7e48248eb20c4f7681d8ea5cbed3100718527a",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Storm",
-    "url": "https://github.com/apache/storm.git",
-    "ref": "d705565d6252400be374a1718b694e8af27552e2",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2414,44 +2043,17 @@
     "optional": false
   },
   {
-    "name": "Drill",
-    "url": "https://github.com/apache/drill.git",
-    "ref": "ddded87fd00a987ca88ff15d715a46efa5b99a14",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "Phoenix",
     "url": "https://github.com/apache/phoenix.git",
     "ref": "a3e8731c272468dad3f062ff14742a77007743d7",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "Tez",
     "url": "https://github.com/apache/tez.git",
     "ref": "b434f5ccdf4fd7384e4dfea8df9947bf31193416",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "JackrabbitOak",
-    "url": "https://github.com/apache/jackrabbit-oak.git",
-    "ref": "73d1a7a6a1ad291b950881a20d55d3a463e9dc62",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "DirectoryServer",
-    "url": "https://github.com/apache/directory-server.git",
-    "ref": "d854715e1e6a4ca853b5adb41411444b0de04438",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Unomi",
-    "url": "https://github.com/apache/unomi.git",
-    "ref": "24ee1ed32baac6788c3b9dfe60f2580d84ec053f",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2463,58 +2065,9 @@
     "optional": false
   },
   {
-    "name": "Tinkerpop",
-    "url": "https://github.com/apache/tinkerpop.git",
-    "ref": "a3fad343d101a87c53fb6c7417a9cdaabe8c7740",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Inlong",
-    "url": "https://github.com/apache/inlong.git",
-    "ref": "13c437946fcf503aa5d9c5cb7d9e3ae135e1911b",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "SkywalkingJava",
-    "url": "https://github.com/apache/skywalking-java.git",
-    "ref": "1d3bdc0029562ad76af67324e85739e8764c0535",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "ServicecombJavaChassis",
     "url": "https://github.com/apache/servicecomb-java-chassis.git",
     "ref": "1db6f7ae02fe7f750410fd1139909b3dfe65ac64",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Dolphinscheduler",
-    "url": "https://github.com/apache/dolphinscheduler.git",
-    "ref": "282d956cbc11215b30112e59a69780b238366f34",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Kyuubi",
-    "url": "https://github.com/apache/kyuubi.git",
-    "ref": "1e12a13ec4827d6875801210aac9450fb7a955f0",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Paimon",
-    "url": "https://github.com/apache/paimon.git",
-    "ref": "d85253bbdcbee098093d4fc2ea21c2708827d0d4",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Amoro",
-    "url": "https://github.com/apache/amoro.git",
-    "ref": "68938a74d2d89f2ec03fdf99a6ba8f94d524e462",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2523,26 +2076,13 @@
     "url": "https://github.com/apache/celeborn.git",
     "ref": "c277ec1911b2719dbc43f9471b7298b6934cc23d",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Hertzbeat",
-    "url": "https://github.com/apache/hertzbeat.git",
-    "ref": "f558381409802cd8d3aeebd0d607d450ecf5808f",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "CommonsDaemon",
     "url": "https://github.com/apache/commons-daemon.git",
     "ref": "d81f55f0c4393d03cfab13b502946083cdc556ea",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Ozone",
-    "url": "https://github.com/apache/ozone.git",
-    "ref": "7294fc2da180254d7430a3e61ae5f1af80581cb1",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2558,33 +2098,21 @@
     "url": "https://github.com/apache/ranger.git",
     "ref": "c5be812d05b2981ec713bd69c42e47c38cb4edee",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Knox",
-    "url": "https://github.com/apache/knox.git",
-    "ref": "778105089bce6d5df5dd6aecce7fd72fd488b9dd",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "ShardingsphereElasticjob",
     "url": "https://github.com/apache/shardingsphere-elasticjob.git",
     "ref": "f2dd950dd3a2251fcb4b4dd8868938c604b5ee32",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "RocketmqSpring",
     "url": "https://github.com/apache/rocketmq-spring.git",
     "ref": "a9f294bd40fca5d401b7ed02b60cf62f6ac74cf5",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Hugegraph",
-    "url": "https://github.com/apache/hugegraph.git",
-    "ref": "8e327b8f3d3ffcf61547be7fea1a15d3af2de8b4",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -2813,13 +2341,6 @@
     "optional": false
   },
   {
-    "name": "Krazo",
-    "url": "https://github.com/eclipse-ee4j/krazo.git",
-    "ref": "4b966ab4554f29bcf92233a74c83bf53d2d6c507",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "Soteria",
     "url": "https://github.com/eclipse-ee4j/soteria.git",
     "ref": "32f9916d44852a4235e574bbef545425572dd317",
@@ -2890,27 +2411,6 @@
     "optional": false
   },
   {
-    "name": "JakartaConcurrency",
-    "url": "https://github.com/jakartaee/concurrency.git",
-    "ref": "984cd12cb53324c18543b3dddb73e75044aa5871",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "JakartaSecurity",
-    "url": "https://github.com/jakartaee/security.git",
-    "ref": "a4b2168f43552a1b44f99324c629ed50fbfd3259",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "JakartaData",
-    "url": "https://github.com/jakartaee/data.git",
-    "ref": "5e6e79e518971ec2180676b231e80449cedb588d",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "JakartaMessaging",
     "url": "https://github.com/jakartaee/messaging.git",
     "ref": "5e449ebc3d788de6627f794f9f9f0b4823602656",
@@ -2921,13 +2421,6 @@
     "name": "JakartaExpressionLanguage",
     "url": "https://github.com/jakartaee/expression-language.git",
     "ref": "725dfdcb87b0e5c48e30b0ee8559a08c18b8d0e8",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "JakartaPages",
-    "url": "https://github.com/jakartaee/pages.git",
-    "ref": "0e6c6cde13f18e38ae2646fac94e47a872e65129",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -3037,23 +2530,9 @@
     "optional": false
   },
   {
-    "name": "VertxCodegen",
-    "url": "https://github.com/eclipse-vertx/vertx-codegen.git",
-    "ref": "3eb6b930556c32545e382391715ca2f2f9c1c9a9",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "VertxAuth",
     "url": "https://github.com/vert-x3/vertx-auth.git",
     "ref": "f4e27458910cccc77cc8bfe305a620fcb1f94623",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Hono",
-    "url": "https://github.com/eclipse-hono/hono.git",
-    "ref": "e1c98bec09efad17203a5ca8b470763c7fb11294",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -3100,20 +2579,6 @@
     "optional": false
   },
   {
-    "name": "SmallryeReactiveMessaging",
-    "url": "https://github.com/smallrye/smallrye-reactive-messaging.git",
-    "ref": "189c5c5b62d9d5b1c5ab35174108bea0951ec1ec",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "SmallryeGraphql",
-    "url": "https://github.com/smallrye/smallrye-graphql.git",
-    "ref": "49e8c20745f64c257d0dcb78421a74bc654669e5",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "SmallryeContextPropagation",
     "url": "https://github.com/smallrye/smallrye-context-propagation.git",
     "ref": "1fa49c07f659344a6eada3fc90eadf6418e3a41f",
@@ -3142,20 +2607,6 @@
     "optional": false
   },
   {
-    "name": "Narayana",
-    "url": "https://github.com/jbosstm/narayana.git",
-    "ref": "f8023670ae6e019422b3e302ff58f549f8098b5c",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Infinispan",
-    "url": "https://github.com/infinispan/infinispan.git",
-    "ref": "d39f630fbc7afad4adaf7b59506a5be9d243d913",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "SpringPlugin",
     "url": "https://github.com/spring-projects/spring-plugin.git",
     "ref": "33d227d480bdbda50fac7f31eb722dc6b252e2a4",
@@ -3167,7 +2618,8 @@
     "url": "https://github.com/spring-projects/spring-vault.git",
     "ref": "9bdd56ebf00d5c0e35f2a7fa88a29530d0e46d19",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "SpringModulith",
@@ -3240,65 +2692,9 @@
     "optional": false
   },
   {
-    "name": "COLA",
-    "url": "https://github.com/alibaba/COLA.git",
-    "ref": "352e1a867538d9cd40e1b11e4028fa652fc97557",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "JvmSandbox",
-    "url": "https://github.com/alibaba/jvm-sandbox.git",
-    "ref": "c01c28ab5d7d97a64071a2aca261804c47a5347e",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "QLExpress",
     "url": "https://github.com/alibaba/QLExpress.git",
     "ref": "d90c47080d006347ba803e38a65988995b00c746",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Forest",
-    "url": "https://github.com/dromara/forest.git",
-    "ref": "52d68e974c54229ea2ce5daf9392aaa3b621938f",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Liteflow",
-    "url": "https://github.com/dromara/liteflow.git",
-    "ref": "54c084446c17ebd8536b0172de44b946f85562de",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Hmily",
-    "url": "https://github.com/dromara/hmily.git",
-    "ref": "52dc6ba3a44f9ade8d49bcc6ad49485ef9879c49",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "DynamicTp",
-    "url": "https://github.com/dromara/dynamic-tp.git",
-    "ref": "e304f1832db7afc2a83bd7440b1b95018c0562c5",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "EasyEs",
-    "url": "https://github.com/dromara/easy-es.git",
-    "ref": "5b888368a9c0137d3f58cf969be6d2db255c1c5b",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "XFileStorage",
-    "url": "https://github.com/dromara/x-file-storage.git",
-    "ref": "f7baa6e933398185096a5bff5e427593247b19d7",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -3307,7 +2703,8 @@
     "url": "https://github.com/elunez/eladmin.git",
     "ref": "646c58c30f2e9aecf998b054f05f4d9ba0008995",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "RuoyiVuePro",
@@ -3345,13 +2742,6 @@
     "optional": false
   },
   {
-    "name": "XPipe",
-    "url": "https://github.com/ctripcorp/x-pipe.git",
-    "ref": "2634c102bdb66d8a916b9a14748c77ae5004efc8",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "ChaosbladeExecJvm",
     "url": "https://github.com/chaosblade-io/chaosblade-exec-jvm.git",
     "ref": "4f2c393eca0792e0ff1f6c614a6cb845156101ea",
@@ -3359,44 +2749,9 @@
     "optional": false
   },
   {
-    "name": "JsonIterJava",
-    "url": "https://github.com/json-iterator/java.git",
-    "ref": "6925cf4c19d313504b416f58a349a36bf563e0e1",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "MinimalJson",
-    "url": "https://github.com/ralfstx/minimal-json.git",
-    "ref": "c091e6985620da04d5abcd902aafb6c9583c48ea",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "JsonldJava",
     "url": "https://github.com/jsonld-java/jsonld-java.git",
     "ref": "4a7305f26af38b47336fe28ba506a5f2ce0aae43",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "ErrorProne",
-    "url": "https://github.com/google/error-prone.git",
-    "ref": "e188bc5ce81975299588346248e6616f340443eb",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "GoogleApiJavaClient",
-    "url": "https://github.com/googleapis/google-api-java-client.git",
-    "ref": "9e0a9f014ae0a0a6db5e94fbbff6d55eec958f82",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "GoogleOauthJavaClient",
-    "url": "https://github.com/googleapis/google-oauth-java-client.git",
-    "ref": "41a5523fda7a8667c90e4b8972f32d89dd08dae5",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -3429,23 +2784,9 @@
     "optional": false
   },
   {
-    "name": "JbehaveCore",
-    "url": "https://github.com/jbehave/jbehave-core.git",
-    "ref": "52c055edf70a6b0d0382d15f1a869ef8d1d4a603",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "ApprovalTestsJava",
     "url": "https://github.com/approvals/ApprovalTests.Java.git",
     "ref": "778ac1afb37f5e63958dab968e56d801d1503c53",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Quickperf",
-    "url": "https://github.com/quick-perf/quickperf.git",
-    "ref": "589913ca6dc1c64815df0e0dfd6dcbcb8f5a0bb7",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -3464,13 +2805,6 @@
     "optional": false
   },
   {
-    "name": "Javalin",
-    "url": "https://github.com/javalin/javalin.git",
-    "ref": "3c6d62fe04e84075922b390b03c53126b093fbb3",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "SparkJava",
     "url": "https://github.com/perwendel/spark.git",
     "ref": "1973e402f5d4c1442ad34a1d38ed0758079f7773",
@@ -3485,30 +2819,9 @@
     "optional": false
   },
   {
-    "name": "Ninja",
-    "url": "https://github.com/ninjaframework/ninja.git",
-    "ref": "f7b39ce103e547595585276857c3fc77d1e6f4f0",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Blade",
-    "url": "https://github.com/lets-blade/blade.git",
-    "ref": "e6283048331004204bc769ce295b151000894b33",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "VaadinFlow",
     "url": "https://github.com/vaadin/flow.git",
     "ref": "2ffc813272a7592169fb3933fac8816809924dec",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Primefaces",
-    "url": "https://github.com/primefaces/primefaces.git",
-    "ref": "c55f41e18b27501baf0cc4dae4e819e2fc85a000",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -3531,7 +2844,8 @@
     "url": "https://github.com/mybatis/spring.git",
     "ref": "07c1ce8968d6366cfa5e1d80cc6878f0e5407078",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "MybatisDynamicSql",
@@ -3545,7 +2859,8 @@
     "url": "https://github.com/mybatis/spring-boot-starter.git",
     "ref": "e16a13e0e275514b3b87c1f0256c3ba1005aaed4",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "HypersistenceUtils",
@@ -3562,37 +2877,17 @@
     "optional": false
   },
   {
-    "name": "CassandraJavaDriver",
-    "url": "https://github.com/apache/cassandra-java-driver.git",
-    "ref": "c2043c577fd9a61ca196f08ac45d568f1d00e8b5",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "InfluxdbClientJava",
     "url": "https://github.com/influxdata/influxdb-client-java.git",
     "ref": "cf1d92d4d27bbd5ad540405f04eaa4ed41514800",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Reload4j",
-    "url": "https://github.com/qos-ch/reload4j.git",
-    "ref": "343b83bc3866daf2e742cc2fd1affc416c6bc880",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "Logbook",
     "url": "https://github.com/zalando/logbook.git",
     "ref": "b8604ccb41041fa078574458c0bf8af28bbf3dce",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Dozer",
-    "url": "https://github.com/DozerMapper/dozer.git",
-    "ref": "8efd82f65da118abfa4a5c953bd8dc1bda3bb112",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -3615,7 +2910,8 @@
     "url": "https://github.com/OpenHFT/Chronicle-Core.git",
     "ref": "4051f1a145f616706c767251c70ad8f11818d296",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "jdk": "21"
   },
   {
     "name": "ChronicleBytes",
@@ -3628,13 +2924,6 @@
     "name": "ZeroAllocationHashing",
     "url": "https://github.com/OpenHFT/Zero-Allocation-Hashing.git",
     "ref": "60af5802dfa1867ef286155e66503f7c20d8613b",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Airlift",
-    "url": "https://github.com/airlift/airlift.git",
-    "ref": "ae7e614b9a623a6bf52eeb9ca081c5ef3e0bc930",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -3677,13 +2966,6 @@
     "name": "Docx4j",
     "url": "https://github.com/plutext/docx4j.git",
     "ref": "f8f661f684f5ef5db3b463f87eb41685cf15d5cf",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Xdocreport",
-    "url": "https://github.com/opensagres/xdocreport.git",
-    "ref": "625c947734ca25d504b3217e33d3f5275b4e0ae6",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -3779,13 +3061,6 @@
     "optional": false
   },
   {
-    "name": "GitCommitIdMavenPlugin",
-    "url": "https://github.com/git-commit-id/git-commit-id-maven-plugin.git",
-    "ref": "bf0d37e0a21288db15d3d35a19dfc693224f5c01",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "DockerMavenPlugin",
     "url": "https://github.com/fabric8io/docker-maven-plugin.git",
     "ref": "8bba92bf61e012cc1334e48bac5de27a97c33d3c",
@@ -3796,13 +3071,6 @@
     "name": "FrontendMavenPlugin",
     "url": "https://github.com/eirslett/frontend-maven-plugin.git",
     "ref": "9322a2dffec2f8ce83bf5dea5c7fbcbeb4f404b4",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "Jruby",
-    "url": "https://github.com/jruby/jruby.git",
-    "ref": "dbd645839bd2d3bce4b8f138ea0495ee28622476",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -3842,20 +3110,6 @@
     "optional": false
   },
   {
-    "name": "TimefoldSolver",
-    "url": "https://github.com/TimefoldAI/timefold-solver.git",
-    "ref": "25c07820a1b758a7ae5cf5e0eac0afe6a171af5a",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "ChocoSolver",
-    "url": "https://github.com/chocoteam/choco-solver.git",
-    "ref": "4456ac71ba28109b6af0fb1c41196ebddcae69ae",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "GsCore",
     "url": "https://github.com/graphstream/gs-core.git",
     "ref": "950b87280075f92a85b564b47ce6522ced5ba53a",
@@ -3873,13 +3127,6 @@
     "name": "Biojava",
     "url": "https://github.com/biojava/biojava.git",
     "ref": "8f151db1d376ed0311979bd6bc2131f0eea11c1a",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "ImageJ",
-    "url": "https://github.com/imagej/ImageJ.git",
-    "ref": "a376e43fad41a7337f7f01433c9673ed376b40e6",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   },
@@ -3926,13 +3173,6 @@
     "optional": false
   },
   {
-    "name": "XwikiRendering",
-    "url": "https://github.com/xwiki/xwiki-rendering.git",
-    "ref": "55faff69eb0dd68b541907173bde9c3d5c644e89",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
     "name": "OpenRefine",
     "url": "https://github.com/OpenRefine/OpenRefine.git",
     "ref": "33f9544f88ee8ca91f055b3a722ded5672cffbb4",
@@ -3971,13 +3211,6 @@
     "name": "SignalServer",
     "url": "https://github.com/signalapp/Signal-Server.git",
     "ref": "ca7a105f156511b17ddefe1cf4ae8cd0831646e9",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
-  },
-  {
-    "name": "CarbonKernel",
-    "url": "https://github.com/wso2/carbon-kernel.git",
-    "ref": "95544a36209f89089927cadc2e7d0446594c2cf7",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false
   }
