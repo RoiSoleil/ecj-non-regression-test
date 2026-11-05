@@ -49,69 +49,69 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 <!-- status:start -->
 | Project | Released ECJ | Head ECJ |
 |---|---|---|
-| JDK | ❌ 3 compile errors | ⚠️ not run |
-| ApacheCommonsIO | ⚠️ not run | ✅ compiles |
-| ApacheCommonsCollections | ✅ compiles | ✅ compiles |
-| ApacheCommonsLang | ✅ compiles | ✅ compiles |
-| JacksonDatabind | ✅ compiles | ✅ compiles |
-| xwiki | ✅ compiles | ✅ compiles |
-| Eclipse-Collections | ⚠️ not run | ❌ 1 compile errors |
-| JavaHamcrest | ✅ compiles | ⚠️ not run |
-| Quarkus | ❌ 1360 compile errors | ❌ 1360 compile errors |
-| Camel | ⚠️ not run | ❌ 90 compile errors |
-| WildFly | ❌ 2 compile errors | ❌ 2 compile errors |
-| Guava | ❌ 11 compile errors | ❌ 11 compile errors |
+| JDK | ⚠️ not run | ⚠️ not run |
+| ApacheCommonsIO | ⚠️ not run | ⚠️ not run |
+| ApacheCommonsCollections | ⚠️ not run | ⚠️ not run |
+| ApacheCommonsLang | ⚠️ not run | ⚠️ not run |
+| JacksonDatabind | ⚠️ not run | ⚠️ not run |
+| xwiki | ⚠️ not run | ⚠️ not run |
+| Eclipse-Collections | ⚠️ not run | ⚠️ not run |
+| JavaHamcrest | ⚠️ not run | ⚠️ not run |
+| Quarkus | ⚠️ not run | ⚠️ not run |
+| Camel | ⚠️ not run | ⚠️ not run |
+| WildFly | ⚠️ not run | ⚠️ not run |
+| Guava | ⚠️ not run | ⚠️ not run |
 | Gson | ⚠️ not run | ⚠️ not run |
-| Guice | ❌ 1 compile errors | ⚠️ not run |
-| AssertJ | ❌ 53654 compile errors | ❌ 53654 compile errors |
-| ApacheCommonsMath | ✅ compiles | ⚠️ not run |
-| ApacheCommonsCompress | ⚠️ not run | ✅ compiles |
-| ApacheCommonsCodec | ✅ compiles | ⚠️ not run |
-| Netty | ❌ 65 compile errors | ❌ 65 compile errors |
-| ApacheMaven | ❌ 245 compile errors | ❌ 245 compile errors |
-| Jsoup | ⚠️ not run | ❌ 53 compile errors |
-| Jetty | ❌ 153 compile errors | ❌ 153 compile errors |
-| CommonsBeanutils | ✅ compiles | ⚠️ not run |
-| CommonsCli | ✅ compiles | ✅ compiles |
-| CommonsCsv | ⚠️ not run | ✅ compiles |
-| CommonsText | ✅ compiles | ✅ compiles |
-| CommonsNet | ✅ compiles | ✅ compiles |
-| CommonsPool | ✅ compiles | ✅ compiles |
-| CommonsDbcp | ✅ compiles | ✅ compiles |
-| CommonsValidator | ✅ compiles | ✅ compiles |
+| Guice | ⚠️ not run | ⚠️ not run |
+| AssertJ | ⚠️ not run | ⚠️ not run |
+| ApacheCommonsMath | ⚠️ not run | ⚠️ not run |
+| ApacheCommonsCompress | ⚠️ not run | ⚠️ not run |
+| ApacheCommonsCodec | ⚠️ not run | ⚠️ not run |
+| Netty | ⚠️ not run | ⚠️ not run |
+| ApacheMaven | ⚠️ not run | ⚠️ not run |
+| Jsoup | ⚠️ not run | ⚠️ not run |
+| Jetty | ⚠️ not run | ⚠️ not run |
+| CommonsBeanutils | ⚠️ not run | ⚠️ not run |
+| CommonsCli | ⚠️ not run | ⚠️ not run |
+| CommonsCsv | ⚠️ not run | ⚠️ not run |
+| CommonsText | ⚠️ not run | ⚠️ not run |
+| CommonsNet | ⚠️ not run | ⚠️ not run |
+| CommonsPool | ⚠️ not run | ⚠️ not run |
+| CommonsDbcp | ⚠️ not run | ⚠️ not run |
+| CommonsValidator | ⚠️ not run | ⚠️ not run |
 | CommonsJexl | ⚠️ not run | ⚠️ not run |
-| CommonsConfiguration | ✅ compiles | ✅ compiles |
-| CommonsFileupload | ✅ compiles | ✅ compiles |
-| CommonsVfs | ✅ compiles | ✅ compiles |
-| CommonsBcel | ✅ compiles | ✅ compiles |
-| CommonsExec | ⚠️ not run | ✅ compiles |
-| CommonsImaging | ✅ compiles | ⚠️ not run |
-| CommonsRng | ⚠️ not run | ✅ compiles |
-| CommonsNumbers | ✅ compiles | ✅ compiles |
-| CommonsStatistics | ✅ compiles | ✅ compiles |
-| CommonsGeometry | ✅ compiles | ✅ compiles |
-| CommonsLogging | ⚠️ not run | ✅ compiles |
-| CommonsEmail | ✅ compiles | ✅ compiles |
-| CommonsDigester | ✅ compiles | ✅ compiles |
-| LoggingLog4j2 | ✅ compiles | ✅ compiles |
-| Shiro | ❌ 54 compile errors | ❌ 54 compile errors |
-| Curator | ❌ 3 compile errors | ❌ 3 compile errors |
-| JacksonCore | ❌ 47 compile errors | ⚠️ not run |
-| JacksonAnnotations | ✅ compiles | ✅ compiles |
-| Mybatis3 | ⚠️ not run | ✅ compiles |
-| JSqlParser | ⚠️ not run | ❌ 15938 compile errors |
-| Javaparser | ❌ 1 compile errors | ⚠️ not run |
-| Pmd | ❌ 6 compile errors | ✅ compiles |
-| Junit4 | ✅ compiles | ✅ compiles |
-| Slf4j | ✅ compiles | ⚠️ not run |
-| Logback | ❌ 2 compile errors | ❌ 2 compile errors |
-| H2database | ✅ compiles | ✅ compiles |
-| Dropwizard | ✅ compiles | ✅ compiles |
-| Jdbi | ❌ 1 compile errors | ❌ 1 compile errors |
-| RestAssured | ✅ compiles | ✅ compiles |
-| Pdfbox | ✅ compiles | ⚠️ not run |
-| Activemq | ❌ 1 compile errors | ⚠️ not run |
-| Avro | ✅ compiles | ✅ compiles |
+| CommonsConfiguration | ⚠️ not run | ⚠️ not run |
+| CommonsFileupload | ⚠️ not run | ⚠️ not run |
+| CommonsVfs | ⚠️ not run | ⚠️ not run |
+| CommonsBcel | ⚠️ not run | ⚠️ not run |
+| CommonsExec | ⚠️ not run | ⚠️ not run |
+| CommonsImaging | ⚠️ not run | ⚠️ not run |
+| CommonsRng | ⚠️ not run | ⚠️ not run |
+| CommonsNumbers | ⚠️ not run | ⚠️ not run |
+| CommonsStatistics | ⚠️ not run | ⚠️ not run |
+| CommonsGeometry | ⚠️ not run | ⚠️ not run |
+| CommonsLogging | ⚠️ not run | ⚠️ not run |
+| CommonsEmail | ⚠️ not run | ⚠️ not run |
+| CommonsDigester | ⚠️ not run | ⚠️ not run |
+| LoggingLog4j2 | ⚠️ not run | ⚠️ not run |
+| Shiro | ⚠️ not run | ⚠️ not run |
+| Curator | ⚠️ not run | ⚠️ not run |
+| JacksonCore | ⚠️ not run | ⚠️ not run |
+| JacksonAnnotations | ⚠️ not run | ⚠️ not run |
+| Mybatis3 | ⚠️ not run | ⚠️ not run |
+| JSqlParser | ⚠️ not run | ⚠️ not run |
+| Javaparser | ⚠️ not run | ⚠️ not run |
+| Pmd | ⚠️ not run | ⚠️ not run |
+| Junit4 | ⚠️ not run | ⚠️ not run |
+| Slf4j | ⚠️ not run | ⚠️ not run |
+| Logback | ⚠️ not run | ⚠️ not run |
+| H2database | ⚠️ not run | ⚠️ not run |
+| Dropwizard | ⚠️ not run | ⚠️ not run |
+| Jdbi | ⚠️ not run | ⚠️ not run |
+| RestAssured | ⚠️ not run | ⚠️ not run |
+| Pdfbox | ⚠️ not run | ⚠️ not run |
+| Activemq | ⚠️ not run | ⚠️ not run |
+| Avro | ⚠️ not run | ⚠️ not run |
 | MavenSurefire | ⚠️ not run | ⚠️ not run |
 | HttpcomponentsClient | ⚠️ not run | ⚠️ not run |
 | HttpcomponentsCore | ⚠️ not run | ⚠️ not run |
@@ -149,70 +149,70 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | MavenAssemblyPlugin | ⚠️ not run | ⚠️ not run |
 | MavenMvnd | ⚠️ not run | ⚠️ not run |
 | CommonsCrypto | ⚠️ not run | ⚠️ not run |
-| CommonsDbutils | ✅ compiles | ✅ compiles |
-| CommonsJxpath | ✅ compiles | ✅ compiles |
-| CommonsJcs | ❌ 2484 compile errors | ⚠️ not run |
-| CommonsRdf | ✅ compiles | ✅ compiles |
-| MyFaces | ✅ compiles | ✅ compiles |
-| Johnzon | ✅ compiles | ✅ compiles |
-| Jersey | ❌ 713 compile errors | ⚠️ not run |
-| Grizzly | ❌ 1704 compile errors | ❌ 1702 compile errors |
-| Yasson | ❌ 1118 compile errors | ⚠️ not run |
-| Mojarra | ✅ compiles | ✅ compiles |
-| Milo | ✅ compiles | ✅ compiles |
-| Tycho | ✅ compiles | ✅ compiles |
-| Truth | ✅ compiles | ✅ compiles |
+| CommonsDbutils | ⚠️ not run | ✅ compiles |
+| CommonsJxpath | ⚠️ not run | ✅ compiles |
+| CommonsJcs | ⚠️ not run | ⚠️ not run |
+| CommonsRdf | ⚠️ not run | ⚠️ not run |
+| MyFaces | ⚠️ not run | ✅ compiles |
+| Johnzon | ⚠️ not run | ✅ compiles |
+| Jersey | ⚠️ not run | ❌ 713 compile errors |
+| Grizzly | ⚠️ not run | ❌ 1702 compile errors |
+| Yasson | ⚠️ not run | ❌ 1118 compile errors |
+| Mojarra | ⚠️ not run | ✅ compiles |
+| Milo | ⚠️ not run | ✅ compiles |
+| Tycho | ⚠️ not run | ✅ compiles |
+| Truth | ⚠️ not run | ✅ compiles |
 | GoogleJavaFormat | ⚠️ not run | ✅ compiles |
-| CompileTesting | ✅ compiles | ✅ compiles |
-| Jimfs | ✅ compiles | ✅ compiles |
-| GoogleHttpClient | ✅ compiles | ✅ compiles |
-| JacksonModulesJava8 | ✅ compiles | ✅ compiles |
-| JacksonDataformatsBinary | ❌ 4202 compile errors | ⚠️ not run |
-| JacksonDataformatsText | ❌ 2170 compile errors | ❌ 2170 compile errors |
-| Woodstox | ✅ compiles | ✅ compiles |
-| AaltoXml | ✅ compiles | ✅ compiles |
-| Fastjson2 | ❌ 661 compile errors | ❌ 661 compile errors |
-| AlibabaDruid | ✅ compiles | ✅ compiles |
-| Nacos | ✅ compiles | ⚠️ not run |
-| Sentinel | ❌ 3 compile errors | ❌ 3 compile errors |
-| Canal | ✅ compiles | ✅ compiles |
-| Jedis | ✅ compiles | ✅ compiles |
-| Lettuce | ✅ compiles | ✅ compiles |
-| HikariCP | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| Liquibase | ❌ 1792 compile errors | ⚠️ not run |
-| Immutables | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| ModelMapper | ✅ compiles | ✅ compiles |
-| Javassist | ✅ compiles | ✅ compiles |
-| EasyMock | ✅ compiles | ✅ compiles |
-| Awaitility | ✅ compiles | ✅ compiles |
-| CucumberJvm | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| CompileTesting | ⚠️ not run | ✅ compiles |
+| Jimfs | ⚠️ not run | ✅ compiles |
+| GoogleHttpClient | ⚠️ not run | ✅ compiles |
+| JacksonModulesJava8 | ⚠️ not run | ✅ compiles |
+| JacksonDataformatsBinary | ⚠️ not run | ❌ 4202 compile errors |
+| JacksonDataformatsText | ⚠️ not run | ❌ 2170 compile errors |
+| Woodstox | ⚠️ not run | ✅ compiles |
+| AaltoXml | ⚠️ not run | ✅ compiles |
+| Fastjson2 | ⚠️ not run | ❌ 661 compile errors |
+| AlibabaDruid | ⚠️ not run | ✅ compiles |
+| Nacos | ⚠️ not run | ✅ compiles |
+| Sentinel | ⚠️ not run | ❌ 3 compile errors |
+| Canal | ⚠️ not run | ✅ compiles |
+| Jedis | ⚠️ not run | ✅ compiles |
+| Lettuce | ⚠️ not run | ✅ compiles |
+| HikariCP | ⚠️ not run | ⚠️ build failed (no compile error) |
+| Liquibase | ⚠️ not run | ❌ 1792 compile errors |
+| Immutables | ⚠️ not run | ⚠️ not run |
+| ModelMapper | ⚠️ not run | ⚠️ not run |
+| Javassist | ⚠️ not run | ✅ compiles |
+| EasyMock | ⚠️ not run | ✅ compiles |
+| Awaitility | ⚠️ not run | ✅ compiles |
+| CucumberJvm | ⚠️ not run | ⚠️ build failed (no compile error) |
 | Karate | ⚠️ not run | ✅ compiles |
-| Jmh | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| Jol | ✅ compiles | ✅ compiles |
-| Vavr | ❌ 73 compile errors | ❌ 73 compile errors |
-| StreamEx | ❌ 10 compile errors | ❌ 10 compile errors |
-| Failsafe | ❌ 3 compile errors | ❌ 3 compile errors |
-| Bucket4j | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| AsyncHttpClient | ✅ compiles | ✅ compiles |
-| Jsonschema2pojo | ❌ 678 compile errors | ❌ 678 compile errors |
-| JsonSchemaValidator | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| JsonJava | ✅ compiles | ✅ compiles |
-| Kryo | ⚠️ build failed (no compile error) | ✅ compiles |
-| XStream | ✅ compiles | ✅ compiles |
-| RESTEasy | ❌ 177 compile errors | ❌ 177 compile errors |
-| Undertow | ❌ 9 compile errors | ❌ 9 compile errors |
-| Thymeleaf | ✅ compiles | ⚠️ not run |
+| Jmh | ⚠️ not run | ⚠️ not run |
+| Jol | ⚠️ not run | ✅ compiles |
+| Vavr | ⚠️ not run | ❌ 73 compile errors |
+| StreamEx | ⚠️ not run | ⚠️ not run |
+| Failsafe | ⚠️ not run | ❌ 3 compile errors |
+| Bucket4j | ⚠️ not run | ⚠️ build failed (no compile error) |
+| AsyncHttpClient | ⚠️ not run | ✅ compiles |
+| Jsonschema2pojo | ⚠️ not run | ❌ 678 compile errors |
+| JsonSchemaValidator | ⚠️ not run | ⚠️ not run |
+| JsonJava | ⚠️ not run | ✅ compiles |
+| Kryo | ⚠️ not run | ✅ compiles |
+| XStream | ⚠️ not run | ✅ compiles |
+| RESTEasy | ⚠️ not run | ❌ 177 compile errors |
+| Undertow | ⚠️ not run | ⚠️ not run |
+| Thymeleaf | ⚠️ not run | ⚠️ not run |
 | HandlebarsJava | ⚠️ not run | ❌ 2704 compile errors |
-| Pebble | ✅ compiles | ✅ compiles |
-| FlexmarkJava | ✅ compiles | ✅ compiles |
-| CommonmarkJava | ❌ 670 compile errors | ❌ 670 compile errors |
-| Jjwt | ✅ compiles | ✅ compiles |
-| Pac4j | ❌ 1152 compile errors | ❌ 1152 compile errors |
-| Ebean | ❌ 546 compile errors | ❌ 546 compile errors |
-| Tablesaw | ✅ compiles | ✅ compiles |
-| Jts | ✅ compiles | ✅ compiles |
-| JCTools | ✅ compiles | ✅ compiles |
-| ChronicleQueue | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| Pebble | ⚠️ not run | ⚠️ not run |
+| FlexmarkJava | ⚠️ not run | ✅ compiles |
+| CommonmarkJava | ⚠️ not run | ⚠️ not run |
+| Jjwt | ⚠️ not run | ⚠️ not run |
+| Pac4j | ⚠️ not run | ⚠️ not run |
+| Ebean | ⚠️ not run | ⚠️ not run |
+| Tablesaw | ⚠️ not run | ⚠️ not run |
+| Jts | ⚠️ not run | ⚠️ not run |
+| JCTools | ⚠️ not run | ⚠️ not run |
+| ChronicleQueue | ⚠️ not run | ⚠️ build failed (no compile error) |
 | Zip4j | ⚠️ not run | ⚠️ not run |
 | JnrFfi | ⚠️ not run | ⚠️ not run |
 | ThreeTenExtra | ⚠️ not run | ⚠️ not run |
@@ -249,80 +249,80 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | Stringtemplate4 | ⚠️ not run | ⚠️ not run |
 | Args4j | ⚠️ not run | ⚠️ not run |
 | JsonSchema | ⚠️ not run | ⚠️ not run |
-| JacksonModulesBase | ❌ 1887 compile errors | ❌ 1887 compile errors |
-| JacksonDatatypesCollections | ❌ 3093 compile errors | ❌ 3093 compile errors |
-| JacksonJakartaRsProviders | ✅ compiles | ✅ compiles |
-| JacksonDataformatXml | ❌ 1480 compile errors | ❌ 1480 compile errors |
-| JacksonJr | ✅ compiles | ✅ compiles |
-| JacksonDatatypeJoda | ❌ 328 compile errors | ❌ 328 compile errors |
-| Querydsl | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
-| SqliteJdbc | ❌ 58 compile errors | ❌ 58 compile errors |
-| MariadbConnectorJ | ✅ compiles | ✅ compiles |
-| MssqlJdbc | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
-| Helidon | ⚠️ build failed (no compile error) | ❌ 33 compile errors |
-| VertxWeb | ❌ 18 compile errors | ❌ 18 compile errors |
+| JacksonModulesBase | ⚠️ not run | ❌ 1887 compile errors |
+| JacksonDatatypesCollections | ⚠️ not run | ❌ 3093 compile errors |
+| JacksonJakartaRsProviders | ⚠️ not run | ✅ compiles |
+| JacksonDataformatXml | ⚠️ not run | ⚠️ not run |
+| JacksonJr | ⚠️ not run | ✅ compiles |
+| JacksonDatatypeJoda | ⚠️ not run | ❌ 328 compile errors |
+| Querydsl | ⚠️ not run | ⚠️ ecj not used (no compile error) |
+| SqliteJdbc | ⚠️ not run | ❌ 58 compile errors |
+| MariadbConnectorJ | ⚠️ not run | ✅ compiles |
+| MssqlJdbc | ⚠️ not run | ⚠️ ecj not used (no compile error) |
+| Helidon | ⚠️ not run | ❌ 33 compile errors |
+| VertxWeb | ⚠️ not run | ❌ 18 compile errors |
 | GlassfishHk2 | ⚠️ not run | ❌ 1 compile errors |
-| MicroprofileConfig | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
+| MicroprofileConfig | ⚠️ not run | ⚠️ ecj not used (no compile error) |
 | MicroprofileFaultTolerance | ⚠️ not run | ⚠️ ecj not used (no compile error) |
-| MicroprofileRestClient | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
-| SmallryeFaultTolerance | ⚠️ build failed (no compile error) | ⚠️ not run |
-| SmallryeOpenApi | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| SmallryeCommon | ❌ 33 compile errors | ❌ 33 compile errors |
-| SmallryeJwt | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
+| MicroprofileRestClient | ⚠️ not run | ⚠️ ecj not used (no compile error) |
+| SmallryeFaultTolerance | ⚠️ not run | ⚠️ build failed (no compile error) |
+| SmallryeOpenApi | ⚠️ not run | ⚠️ not run |
+| SmallryeCommon | ⚠️ not run | ⚠️ not run |
+| SmallryeJwt | ⚠️ not run | ⚠️ build failed (no compile error) |
 | JbossLogging | ⚠️ not run | ✅ compiles |
 | JbossModules | ⚠️ not run | ❌ 869 compile errors |
-| Xnio | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| ArquillianCore | ✅ compiles | ✅ compiles |
-| Shrinkwrap | ❌ 126 compile errors | ❌ 126 compile errors |
-| SpringBatch | ✅ compiles | ✅ compiles |
-| SpringDataElasticsearch | ✅ compiles | ✅ compiles |
-| SpringDataCassandra | ✅ compiles | ✅ compiles |
-| SpringDataRelational | ❌ 2 compile errors | ✅ compiles |
-| SpringDataRest | ✅ compiles | ✅ compiles |
-| SpringDataNeo4j | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
-| SpringDataCouchbase | ✅ compiles | ✅ compiles |
-| SpringDataLdap | ✅ compiles | ✅ compiles |
-| SpringDataKeyvalue | ✅ compiles | ✅ compiles |
-| SpringCloudGateway | ⚠️ build failed (no compile error) | ⚠️ not run |
-| SpringCloudConfig | ✅ compiles | ✅ compiles |
-| SpringCloudOpenfeign | ❌ 1 compile errors | ❌ 1 compile errors |
-| SpringCloudCommons | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| SpringCloudFunction | ✅ compiles | ✅ compiles |
-| SpringCloudNetflix | ✅ compiles | ✅ compiles |
-| SpringCloudAlibaba | ✅ compiles | ✅ compiles |
-| Jetcache | ✅ compiles | ✅ compiles |
-| SaToken | ✅ compiles | ✅ compiles |
-| IncubatorSeata | ✅ compiles | ✅ compiles |
-| PowerJob | ❌ 97 compile errors | ❌ 97 compile errors |
-| MacrozhengMall | ❌ 16 compile errors | ❌ 16 compile errors |
-| JavaDesignPatterns | ❌ 2170 compile errors | ❌ 2170 compile errors |
-| TheAlgorithmsJava | ✅ compiles | ✅ compiles |
-| XmlgraphicsCommons | ✅ compiles | ✅ compiles |
-| QpidJms | ✅ compiles | ✅ compiles |
-| Californium | ✅ compiles | ✅ compiles |
+| Xnio | ⚠️ not run | ⚠️ build failed (no compile error) |
+| ArquillianCore | ⚠️ not run | ✅ compiles |
+| Shrinkwrap | ⚠️ not run | ❌ 126 compile errors |
+| SpringBatch | ⚠️ not run | ✅ compiles |
+| SpringDataElasticsearch | ⚠️ not run | ✅ compiles |
+| SpringDataCassandra | ⚠️ not run | ✅ compiles |
+| SpringDataRelational | ⚠️ not run | ✅ compiles |
+| SpringDataRest | ⚠️ not run | ✅ compiles |
+| SpringDataNeo4j | ⚠️ not run | ⚠️ not run |
+| SpringDataCouchbase | ⚠️ not run | ✅ compiles |
+| SpringDataLdap | ⚠️ not run | ✅ compiles |
+| SpringDataKeyvalue | ⚠️ not run | ⚠️ not run |
+| SpringCloudGateway | ⚠️ not run | ⚠️ not run |
+| SpringCloudConfig | ⚠️ not run | ✅ compiles |
+| SpringCloudOpenfeign | ⚠️ not run | ❌ 1 compile errors |
+| SpringCloudCommons | ⚠️ not run | ⚠️ build failed (no compile error) |
+| SpringCloudFunction | ⚠️ not run | ✅ compiles |
+| SpringCloudNetflix | ⚠️ not run | ✅ compiles |
+| SpringCloudAlibaba | ⚠️ not run | ✅ compiles |
+| Jetcache | ⚠️ not run | ⚠️ not run |
+| SaToken | ⚠️ not run | ✅ compiles |
+| IncubatorSeata | ⚠️ not run | ✅ compiles |
+| PowerJob | ⚠️ not run | ⚠️ not run |
+| MacrozhengMall | ⚠️ not run | ❌ 16 compile errors |
+| JavaDesignPatterns | ⚠️ not run | ❌ 2170 compile errors |
+| TheAlgorithmsJava | ⚠️ not run | ✅ compiles |
+| XmlgraphicsCommons | ⚠️ not run | ✅ compiles |
+| QpidJms | ⚠️ not run | ✅ compiles |
+| Californium | ⚠️ not run | ✅ compiles |
 | DockerJava | ⚠️ not run | ❌ 1 compile errors |
-| ItextJava | ❌ 4 compile errors | ❌ 4 compile errors |
-| OpenPDF | ❌ 271 compile errors | ❌ 271 compile errors |
-| Flyingsaucer | ✅ compiles | ✅ compiles |
-| TwelveMonkeys | ✅ compiles | ✅ compiles |
-| MetadataExtractor | ✅ compiles | ✅ compiles |
-| JavaDiffUtils | ✅ compiles | ✅ compiles |
-| XChart | ✅ compiles | ✅ compiles |
-| Jte | ✅ compiles | ✅ compiles |
-| Datafaker | ✅ compiles | ✅ compiles |
-| Instancio | ❌ 111 compile errors | ❌ 111 compile errors |
+| ItextJava | ⚠️ not run | ❌ 4 compile errors |
+| OpenPDF | ⚠️ not run | ❌ 271 compile errors |
+| Flyingsaucer | ⚠️ not run | ✅ compiles |
+| TwelveMonkeys | ⚠️ not run | ✅ compiles |
+| MetadataExtractor | ⚠️ not run | ✅ compiles |
+| JavaDiffUtils | ⚠️ not run | ⚠️ not run |
+| XChart | ⚠️ not run | ✅ compiles |
+| Jte | ⚠️ not run | ✅ compiles |
+| Datafaker | ⚠️ not run | ✅ compiles |
+| Instancio | ⚠️ not run | ⚠️ not run |
 | Xmlunit | ⚠️ not run | ✅ compiles |
-| JSONassert | ✅ compiles | ⚠️ not run |
+| JSONassert | ⚠️ not run | ✅ compiles |
 | JsonUnit | ⚠️ not run | ⚠️ not run |
 | HdrHistogram | ⚠️ not run | ⚠️ not run |
 | Jolokia | ⚠️ not run | ⚠️ not run |
 | LogstashLogbackEncoder | ⚠️ not run | ⚠️ not run |
 | Rome | ⚠️ not run | ⚠️ not run |
-| ChronicleMap | ⚠️ not run | ⚠️ build failed (no compile error) |
+| ChronicleMap | ⚠️ not run | ⚠️ not run |
 | ChronicleWire | ⚠️ not run | ⚠️ not run |
 | Juneau | ⚠️ not run | ⚠️ not run |
-| QpidBrokerJ | ⚠️ not run | ⚠️ build failed (no compile error) |
-| Helix | ⚠️ not run | ❌ 7 compile errors |
+| QpidBrokerJ | ⚠️ not run | ⚠️ not run |
+| Helix | ⚠️ not run | ⚠️ not run |
 | CommonsScxml | ⚠️ not run | ⚠️ not run |
 | Languagetool | ⚠️ not run | ⚠️ not run |
 | KubernetesClientJava | ⚠️ not run | ⚠️ not run |
@@ -335,84 +335,84 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | PrometheusClientJava | ⚠️ not run | ⚠️ not run |
 | Activiti | ⚠️ not run | ⚠️ not run |
 | Accumulo | ⚠️ not run | ⚠️ not run |
-| Phoenix | ⚠️ not run | ✅ compiles |
+| Phoenix | ⚠️ not run | ⚠️ not run |
 | Tez | ⚠️ not run | ⚠️ not run |
-| Causeway | ⚠️ not run | ❌ 473 compile errors |
+| Causeway | ⚠️ not run | ⚠️ not run |
 | ServicecombJavaChassis | ⚠️ not run | ⚠️ not run |
-| Celeborn | ⚠️ not run | ✅ compiles |
+| Celeborn | ⚠️ not run | ⚠️ not run |
 | CommonsDaemon | ⚠️ not run | ⚠️ not run |
 | Ratis | ⚠️ not run | ⚠️ not run |
 | Ranger | ⚠️ not run | ⚠️ not run |
 | ShardingsphereElasticjob | ⚠️ not run | ⚠️ not run |
 | RocketmqSpring | ⚠️ not run | ⚠️ not run |
-| MavenJavadocPlugin | ⚠️ not run | ✅ compiles |
+| MavenJavadocPlugin | ⚠️ not run | ⚠️ not run |
 | MavenEnforcer | ⚠️ not run | ⚠️ not run |
-| MavenRelease | ⚠️ not run | ✅ compiles |
+| MavenRelease | ⚠️ not run | ⚠️ not run |
 | MavenScm | ⚠️ not run | ⚠️ not run |
-| MavenWagon | ✅ compiles | ⚠️ not run |
+| MavenWagon | ⚠️ not run | ⚠️ not run |
 | MavenArchetype | ⚠️ not run | ⚠️ not run |
-| MavenPluginTools | ✅ compiles | ✅ compiles |
-| MavenIndexer | ✅ compiles | ✅ compiles |
-| MavenJarPlugin | ✅ compiles | ⚠️ not run |
-| MavenWarPlugin | ✅ compiles | ✅ compiles |
+| MavenPluginTools | ⚠️ not run | ⚠️ not run |
+| MavenIndexer | ⚠️ not run | ⚠️ not run |
+| MavenJarPlugin | ⚠️ not run | ⚠️ not run |
+| MavenWarPlugin | ⚠️ not run | ⚠️ not run |
 | MavenSitePlugin | ⚠️ not run | ⚠️ not run |
-| MavenInvokerPlugin | ✅ compiles | ⚠️ not run |
-| MavenHelpPlugin | ✅ compiles | ✅ compiles |
-| MavenSharedUtils | ✅ compiles | ⚠️ not run |
-| MavenFiltering | ✅ compiles | ✅ compiles |
-| MavenResourcesPlugin | ✅ compiles | ✅ compiles |
+| MavenInvokerPlugin | ⚠️ not run | ⚠️ not run |
+| MavenHelpPlugin | ⚠️ not run | ⚠️ not run |
+| MavenSharedUtils | ⚠️ not run | ⚠️ not run |
+| MavenFiltering | ⚠️ not run | ⚠️ not run |
+| MavenResourcesPlugin | ⚠️ not run | ⚠️ not run |
 | MavenPmdPlugin | ⚠️ not run | ⚠️ not run |
-| MavenCheckstylePlugin | ✅ compiles | ⚠️ not run |
-| MavenEarPlugin | ✅ compiles | ⚠️ not run |
-| MavenSourcePlugin | ✅ compiles | ✅ compiles |
-| MavenInstallPlugin | ✅ compiles | ⚠️ not run |
-| MavenDeployPlugin | ✅ compiles | ⚠️ not run |
-| MavenCleanPlugin | ⚠️ not run | ✅ compiles |
-| MavenGpgPlugin | ✅ compiles | ⚠️ not run |
-| MavenAntrunPlugin | ✅ compiles | ⚠️ not run |
-| MavenProjectInfoReportsPlugin | ✅ compiles | ✅ compiles |
-| MavenDoxia | ✅ compiles | ⚠️ not run |
-| MavenDoxiaSitetools | ✅ compiles | ⚠️ not run |
+| MavenCheckstylePlugin | ⚠️ not run | ⚠️ not run |
+| MavenEarPlugin | ⚠️ not run | ⚠️ not run |
+| MavenSourcePlugin | ⚠️ not run | ⚠️ not run |
+| MavenInstallPlugin | ⚠️ not run | ⚠️ not run |
+| MavenDeployPlugin | ⚠️ not run | ⚠️ not run |
+| MavenCleanPlugin | ⚠️ not run | ⚠️ not run |
+| MavenGpgPlugin | ⚠️ not run | ⚠️ not run |
+| MavenAntrunPlugin | ⚠️ not run | ⚠️ not run |
+| MavenProjectInfoReportsPlugin | ⚠️ not run | ⚠️ not run |
+| MavenDoxia | ⚠️ not run | ⚠️ not run |
+| MavenDoxiaSitetools | ⚠️ not run | ⚠️ not run |
 | MavenDependencyTree | ⚠️ not run | ⚠️ not run |
-| MavenArchiver | ✅ compiles | ✅ compiles |
-| MavenJlinkPlugin | ✅ compiles | ⚠️ not run |
-| MavenBuildCacheExtension | ✅ compiles | ⚠️ not run |
-| Soteria | ❌ 24 compile errors | ⚠️ not run |
+| MavenArchiver | ⚠️ not run | ⚠️ not run |
+| MavenJlinkPlugin | ⚠️ not run | ⚠️ not run |
+| MavenBuildCacheExtension | ⚠️ not run | ⚠️ not run |
+| Soteria | ⚠️ not run | ⚠️ not run |
 | Exousia | ⚠️ not run | ⚠️ not run |
-| Expressly | ✅ compiles | ⚠️ not run |
-| GlassfishConcurro | ⚠️ not run | ✅ compiles |
-| JakartaServlet | ✅ compiles | ⚠️ not run |
-| JakartaCdi | ✅ compiles | ✅ compiles |
+| Expressly | ⚠️ not run | ⚠️ not run |
+| GlassfishConcurro | ⚠️ not run | ⚠️ not run |
+| JakartaServlet | ⚠️ not run | ⚠️ not run |
+| JakartaCdi | ⚠️ not run | ⚠️ not run |
 | JakartaRest | ⚠️ not run | ⚠️ not run |
 | JakartaPersistence | ⚠️ not run | ⚠️ not run |
-| JsonbApi | ✅ compiles | ⚠️ not run |
-| JakartaWebsocket | ✅ compiles | ⚠️ not run |
-| JakartaMessaging | ✅ compiles | ⚠️ not run |
-| JakartaExpressionLanguage | ⚠️ not run | ❌ 25 compile errors |
-| JakartaAuthentication | ✅ compiles | ⚠️ not run |
+| JsonbApi | ⚠️ not run | ⚠️ not run |
+| JakartaWebsocket | ⚠️ not run | ⚠️ not run |
+| JakartaMessaging | ⚠️ not run | ⚠️ not run |
+| JakartaExpressionLanguage | ⚠️ not run | ⚠️ not run |
+| JakartaAuthentication | ⚠️ not run | ⚠️ not run |
 | JakartaInterceptors | ⚠️ not run | ⚠️ not run |
-| JakartaInject | ✅ compiles | ⚠️ not run |
-| MicroprofileHealth | ⚠️ not run | ⚠️ ecj not used (no compile error) |
-| MicroprofileMetrics | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
-| MicroprofileOpenApi | ⚠️ ecj not used (no compile error) | ⚠️ not run |
-| MicroprofileJwtAuth | ⚠️ ecj not used (no compile error) | ⚠️ not run |
-| MicroprofileReactiveMessaging | ⚠️ ecj not used (no compile error) | ⚠️ not run |
-| MicroprofileGraphql | ⚠️ ecj not used (no compile error) | ⚠️ not run |
-| MicroprofileLra | ⚠️ ecj not used (no compile error) | ⚠️ not run |
-| MicroprofileContextPropagation | ⚠️ ecj not used (no compile error) | ⚠️ not run |
-| EclipseStore | ❌ 6705 compile errors | ⚠️ not run |
-| EclipseSerializer | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| Jnosql | ❌ 1000 compile errors | ⚠️ not run |
-| VertxSqlClient | ❌ 11 compile errors | ❌ 11 compile errors |
-| VertxAuth | ❌ 2 compile errors | ⚠️ not run |
-| Lemminx | ❌ 1020 compile errors | ❌ 1020 compile errors |
-| WildflyElytron | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| JbossRemoting | ⚠️ build failed (no compile error) | ⚠️ not run |
-| JbossLogmanager | ❌ 1083 compile errors | ⚠️ not run |
-| JbossThreads | ❌ 71 compile errors | ❌ 71 compile errors |
-| Jandex | ❌ 9 compile errors | ❌ 9 compile errors |
-| SmallryeContextPropagation | ✅ compiles | ⚠️ not run |
-| SmallryeOpentelemetry | ✅ compiles | ✅ compiles |
+| JakartaInject | ⚠️ not run | ⚠️ not run |
+| MicroprofileHealth | ⚠️ not run | ⚠️ not run |
+| MicroprofileMetrics | ⚠️ not run | ⚠️ not run |
+| MicroprofileOpenApi | ⚠️ not run | ⚠️ not run |
+| MicroprofileJwtAuth | ⚠️ not run | ⚠️ not run |
+| MicroprofileReactiveMessaging | ⚠️ not run | ⚠️ not run |
+| MicroprofileGraphql | ⚠️ not run | ⚠️ not run |
+| MicroprofileLra | ⚠️ not run | ⚠️ not run |
+| MicroprofileContextPropagation | ⚠️ not run | ⚠️ not run |
+| EclipseStore | ⚠️ not run | ⚠️ not run |
+| EclipseSerializer | ⚠️ not run | ⚠️ not run |
+| Jnosql | ⚠️ not run | ⚠️ not run |
+| VertxSqlClient | ⚠️ not run | ⚠️ not run |
+| VertxAuth | ⚠️ not run | ⚠️ not run |
+| Lemminx | ⚠️ not run | ⚠️ not run |
+| WildflyElytron | ⚠️ not run | ⚠️ not run |
+| JbossRemoting | ⚠️ not run | ⚠️ not run |
+| JbossLogmanager | ⚠️ not run | ⚠️ not run |
+| JbossThreads | ⚠️ not run | ⚠️ not run |
+| Jandex | ⚠️ not run | ⚠️ not run |
+| SmallryeContextPropagation | ⚠️ not run | ⚠️ not run |
+| SmallryeOpentelemetry | ⚠️ not run | ⚠️ not run |
 | SmallryeStork | ⚠️ not run | ⚠️ not run |
 | HibernateTools | ⚠️ not run | ⚠️ not run |
 | SpringPlugin | ⚠️ not run | ⚠️ not run |
@@ -449,70 +449,70 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | Omnifaces | ⚠️ not run | ⚠️ not run |
 | Jfinal | ⚠️ not run | ⚠️ not run |
 | MybatisSpring | ⚠️ not run | ⚠️ not run |
-| MybatisDynamicSql | ✅ compiles | ⚠️ not run |
-| SpringBootStarter | ✅ compiles | ⚠️ not run |
-| HypersistenceUtils | ❌ 35 compile errors | ⚠️ not run |
-| Neo4jJavaDriver | ❌ 7259 compile errors | ❌ 7259 compile errors |
-| InfluxdbClientJava | ❌ 3 compile errors | ⚠️ not run |
-| Logbook | ❌ 49 compile errors | ⚠️ not run |
-| Orika | ✅ compiles | ⚠️ not run |
+| MybatisDynamicSql | ⚠️ not run | ⚠️ not run |
+| SpringBootStarter | ⚠️ not run | ⚠️ not run |
+| HypersistenceUtils | ⚠️ not run | ⚠️ not run |
+| Neo4jJavaDriver | ⚠️ not run | ⚠️ not run |
+| InfluxdbClientJava | ⚠️ not run | ⚠️ not run |
+| Logbook | ⚠️ not run | ⚠️ not run |
+| Orika | ⚠️ not run | ⚠️ not run |
 | JavaThreadAffinity | ⚠️ not run | ⚠️ not run |
-| ChronicleCore | ✅ compiles | ✅ compiles |
-| ChronicleBytes | ⚠️ build failed (no compile error) | ⚠️ not run |
-| ZeroAllocationHashing | ❌ 3 compile errors | ⚠️ not run |
+| ChronicleCore | ⚠️ not run | ⚠️ not run |
+| ChronicleBytes | ⚠️ not run | ⚠️ not run |
+| ZeroAllocationHashing | ⚠️ not run | ⚠️ not run |
 | Aircompressor | ⚠️ not run | ⚠️ not run |
-| Slice | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
-| Airline | ✅ compiles | ✅ compiles |
-| CoreNLP | ❌ 589 compile errors | ⚠️ not run |
-| JiebaAnalysis | ✅ compiles | ✅ compiles |
-| Docx4j | ❌ 1 compile errors | ⚠️ not run |
-| Openhtmltopdf | ✅ compiles | ⚠️ not run |
-| ExecMavenPlugin | ✅ compiles | ⚠️ not run |
-| Versions | ✅ compiles | ⚠️ not run |
-| BuildHelperMavenPlugin | ✅ compiles | ⚠️ not run |
-| Jaxb2MavenPlugin | ✅ compiles | ⚠️ not run |
-| LicenseMavenPlugin | ❌ 22 compile errors | ⚠️ not run |
-| FlattenMavenPlugin | ✅ compiles | ⚠️ not run |
-| AnimalSniffer | ✅ compiles | ⚠️ not run |
+| Slice | ⚠️ not run | ⚠️ not run |
+| Airline | ⚠️ not run | ⚠️ not run |
+| CoreNLP | ⚠️ not run | ⚠️ not run |
+| JiebaAnalysis | ⚠️ not run | ⚠️ not run |
+| Docx4j | ⚠️ not run | ⚠️ not run |
+| Openhtmltopdf | ⚠️ not run | ⚠️ not run |
+| ExecMavenPlugin | ⚠️ not run | ⚠️ not run |
+| Versions | ⚠️ not run | ⚠️ not run |
+| BuildHelperMavenPlugin | ⚠️ not run | ⚠️ not run |
+| Jaxb2MavenPlugin | ⚠️ not run | ⚠️ not run |
+| LicenseMavenPlugin | ⚠️ not run | ⚠️ not run |
+| FlattenMavenPlugin | ⚠️ not run | ⚠️ not run |
+| AnimalSniffer | ⚠️ not run | ⚠️ not run |
 | PlexusArchiver | ⚠️ not run | ⚠️ not run |
-| PlexusClassworlds | ✅ compiles | ⚠️ not run |
-| PlexusInterpolation | ❌ 1 compile errors | ⚠️ not run |
-| SisuProject | ✅ compiles | ⚠️ not run |
-| FormatterMavenPlugin | ⚠️ build failed (no compile error) | ⚠️ not run |
-| DockerMavenPlugin | ✅ compiles | ⚠️ not run |
-| FrontendMavenPlugin | ✅ compiles | ✅ compiles |
-| Clojure | ✅ compiles | ⚠️ not run |
-| Mvel | ✅ compiles | ⚠️ not run |
-| Ognl | ✅ compiles | ⚠️ not run |
-| Hipparchus | ✅ compiles | ✅ compiles |
-| Tribuo | ✅ compiles | ⚠️ not run |
+| PlexusClassworlds | ⚠️ not run | ⚠️ not run |
+| PlexusInterpolation | ⚠️ not run | ⚠️ not run |
+| SisuProject | ⚠️ not run | ⚠️ not run |
+| FormatterMavenPlugin | ⚠️ not run | ⚠️ not run |
+| DockerMavenPlugin | ⚠️ not run | ⚠️ not run |
+| FrontendMavenPlugin | ⚠️ not run | ⚠️ not run |
+| Clojure | ⚠️ not run | ⚠️ not run |
+| Mvel | ⚠️ not run | ⚠️ not run |
+| Ognl | ⚠️ not run | ⚠️ not run |
+| Hipparchus | ⚠️ not run | ⚠️ not run |
+| Tribuo | ⚠️ not run | ⚠️ not run |
 | GsCore | ⚠️ not run | ⚠️ not run |
-| Cdk | ✅ compiles | ⚠️ not run |
-| Biojava | ✅ compiles | ⚠️ not run |
-| Geotools | ❌ 1 compile errors | ⚠️ not run |
-| Spatial4j | ✅ compiles | ⚠️ not run |
-| JGroups | ✅ compiles | ⚠️ not run |
-| DbScheduler | ✅ compiles | ⚠️ not run |
+| Cdk | ⚠️ not run | ⚠️ not run |
+| Biojava | ⚠️ not run | ⚠️ not run |
+| Geotools | ⚠️ not run | ⚠️ not run |
+| Spatial4j | ⚠️ not run | ⚠️ not run |
+| JGroups | ⚠️ not run | ⚠️ not run |
+| DbScheduler | ⚠️ not run | ⚠️ not run |
 | ShedLock | ⚠️ not run | ⚠️ not run |
 | DSpace | ⚠️ not run | ⚠️ not run |
-| OpenRefine | ⚠️ build failed (no compile error) | ⚠️ not run |
-| JitsiVideobridge | ✅ compiles | ⚠️ not run |
-| Jicofo | ✅ compiles | ⚠️ not run |
-| Openfire | ✅ compiles | ⚠️ not run |
+| OpenRefine | ⚠️ not run | ⚠️ not run |
+| JitsiVideobridge | ⚠️ not run | ⚠️ not run |
+| Jicofo | ⚠️ not run | ⚠️ not run |
+| Openfire | ⚠️ not run | ⚠️ not run |
 | OpenTripPlanner | ⚠️ not run | ⚠️ not run |
 | SignalServer | ⚠️ not run | ⚠️ not run |
 | JacksonDatabindNullable | ⚠️ not run | ⚠️ not run |
 | JavaClassmate | ⚠️ not run | ⚠️ not run |
-| JacksonDatatypeHibernate | ❌ 537 compile errors | ❌ 537 compile errors |
+| JacksonDatatypeHibernate | ⚠️ not run | ⚠️ not run |
 | JacksonModuleJsonSchema | ⚠️ not run | ⚠️ not run |
 | JaxbApi | ⚠️ not run | ⚠️ not run |
-| SpringPetclinicMicroservices | ⚠️ not run | ✅ compiles |
+| SpringPetclinicMicroservices | ⚠️ not run | ⚠️ not run |
 | SpringPetclinicRest | ⚠️ not run | ⚠️ not run |
-| SpringFrameworkPetclinic | ✅ compiles | ⚠️ not run |
-| VelocityScripting | ✅ compiles | ⚠️ not run |
-| FreemarkerScripting | ❌ 2 compile errors | ⚠️ not run |
-| ThymeleafScripting | ❌ 2 compile errors | ⚠️ not run |
-| EhcacheCache | ✅ compiles | ✅ compiles |
+| SpringFrameworkPetclinic | ⚠️ not run | ⚠️ not run |
+| VelocityScripting | ⚠️ not run | ⚠️ not run |
+| FreemarkerScripting | ⚠️ not run | ⚠️ not run |
+| ThymeleafScripting | ⚠️ not run | ⚠️ not run |
+| EhcacheCache | ⚠️ not run | ⚠️ not run |
 | RedisCache | ⚠️ not run | ⚠️ not run |
 | AssertjDb | ⚠️ not run | ⚠️ not run |
 | Expiringmap | ⚠️ not run | ⚠️ not run |
@@ -552,7 +552,7 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
 | RabbitmqStreamJavaClient | ✅ compiles | ✅ compiles |
 | CiMaven | ❌ 2 compile errors | ❌ 2 compile errors |
 | WildflyMavenPlugin | ✅ compiles | ✅ compiles |
-| JbossParentPom | ⚠️ ecj not used (no compile error) | ⚠️ ecj not used (no compile error) |
+| JbossParentPom | ⚠️ ecj not used (no compile error) | ⚠️ not run |
 <!-- status:end -->
 
 ### Analysis of the failing projects
