@@ -565,7 +565,12 @@ async function render() {
 	charts.forEach(c => c.dispose());
 	charts = [];
 	const r = route();
-	document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('active', a.dataset.view === r.view));
+	// the tabs (and the brand link) keep the selected run
+	document.querySelectorAll('#nav a').forEach(a => {
+		a.classList.toggle('active', a.dataset.view === r.view);
+		a.href = href(a.dataset.view);
+	});
+	document.querySelector('.brand').href = href('overview');
 	const run = currentRun();
 	const select = document.getElementById('run-select');
 	select.innerHTML = runs.map(x => `<option value="${esc(x.id)}"${x === run ? ' selected' : ''}>${esc((x.date || '').slice(0, 16).replace('T', ' '))} · ${esc(shortSha(x.ecj?.sha) || x.id)}${x.partial ? ' (partial)' : ''}</option>`).join('');
