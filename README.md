@@ -40,209 +40,15 @@ The Java Flight Recording (head run, about 1 % overhead) keeps the last measured
 
 ## Status
 
-The goal is that every project compiles with ECJ without any compile error. The table says, for each project, whether
-it compiles today (`❌` lists compile errors of the compiler itself, `⚠️` a build problem that is not a compile error,
-for example a plugin that fails before the compilation). Each failing case has to be analysed one by one: a build
-configuration problem is fixed in `projects.json` or in the scripts, a real ECJ bug gets an issue.
-Regenerate the table with `python3 scripts/readme-status.py results baseline head` after a run.
+[![ECJ Non-regression Builds](https://github.com/RoiSoleil/ecj-non-regression-test/actions/workflows/ecj-matrix.yml/badge.svg)](https://github.com/RoiSoleil/ecj-non-regression-test/actions/workflows/ecj-matrix.yml)
+[![Dashboard](https://img.shields.io/badge/dashboard-GitHub%20Pages-2f6fde)](https://roisoleil.github.io/ecj-non-regression-test/)
 
-<!-- status:start -->
-| Project | Released ECJ | Head ECJ |
-|---|---|---|
-| JDK | ❌ 2 compile errors | ❌ 2 compile errors |
-| ApacheCommonsIO | ✅ compiles | ✅ compiles |
-| ApacheCommonsCollections | ✅ compiles | ✅ compiles |
-| ApacheCommonsLang | ✅ compiles | ✅ compiles |
-| JacksonDatabind | ✅ compiles | ✅ compiles |
-| xwiki | ✅ compiles | ✅ compiles |
-| Eclipse-Collections | ❌ 1 compile errors | ❌ 1 compile errors |
-| JavaHamcrest | ✅ compiles | ✅ compiles |
-| Quarkus | ❌ 1360 compile errors | ❌ 1360 compile errors |
-| Camel | ❌ 91 compile errors | ❌ 90 compile errors |
-| WildFly | ❌ 1 compile errors | ❌ 1 compile errors |
-| Guava | ❌ 11 compile errors | ❌ 11 compile errors |
-| Gson | ❌ 30 compile errors | ❌ 30 compile errors |
-| Guice | ❌ 1 compile errors | ❌ 1 compile errors |
-| AssertJ | ❌ 53654 compile errors | ❌ 53654 compile errors |
-| ApacheCommonsMath | ✅ compiles | ✅ compiles |
-| ApacheCommonsCompress | ✅ compiles | ✅ compiles |
-| ApacheCommonsCodec | ✅ compiles | ✅ compiles |
-| Netty | ❌ 65 compile errors | ❌ 65 compile errors |
-| ApacheMaven | ❌ 245 compile errors | ❌ 245 compile errors |
-| Jsoup | ❌ 53 compile errors | ❌ 53 compile errors |
-| Jetty | ❌ 153 compile errors | ❌ 153 compile errors |
-| CommonsBeanutils | ✅ compiles | ✅ compiles |
-| CommonsCli | ✅ compiles | ✅ compiles |
-| CommonsCsv | ✅ compiles | ✅ compiles |
-| CommonsText | ✅ compiles | ✅ compiles |
-| CommonsNet | ✅ compiles | ✅ compiles |
-| CommonsPool | ✅ compiles | ✅ compiles |
-| CommonsDbcp | ✅ compiles | ✅ compiles |
-| CommonsValidator | ✅ compiles | ✅ compiles |
-| CommonsJexl | ✅ compiles | ✅ compiles |
-| CommonsConfiguration | ✅ compiles | ✅ compiles |
-| CommonsFileupload | ✅ compiles | ✅ compiles |
-| CommonsVfs | ✅ compiles | ✅ compiles |
-| CommonsBcel | ✅ compiles | ✅ compiles |
-| CommonsExec | ✅ compiles | ✅ compiles |
-| CommonsImaging | ✅ compiles | ✅ compiles |
-| CommonsRng | ✅ compiles | ✅ compiles |
-| CommonsNumbers | ✅ compiles | ✅ compiles |
-| CommonsStatistics | ✅ compiles | ✅ compiles |
-| CommonsGeometry | ✅ compiles | ✅ compiles |
-| CommonsLogging | ✅ compiles | ✅ compiles |
-| CommonsEmail | ✅ compiles | ✅ compiles |
-| CommonsDigester | ✅ compiles | ✅ compiles |
-| LoggingLog4j2 | ✅ compiles | ✅ compiles |
-| Shiro | ❌ 54 compile errors | ❌ 54 compile errors |
-| Curator | ❌ 3 compile errors | ❌ 3 compile errors |
-| JacksonCore | ❌ 47 compile errors | ❌ 47 compile errors |
-| JacksonAnnotations | ✅ compiles | ✅ compiles |
-| Mybatis3 | ✅ compiles | ✅ compiles |
-| JSqlParser | ❌ 15938 compile errors | ❌ 15942 compile errors |
-| Javaparser | ❌ 1 compile errors | ❌ 1 compile errors |
-| Pmd | ❌ 6 compile errors | ❌ 6 compile errors |
-| Junit4 | ✅ compiles | ✅ compiles |
-| Slf4j | ✅ compiles | ✅ compiles |
-| Logback | ✅ compiles | ✅ compiles |
-| H2database | ✅ compiles | ✅ compiles |
-| Dropwizard | ✅ compiles | ✅ compiles |
-| Jdbi | ❌ 1 compile errors | ❌ 1 compile errors |
-| RestAssured | ✅ compiles | ✅ compiles |
-| Pdfbox | ✅ compiles | ✅ compiles |
-| Activemq | ❌ 1 compile errors | ❌ 1 compile errors |
-| Avro | ✅ compiles | ✅ compiles |
-| MavenSurefire | ❌ 57 compile errors | ❌ 57 compile errors |
-| HttpcomponentsClient | ✅ compiles | ✅ compiles |
-| HttpcomponentsCore | ✅ compiles | ✅ compiles |
-| Zookeeper | ✅ compiles | ✅ compiles |
-| Tika | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| VelocityEngine | ✅ compiles | ✅ compiles |
-| HibernateValidator | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| Checkstyle | ✅ compiles | ✅ compiles |
-| SpringDataCommons | ✅ compiles | ✅ compiles |
-| SpringDataJpa | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| SpringDataMongodb | ❌ 1 compile errors | ❌ 1 compile errors |
-| SpringDataRedis | ❌ 4 compile errors | ✅ compiles |
-| SpringHateoas | ❌ 327 compile errors | ❌ 327 compile errors |
-| SpringAi | ✅ compiles | ✅ compiles |
-| SpringPetclinic | ✅ compiles | ✅ compiles |
-| Dubbo | ✅ compiles | ✅ compiles |
-| ShardingSphere | ❌ 112 compile errors | ❌ 112 compile errors |
-| Flume | ✅ compiles | ✅ compiles |
-| OpenNLP | ✅ compiles | ✅ compiles |
-| Batik | ❌ 2 compile errors | ❌ 2 compile errors |
-| Santuario | ❌ 2418 compile errors | ❌ 2418 compile errors |
-| Wss4j | ✅ compiles | ✅ compiles |
-| Jackrabbit | ❌ 216 compile errors | ❌ 216 compile errors |
-| Cayenne | ✅ compiles | ✅ compiles |
-| Jena | ❌ 468 compile errors | ❌ 468 compile errors |
-| Cxf | ✅ compiles | ✅ compiles |
-| Ignite | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| HBase | ✅ compiles | ✅ compiles |
-| Hadoop | ❌ 1 compile errors | ❌ 1 compile errors |
-| NiFi | ❌ 3 compile errors | ❌ 3 compile errors |
-| ShenYu | ❌ 13 compile errors | ❌ 12 compile errors |
-| MavenCompilerPlugin | ✅ compiles | ✅ compiles |
-| MavenShadePlugin | ✅ compiles | ✅ compiles |
-| MavenDependencyPlugin | ✅ compiles | ✅ compiles |
-| MavenAssemblyPlugin | ✅ compiles | ✅ compiles |
-| MavenMvnd | ✅ compiles | ✅ compiles |
-| CommonsCrypto | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| CommonsDbutils | ✅ compiles | ✅ compiles |
-| CommonsJxpath | ✅ compiles | ✅ compiles |
-| CommonsJcs | ❌ 2484 compile errors | ❌ 2484 compile errors |
-| CommonsRdf | ✅ compiles | ✅ compiles |
-| MyFaces | ✅ compiles | ✅ compiles |
-| Johnzon | ✅ compiles | ✅ compiles |
-| Jersey | ❌ 713 compile errors | ❌ 713 compile errors |
-| Grizzly | ❌ 1704 compile errors | ❌ 1704 compile errors |
-| Yasson | ❌ 1118 compile errors | ❌ 1118 compile errors |
-| Mojarra | ✅ compiles | ✅ compiles |
-| Milo | ✅ compiles | ✅ compiles |
-| Tycho | ✅ compiles | ✅ compiles |
-| Truth | ✅ compiles | ✅ compiles |
-| GoogleJavaFormat | ✅ compiles | ✅ compiles |
-| CompileTesting | ✅ compiles | ✅ compiles |
-| Jimfs | ✅ compiles | ✅ compiles |
-| GoogleHttpClient | ✅ compiles | ✅ compiles |
-| JacksonModulesJava8 | ✅ compiles | ✅ compiles |
-| JacksonDataformatsBinary | ❌ 4202 compile errors | ❌ 4202 compile errors |
-| JacksonDataformatsText | ❌ 2170 compile errors | ❌ 2170 compile errors |
-| Woodstox | ✅ compiles | ✅ compiles |
-| AaltoXml | ✅ compiles | ✅ compiles |
-| Fastjson2 | ❌ 661 compile errors | ❌ 661 compile errors |
-| AlibabaDruid | ✅ compiles | ✅ compiles |
-| Nacos | ✅ compiles | ✅ compiles |
-| Sentinel | ❌ 3 compile errors | ❌ 3 compile errors |
-| Canal | ✅ compiles | ✅ compiles |
-| Jedis | ✅ compiles | ✅ compiles |
-| Lettuce | ✅ compiles | ✅ compiles |
-| HikariCP | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| Liquibase | ❌ 1792 compile errors | ❌ 1792 compile errors |
-| Immutables | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| ModelMapper | ✅ compiles | ✅ compiles |
-| Javassist | ✅ compiles | ✅ compiles |
-| EasyMock | ✅ compiles | ✅ compiles |
-| Awaitility | ✅ compiles | ✅ compiles |
-| CucumberJvm | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| Karate | ❌ 1 compile errors | ✅ compiles |
-| Jmh | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| Jol | ✅ compiles | ✅ compiles |
-| Vavr | ❌ 73 compile errors | ❌ 73 compile errors |
-| StreamEx | ❌ 10 compile errors | ❌ 10 compile errors |
-| Failsafe | ❌ 3 compile errors | ❌ 3 compile errors |
-| Bucket4j | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| AsyncHttpClient | ✅ compiles | ✅ compiles |
-| Jsonschema2pojo | ❌ 678 compile errors | ❌ 678 compile errors |
-| JsonSchemaValidator | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| JsonJava | ✅ compiles | ✅ compiles |
-| Kryo | ✅ compiles | ✅ compiles |
-| XStream | ✅ compiles | ✅ compiles |
-| RESTEasy | ❌ 177 compile errors | ❌ 177 compile errors |
-| Undertow | ❌ 9 compile errors | ❌ 9 compile errors |
-| Thymeleaf | ✅ compiles | ✅ compiles |
-| HandlebarsJava | ❌ 2704 compile errors | ❌ 2704 compile errors |
-| Pebble | ✅ compiles | ✅ compiles |
-| FlexmarkJava | ✅ compiles | ✅ compiles |
-| CommonmarkJava | ❌ 670 compile errors | ❌ 670 compile errors |
-| Jjwt | ✅ compiles | ✅ compiles |
-| Pac4j | ❌ 1152 compile errors | ❌ 1152 compile errors |
-| Ebean | ❌ 546 compile errors | ❌ 546 compile errors |
-| Tablesaw | ✅ compiles | ✅ compiles |
-| Jts | ✅ compiles | ✅ compiles |
-| JCTools | ✅ compiles | ✅ compiles |
-| ChronicleQueue | ⚠️ build failed (no compile error) | ⚠️ build failed (no compile error) |
-| Zip4j | ✅ compiles | ✅ compiles |
-| JnrFfi | ✅ compiles | ✅ compiles |
-| ThreeTenExtra | ✅ compiles | ✅ compiles |
-| JodaMoney | ❌ 885 compile errors | ❌ 885 compile errors |
-| JodaBeans | ❌ 8314 compile errors | ❌ 8314 compile errors |
-| Zipkin | ✅ compiles | ✅ compiles |
-| Brave | ❌ 6 compile errors | ❌ 6 compile errors |
-| DropwizardMetrics | ✅ compiles | ✅ compiles |
-| Oshi | ❌ 56 compile errors | ❌ 56 compile errors |
-| JFreeChart | ❌ 10577 compile errors | ❌ 10577 compile errors |
-| HtmlUnit | ❌ 31404 compile errors | ❌ 31404 compile errors |
-| JavaCV | ✅ compiles | ✅ compiles |
-| JavaCPP | ✅ compiles | ✅ compiles |
-| ZXing | ✅ compiles | ✅ compiles |
-| SwaggerParser | ✅ compiles | ✅ compiles |
-| OpenApiGenerator | ❌ 2451 compile errors | ❌ 2451 compile errors |
-| SpringdocOpenApi | ✅ compiles | ✅ compiles |
-| Debezium | ✅ compiles | ✅ compiles |
-| Apollo | ✅ compiles | ✅ compiles |
-| XxlJob | ✅ compiles | ✅ compiles |
-| MybatisPageHelper | ✅ compiles | ✅ compiles |
-| Flowable | ❌ 1 compile errors | ❌ 1 compile errors |
-| Jenkins | ❌ 285 compile errors | ❌ 285 compile errors |
-| PlexusUtils | ✅ compiles | ✅ compiles |
-| PlexusCompiler | ✅ compiles | ✅ compiles |
-| Pf4j | ❌ 2 compile errors | ❌ 2 compile errors |
-| SmallRyeConfig | ❌ 103 compile errors | ❌ 103 compile errors |
-| SmallRyeMutiny | ❌ 1 compile errors | ❌ 1 compile errors |
-| JanusGraph | ❌ 219 compile errors | ❌ 220 compile errors |
-<!-- status:end -->
+The goal is that every project compiles with ECJ without any compile error. The
+[dashboard](https://roisoleil.github.io/ecj-non-regression-test/) shows, for each run, whether each project compiles
+with the released ECJ, the head ECJ and javac, its compile errors grouped by families, and the performance of the
+compilers (time, CPU, memory, GC), with the history of the last 60 runs and a page per project. Every number links to
+the raw file it comes from. Each failing case has to be analysed one by one: a build configuration problem is fixed in
+`projects.json` or in the scripts, a real ECJ bug gets an issue.
 
 ### Analysis of the failing projects
 
@@ -282,6 +88,9 @@ Regenerate the table with `python3 scripts/readme-status.py results baseline hea
    does not, when a project that builds with the baseline does not build with head.
    A project that does not build with the baseline ECJ, or that was not tested at all
    (clone or patch failure), is shown with `⚠️` in the table but does not fail the run: only new problems do.
+5. `scripts/dashboard-data.py` turns the results of the run into the JSON files of the dashboard, and
+   `scripts/publish-dashboard.sh` publishes them with the site (`dashboard/`) on the `gh-pages` branch: summaries of
+   the last 60 runs, raw files (`.status`, `.metrics`, `.errors`, build logs) of the last 10.
 
 The workflow `ECJ Non-regression Builds` (`.github/workflows/ecj-matrix.yml`) runs three jobs per project (baseline ECJ, head ECJ and javac, in parallel) and a final `compare` job. A matrix cannot generate more than 256 jobs, so the projects are split in shards of 100, one call of `ecj-build.yml` per shard and label: adding projects only takes `projects.json`. The
 `ECJ Commit Watcher` workflow (`ecj-check.yml`) runs it every night when `eclipse.jdt.core` has a new commit; a

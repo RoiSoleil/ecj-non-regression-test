@@ -1,0 +1,26 @@
+name: Dashboard Import
+
+# Adds past runs of "ECJ Non-regression Builds" to the dashboard (gh-pages), or rebuilds their data after a change of
+# scripts/dashboard-data.py. Their all-results artifact must still exist (90 days).
+on:
+  workflow_dispatch:
+    inputs:
+      runs:
+        description: "Run ids, separated by spaces (default: every run whose all-results artifact still exists)"
+        required: false
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Import the runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUNS: ${{ github.event.inputs.runs }}
+        # $RUNS is split on purpose: one argument per run id (set -f: without glob expansion)
+        run: set -f; bash scripts/publish-dashboard.sh bash scripts/dashboard-import.sh $RUNS

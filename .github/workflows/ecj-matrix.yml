@@ -95,11 +95,12 @@ jobs:
       jdk: ${{ github.event.inputs.jdk }}
 
   compare:
-    needs: [build-ecj, build]
+    needs: [setup, build-ecj, build]
     if: always() && needs.build.result != 'skipped'
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: read
     steps:
       - uses: actions/checkout@v5
       - uses: actions/download-artifact@v5
@@ -123,30 +124,41 @@ jobs:
           name: performance-report
           path: perf-report.html
           if-no-files-found: ignore
-      - name: Status of every project
-        id: status
-        if: always()
-        run: |
-          python3 scripts/readme-status.py artifacts/results baseline head README.md > status.md
-          { echo; echo "### Status"; echo; cat status.md; } >> "$GITHUB_STEP_SUMMARY"
-      - name: Commit the updated README
-        # only a full default run on main: a partial run would mark the other projects "not run"
-        if: >-
-          always() && steps.status.outcome == 'success' && needs.build-ecj.result == 'success'
-          && github.ref == 'refs/heads/main' && github.event.inputs.projects == ''
-          && github.event.inputs.ecj_ref == '' && github.event.inputs.baseline == '' && github.event.inputs.jdk == ''
-        run: |
-          git diff --quiet README.md && exit 0
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "README: update the status table (ECJ ${ECJ_SHA::10})" README.md
-          for i in 1 2 3; do git pull --rebase -q && git push && exit 0; sleep 5; done; exit 1
-        env:
-          ECJ_SHA: ${{ needs.build-ecj.outputs.sha }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: all-results
-          path: |
-            artifacts
-            README.md
+          path: artifacts
+      - name: Status of every project
+        if: always()
+        env:
+          INPUT_PROJECTS: ${{ github.event.inputs.projects }}
+        run: |
+          { echo; echo "### Status"; echo; bash scripts/status-table.sh artifacts/results projects.json "$INPUT_PROJECTS"; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish the dashboard
+        # after the upload of all-results, so that the dashboard links to it; only the runs of main publish, so that a
+        # branch under test does not replace the site
+        if: always() && needs.build-ecj.result == 'success' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ECJ_SHA: ${{ needs.build-ecj.outputs.sha }}
+          BASELINE: ${{ needs.setup.outputs.baseline }}
+          INPUT_PROJECTS: ${{ github.event.inputs.projects }}
+          INPUT_JDK: ${{ github.event.inputs.jdk }}
+          INPUT_JFR: ${{ github.event.inputs.jfr }}
+          INPUT_BASELINE: ${{ github.event.inputs.baseline }}
+          REF_INPUT: ${{ github.event.inputs.ecj_ref }}   # of a run started by hand, not of a nightly one
+        # the builds are done: a failing publish must not fail the run (the nightly check would test the commit again)
+        continue-on-error: true
+        run: |
+          gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --jq '.jobs[] | {name, html_url}' > jobs.jsonl
+          gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" --jq '.artifacts[] | {name, id}' > artifacts.jsonl
+          date="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" --jq .created_at)"
+          bash scripts/publish-dashboard.sh python3 scripts/dashboard-data.py \
+            --results artifacts/results --logs artifacts/logs --repo "$GITHUB_REPOSITORY" \
+            --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --date "$date" --event "$GITHUB_EVENT_NAME" \
+            --ecj-sha "$ECJ_SHA" --baseline "$BASELINE" --jdk "$INPUT_JDK" \
+            --selection "$INPUT_PROJECTS" --jfr "$INPUT_JFR" --repo-sha "$GITHUB_SHA" \
+            --baseline-input "$INPUT_BASELINE" --ref-input "$REF_INPUT" \
+            --jobs jobs.jsonl --artifacts artifacts.jsonl
+          echo "Dashboard: https://${GITHUB_REPOSITORY_OWNER,,}.github.io/${GITHUB_REPOSITORY#*/}/#/?run=$GITHUB_RUN_ID" >> "$GITHUB_STEP_SUMMARY"

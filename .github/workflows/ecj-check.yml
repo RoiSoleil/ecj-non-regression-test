@@ -29,7 +29,8 @@ jobs:
     needs: check
     if: needs.check.outputs.changed == 'true'
     permissions:
-      contents: write   # the called workflow's compare job commits the README
+      contents: write   # the called workflow's compare job publishes the dashboard (gh-pages)
+      actions: read     # and lists the jobs and artifacts of the run for its links
     uses: ./.github/workflows/ecj-matrix.yml
     with:
       ecj_ref: ${{ needs.check.outputs.sha }}
