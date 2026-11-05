@@ -2,3 +2,4 @@ work/
 logs/
 results/
 *.jar
+__pycache__/
