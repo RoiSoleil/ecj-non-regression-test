@@ -103,7 +103,11 @@ jobs:
       actions: read
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/download-artifact@v5
+      # a full run has about 2,000 artifacts (results, logs, JFR): the listing stops at 1,000 by default, and the older
+      # versions (v5) cannot raise it, so that the compare job only saw about half the results
+      - uses: actions/download-artifact@v8.0.2
+        env:
+          ACTIONS_ARTIFACT_MAX_ARTIFACT_COUNT: 10000
         with:
           pattern: result-*
           path: artifacts
