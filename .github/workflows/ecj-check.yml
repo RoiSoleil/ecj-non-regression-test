@@ -2,7 +2,8 @@ name: ECJ Commit Watcher
 
 on:
   schedule:
-    - cron: "0 3 * * *"   # every night, only when eclipse.jdt.core has a new commit
+    # a minute off the hour: GitHub delays the busy round hours (the runs at "0 3" started 6-7 h late)
+    - cron: "23 1 * * *"   # every night, only when eclipse.jdt.core has a new commit
   workflow_dispatch:
 
 jobs:
