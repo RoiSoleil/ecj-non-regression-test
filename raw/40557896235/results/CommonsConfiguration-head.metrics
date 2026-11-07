@@ -1,0 +1,1 @@
+{"wall_s": 6.09, "cpu_s": 20.75, "rss_mb": 444, "gc_count": 24, "gc_full": 0, "gc_pause_total_ms": 169.4, "gc_pause_max_ms": 17.5, "heap_before_gc_peak_mb": 183}
