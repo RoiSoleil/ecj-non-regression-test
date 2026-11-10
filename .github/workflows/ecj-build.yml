@@ -41,7 +41,10 @@ jobs:
         env:
           PROJECT: ${{ matrix.name }}
           DEFAULT_JDK: ${{ inputs.jdk || '27' }}
-        run: echo "version=$(jq -r --arg name "$PROJECT" --arg jdk "$DEFAULT_JDK" '.[] | select(.name == $name) | .jdk // $jdk' projects.json)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "version=$(jq -r --arg name "$PROJECT" --arg jdk "$DEFAULT_JDK" '.[] | select(.name == $name) | .jdk // $jdk' projects.json)" >> "$GITHUB_OUTPUT"
+          echo "cache_m2=$(jq -r --arg name "$PROJECT" '.[] | select(.name == $name) | .cache_m2 // false' projects.json)" >> "$GITHUB_OUTPUT"
+          echo "ref=$(jq -r --arg name "$PROJECT" '.[] | select(.name == $name) | .ref' projects.json)" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-java@v5
         with: { distribution: temurin, java-version: "${{ steps.jdk.outputs.version }}" }
       - name: Free disk space
@@ -56,6 +59,15 @@ jobs:
             https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.9.9/apache-maven-3.9.9-bin.tar.gz
           tar xzf "$RUNNER_TEMP/maven.tar.gz" -C "$HOME"
           echo "$HOME/apache-maven-3.9.9/bin" >> "$GITHUB_PATH"
+      # Only the projects that ask for it (cache_m2 in projects.json, those whose dependencies are long to download):
+      # the caches of a repository are limited to 10 GB, far less than the dependencies of every project.
+      # One cache for the three labels of a project. It must stay before the installation of the head ECJ, which
+      # replaces the HEAD-SNAPSHOT that a saved cache may hold.
+      - uses: actions/cache@v4
+        if: steps.jdk.outputs.cache_m2 == 'true'
+        with:
+          path: ~/.m2/repository
+          key: m2-${{ matrix.name }}-${{ steps.jdk.outputs.ref }}
       - name: Install the head ECJ in the local Maven repository
         run: |
           for i in 1 2 3; do

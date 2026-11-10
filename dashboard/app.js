@@ -390,7 +390,7 @@ async function viewPerf() {
 	app.innerHTML = `
 		<h1>Performance</h1>
 		${runHeader(run, summaryPath)}
-		<p class="muted">Builds that succeeded with both compilers, measured after a warm-up build and offline. Below 0 %, head ECJ uses less than javac.</p>
+		<p class="muted">Builds that succeeded with both compilers. Each project is built once: its wall time includes the download of the dependencies that are not cached, its compile time does not. Below 0 %, head ECJ uses less than javac.</p>
 		<div class="tiles">
 			${RATIO_METRICS.map(k => tile(pct(run.median?.[`head_javac_${k}`]), `Median ${METRICS.find(m => m[0] === k)[1].toLowerCase()}, head ECJ vs javac`, { path: summaryPath, key: `head_javac_${k}` })).join('')}
 			${tile(fmt(measured.length, 0), 'Projects measured')}
@@ -520,7 +520,7 @@ function projectPerf(el, run, name, entry) {
 			const v = entry.labels[l]?.metrics?.[key];
 			return `<td class="num">${v == null ? '' : rawButton(`${fmt(v)} ${unit}`, rawPath(run, name, l, 'metrics'), { key, small: true, fallback: entry.artifacts?.[l] })}</td>`;
 		}).join('')}<td class="num">${entry.ratios[`head_javac_${key}`] != null ? ratioCell(run, entry, key) : ''}</td></tr>`).join('')}</tbody></table></div>
-		<p class="muted">${LABELS.filter(l => entry.labels[l] && !measured(l)).map(l => LABEL_NAMES[l]).join(', ') ? `Not measured after a warm-up build offline (so not compared): ${LABELS.filter(l => entry.labels[l] && !measured(l)).map(l => LABEL_NAMES[l]).join(', ')}.` : ''}</p>
+		<p class="muted">${LABELS.filter(l => entry.labels[l] && !measured(l)).map(l => LABEL_NAMES[l]).join(', ') ? `Not measured (so not compared): ${LABELS.filter(l => entry.labels[l] && !measured(l)).map(l => LABEL_NAMES[l]).join(', ')}.` : ''}</p>
 		<div class="card"><div class="chart" id="perf-bars"></div></div>`;
 	const keys = ['wall_s', 'compile_s', 'cpu_s', 'gc_cpu_s'];
 	const mem = ['rss_mb', 'alloc_mb', 'heap_before_gc_peak_mb'];

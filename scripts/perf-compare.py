@@ -227,8 +227,9 @@ tbody th {{ font-weight:600; }}
 <h2>All metrics (javac / ECJ, the better one underlined; lower is better)</h2>
 <div class="card scroll"><table><thead><tr><th>Project</th><th>Fastest</th><th>Time of</th><th>Warm-up</th><th>Runs</th>{head_cells}<th>Classes</th></tr></thead><tbody>{body}</tbody></table></div>
 {skipped_note}
-<p class="note">Warm-up: <em>yes</em> means the build was run twice and only the second, with the dependencies already downloaded, was measured; <em>no</em> means one build, whose time includes the downloads (Avro, and the builds that failed).</p>
-<p class="note">Runs: javac / ECJ builds measured; a short build is measured 3 times and the median is shown. The builds run offline with
+<p class="note">Warm-up: <em>yes</em> for the results of the older runs, measured offline after a first build that downloaded the dependencies;
+<em>no</em> means one build, whose time includes the downloads that are not cached.</p>
+<p class="note">Runs: javac / ECJ builds measured. The builds run with
 <code>-Xms4g -Xmx4g -XX:+UseG1GC</code>. Compile time is the time spent in the compiler plugin alone. Classes: the number of class files produced
 (⚠️: more than 10 % apart; ECJ makes a few less than javac, javac adds synthetic classes).</p>
 <p class="note">Shared CI runners are noisy: differences under {TIE:.0%} are a tie, read the rest as a trend.</p>

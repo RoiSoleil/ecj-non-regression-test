@@ -295,7 +295,9 @@ def main():
             summary_labels[label] = {
                 'status': status, 'errors': len(data['errors']),
                 'metrics': {key: metrics[key] for key in METRICS if key in metrics},
-                'measured': bool(metrics.get('warmup') and metrics.get('offline')),
+                # since the warm-up build is gone every build is measured (its wall time may include downloads); the
+                # older results were only measured after a warm-up build, offline
+                'measured': bool(metrics.get('single_build') or (metrics.get('warmup') and metrics.get('offline'))),
                 'raw': sorted(files),  # the raw files the site has: the dashboard links to the others on GitHub
             }
             project_labels[label] = {
@@ -318,7 +320,7 @@ def main():
             regression = bool(new) or (base['status'] == 'success' and head['status'] != 'success')
             regressions += regression
             fixes += bool(fixed) and not new
-        # performance: only builds that succeeded and were measured (after a warm-up build, offline) say something
+        # performance: only builds that succeeded and were measured say something
         def perf(label):
             data = summary_labels.get(label)
             if data and data['status'] == 'success' and data['measured'] and data['metrics'].get('wall_s'):

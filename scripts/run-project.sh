@@ -22,7 +22,7 @@ OVERRIDE_ARGS="$(field override_compiler_args)"
 NO_MODULE_PATH="$(field no_module_path)"
 ECJ_ARGS="$(field ecj_compiler_args)"
 PRE="$(field pre)"
-NO_WARMUP="$(field no_warmup)"
+NO_REBUILD="$(field no_rebuild)"
 
 mkdir -p "$ROOT/logs" "$ROOT/results" "$ROOT/work"
 LOG="$ROOT/logs/$NAME-$LABEL.log"
@@ -109,9 +109,9 @@ export HEAP_OPTS="${HEAP_OPTS:--Xms4g -Xmx4g -XX:+UseG1GC}"
 export MAVEN_OPTS="${MAVEN_OPTS:-} $HEAP_OPTS"
 BASE_MAVEN_OPTS="$MAVEN_OPTS"
 # Maven (3.9 and later) reads these arguments from the environment: time stamps on every log line give the time spent
-# in the compiler plugin alone, and the measured builds run offline once a warm-up build has downloaded everything.
+# in the compiler plugin alone.
 BASE_MAVEN_ARGS="-Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss.SSS"
-RUNS="$DIR/../$NAME-$LABEL-runs"   # a directory per measured build (1, 2, ...): time, GC logs, Maven log, produced classes
+RUNS="$DIR/../$NAME-$LABEL-runs"   # the directory of the measured build (1): time, GC logs, Maven log, produced classes
 rm -rf "$RUNS"; mkdir -p "$RUNS"
 echo "== $NAME with ECJ $ECJ_VERSION ($LABEL): $CMD" | tee -a "$LOG"
 
@@ -121,7 +121,7 @@ clean_build() {
 }
 
 # Elapsed seconds, user and system CPU seconds and peak resident set size (KB) of the whole process tree.
-# $1 = number of the run, $2 = 1 to run Maven offline. The result is the exit code of the build.
+# $1 = number of the run. The result is the exit code of the build.
 measured_build() {
   local rd="$RUNS/$1"
   rm -rf "$rd"; mkdir -p "$rd"
@@ -130,7 +130,6 @@ measured_build() {
   export GC_OPTS="-Xlog:gc,gc+cpu:file=$rd/gc-%p.log:uptime:filecount=0"
   export MAVEN_OPTS="$MAVEN_OPTS $GC_OPTS"
   export MAVEN_ARGS="$BASE_MAVEN_ARGS"
-  [ "$2" != 1 ] || MAVEN_ARGS="$MAVEN_ARGS -o"
   /usr/bin/time -f '%e %U %S %M' -o "$rd/time" bash -c "$CMD" >"$rd/run.log" 2>&1
   local rc=$?
   cat "$rd/run.log" >>"$LOG"
@@ -140,58 +139,25 @@ measured_build() {
   return $rc
 }
 
-# Two builds: the first one downloads the dependencies and plugins (network time must not count), then the measured ones.
-# The baseline run is only the reference of the compile errors: no warm-up build (the double cost of the long projects).
-[ "$LABEL" != baseline ] || WARMUP_BUILD="${WARMUP_BUILD:-0}"
-# a project whose reactor plugin is built by the build itself (Avro) cannot run twice after its classes were deleted
-[ -z "$NO_WARMUP" ] || WARMUP_BUILD=0
-WARMED=0   # 1 when the measured builds came after a warm-up build
-OFFLINE=0
+# One build, online: there is no warm-up build (it doubled the cost of every project). The wall time includes the
+# download of the dependencies that are not in ~/.m2 (see cache_m2 in projects.json); the compile time, taken from the
+# time stamps of the compiler plugin, does not.
+# A download that fails (Maven Central answers 502, a timeout...) is not a failure of the compiler: try again, up to 3
+# times, from scratch (the classes of the failed attempt are deleted, so that the measured build compiles everything).
+# Not when the build has compile errors (it is a result), nor for a project whose reactor plugin is built by the build
+# itself (Avro, no_rebuild in projects.json: it cannot run again after its classes were deleted).
 STATUS=0
-RUN_COUNT=1
-if [ "${WARMUP_BUILD:-1}" = 1 ]; then
-  echo "== warm-up build (not measured)" >>"$LOG"
-  mkdir -p "$RUNS/1"
-  # A download that fails (Maven Central answers 502, a timeout...) is not a failure of the compiler: try again, up to 3 times.
-  for attempt in 1 2 3; do
-    /usr/bin/time -f '%e %U %S %M' -o "$RUNS/1/time" bash -c "$CMD" >"$RUNS.warmup.log" 2>&1
-    STATUS=$?
-    cat "$RUNS.warmup.log" >>"$LOG"
-    [ "$STATUS" != 0 ] && [ "$attempt" -lt 3 ] && grep -q -E 'Could not transfer artifact|status code: 5[0-9][0-9]|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length' "$RUNS.warmup.log" || break
-    echo "== warm-up build failed on a network error, attempt $((attempt + 1))" >>"$LOG"
-    sleep 20
-  done
-  if [ "$STATUS" = 0 ]; then
-    WARMED=1; OFFLINE=1
-    # a short build is measured several times (the median is reported), a long one once
-    WARM_SECONDS="$(awk '{print int($1)}' "$RUNS/1/time")"
-    if [ -n "${MEASURE_RUNS:-}" ]; then RUN_COUNT="$MEASURE_RUNS"
-    elif [ "$WARM_SECONDS" -lt "${SHORT_BUILD_SECONDS:-120}" ]; then RUN_COUNT=3; fi
-    rm -rf "$RUNS/1"
-  fi
-fi
-if [ "$STATUS" = 0 ]; then
-  for i in $(seq 1 "$RUN_COUNT"); do
-    [ "$WARMED" != 1 ] || clean_build   # without a warm-up build there is nothing to clean (and Avro needs its own classes)
-    echo "== measured build $i of $RUN_COUNT" >>"$LOG"
-    measured_build "$i" "$OFFLINE"
-    STATUS=$?
-    if [ "$STATUS" != 0 ] && [ "$OFFLINE" = 1 ] && grep -q "offline mode" "$RUNS/$i/run.log"; then
-      # something the warm-up build did not need: download it with an unmeasured online build, then measure again offline
-      echo "== offline build failed, online build to download, then measured build $i again" >>"$LOG"
-      clean_build
-      MAVEN_ARGS="$BASE_MAVEN_ARGS" bash -c "$CMD" >>"$LOG" 2>&1
-      clean_build
-      measured_build "$i" 1
-      STATUS=$?
-    fi
-    if [ "$STATUS" != 0 ]; then
-      # the numbers of a failed build are not mixed with those of the good ones
-      [ "$i" = 1 ] || rm -rf "$RUNS/$i"
-      break
-    fi
-  done
-fi
+for attempt in 1 2 3; do
+  echo "== build, attempt $attempt" >>"$LOG"
+  measured_build 1
+  STATUS=$?
+  [ "$STATUS" != 0 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] \
+    && grep -q -E 'Could not transfer artifact|status code: 5[0-9][0-9]|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length' "$RUNS/1/run.log" \
+    && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:' "$RUNS/1/run.log" || break
+  echo "== build failed on a network error" >>"$LOG"
+  sleep 20
+  clean_build
+done
 if [ "$STATUS" = 0 ]; then
   echo "success" > "$ROOT/results/$NAME-$LABEL.status"
 else
@@ -210,8 +176,6 @@ fi
   sed -n -E "s#^$DIR/?([^:]*\.java):([0-9]+): error: (.*)#\1:\2 \3#p" "$LOG"
   awk -v d="$DIR/" '/^[0-9]+\. ERROR in /{sub(d,""); f=$4; l=$7; sub(/\)/,"",l); getline; getline; getline; print f ":" l " " $0}' "$LOG"
 } | sort -u > "$ROOT/results/$NAME-$LABEL.errors"
-# a failed warm-up build leaves no run directory: its time is the only measure
-[ -n "$(ls -A "$RUNS")" ] || { mkdir -p "$RUNS/1"; echo "0 0 0 0" > "$RUNS/1/time"; }
-python3 "$ROOT/scripts/metrics.py" "$WARMED" "$OFFLINE" "$RUNS"/* > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
-rm -rf "$RUNS" "$RUNS.warmup.log"
+python3 "$ROOT/scripts/metrics.py" 0 0 "$RUNS"/* > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
+rm -rf "$RUNS"
 echo "$(wc -l < "$ROOT/results/$NAME-$LABEL.errors") compile errors, status $(cat "$ROOT/results/$NAME-$LABEL.status")"

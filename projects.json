@@ -40,7 +40,8 @@
     "url": "https://github.com/xwiki/xwiki-commons.git",
     "ref": "cec018c2636383277f50aac7096aeaa5d439022e",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "cache_m2": true
   },
   {
     "name": "Eclipse-Collections",
@@ -356,6 +357,7 @@
     "ref": "0a44c5fd1f9b247a70232f706c636b2cc942f2ed",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false,
+    "cache_m2": true,
     "jdk": "21"
   },
   {
@@ -453,7 +455,7 @@
     "ref": "3a207fa6e87c535b95eafca4cf5a6ef524d77df2",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false,
-    "no_warmup": true
+    "no_rebuild": true
   },
   {
     "name": "MavenSurefire",
@@ -888,7 +890,8 @@
     "url": "https://github.com/alibaba/druid.git",
     "ref": "fa8dc9912637a2f729eef9f55356621fec18d40e",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "cache_m2": true
   },
   {
     "name": "Nacos",
@@ -910,7 +913,8 @@
     "url": "https://github.com/alibaba/canal.git",
     "ref": "87be50e87686a3e8af08c368d0e1ffd1f59eb04a",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "cache_m2": true
   },
   {
     "name": "Jedis",
@@ -925,6 +929,7 @@
     "ref": "dc07b116261f33f78067f27dee63ec9fc18e9336",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false,
+    "cache_m2": true,
     "jdk": "21"
   },
   {
@@ -1095,7 +1100,8 @@
     "url": "https://github.com/thymeleaf/thymeleaf.git",
     "ref": "85e49e71aac0af8ef2975bed276df1e6f557b0b8",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "cache_m2": true
   },
   {
     "name": "HandlebarsJava",
@@ -1109,7 +1115,8 @@
     "url": "https://github.com/PebbleTemplates/pebble.git",
     "ref": "bf1ae543e109e4c1fbfa5df5966b1af038f21ac1",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "cache_m2": true
   },
   {
     "name": "FlexmarkJava",
@@ -1682,7 +1689,8 @@
     "url": "https://github.com/spring-cloud/spring-cloud-config.git",
     "ref": "3d41249bbbb57cb3c66f7a79b2d0aaa477e4454c",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "cache_m2": true
   },
   {
     "name": "SpringCloudOpenfeign",
@@ -1704,6 +1712,7 @@
     "ref": "d08aece5fa1c8ff0c39cf08032af171afa135dc8",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false,
+    "cache_m2": true,
     "jdk": "21"
   },
   {
@@ -1711,7 +1720,8 @@
     "url": "https://github.com/spring-cloud/spring-cloud-netflix.git",
     "ref": "83919116209edd593e884b6a01c32d0e7c807ca6",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "cache_m2": true
   },
   {
     "name": "SpringCloudAlibaba",
@@ -1719,6 +1729,7 @@
     "ref": "858aa8d58d2e902770ac4c6f5598808e125e695e",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "optional": false,
+    "cache_m2": true,
     "jdk": "21"
   },
   {
@@ -1733,14 +1744,16 @@
     "url": "https://github.com/dromara/Sa-Token.git",
     "ref": "cb191342372cec5045a8c26f38c61a6ea2147ff8",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "cache_m2": true
   },
   {
     "name": "IncubatorSeata",
     "url": "https://github.com/apache/incubator-seata.git",
     "ref": "cba73e180fd8896a99df6415b859d275122feaa7",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "cache_m2": true
   },
   {
     "name": "PowerJob",
@@ -1792,7 +1805,8 @@
     "url": "https://github.com/eclipse-californium/californium.git",
     "ref": "1ca3841a519c7cfa3f49d1366535e870b3e8069f",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "cache_m2": true
   },
   {
     "name": "DockerJava",
@@ -3579,7 +3593,8 @@
     "url": "https://github.com/wildfly/wildfly-maven-plugin.git",
     "ref": "93d870b2091115972824cd2e97a293751a3bb7ac",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "optional": false
+    "optional": false,
+    "cache_m2": true
   },
   {
     "name": "JbossParentPom",

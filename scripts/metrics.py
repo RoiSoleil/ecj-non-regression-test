@@ -85,6 +85,7 @@ runs = sorted((parse(pathlib.Path(d)) for d in sys.argv[3:]), key=lambda r: r['w
 if not runs:
     sys.exit('metrics.py: no measured build')
 median = dict(runs[len(runs) // 2])
-median.update({'warmup': warmed, 'offline': offline, 'runs': len(runs),
+# single_build: one online build, no warm-up build (the results of the older runs do not have the field)
+median.update({'warmup': warmed, 'offline': offline, 'single_build': not warmed, 'runs': len(runs),
                'wall_min_s': runs[0]['wall_s'], 'wall_max_s': runs[-1]['wall_s']})
 print(json.dumps(median))
