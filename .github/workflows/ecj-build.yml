@@ -72,12 +72,14 @@ jobs:
         if: matrix.label == 'baseline'
         env:
           BASELINE: ${{ inputs.baseline }}
+        # straight from Maven Central into the local repository: mvn dependency:get took 8 seconds
         run: |
-          for i in 1 2 3; do
-            mvn -B -q dependency:get -Dartifact="org.eclipse.jdt:ecj:$BASELINE" && exit 0
-            sleep 15
+          D="$HOME/.m2/repository/org/eclipse/jdt/ecj/$BASELINE"
+          mkdir -p "$D"
+          for f in jar pom; do
+            curl -fsSL --retry 5 --retry-all-errors --retry-delay 10 -o "$D/ecj-$BASELINE.$f" \
+              "https://repo1.maven.org/maven2/org/eclipse/jdt/ecj/$BASELINE/ecj-$BASELINE.$f"
           done
-          exit 1
       - name: "Build ${{ join(matrix.projects, ', ') }} (${{ matrix.label }})"
         env:
           BASELINE: ${{ inputs.baseline }}
