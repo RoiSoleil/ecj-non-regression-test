@@ -1,17 +1,21 @@
 #!/usr/bin/env bash
-# Downloads every result-* artifact of the run into <directory>/results and <directory>/logs, and the artifact "plan"
-# (plan.json and the kept results, reference/) into <directory>.
+# Downloads into <directory>/results and <directory>/logs the result-* artifacts of the run that are not there yet.
 # usage: download-results.sh <directory>     (GH_TOKEN, GITHUB_REPOSITORY and GITHUB_RUN_ID are set by the workflow)
 # actions/download-artifact only sees the first 1,000 artifacts of a run, and a full run has about 2,000 (results, JFR):
-# the compare job got about half of the results. The REST API lists them all.
+# the compare job got about half of the results. The REST API lists them all, but the token of a workflow has 1,000
+# requests an hour: the action downloads what it sees first, and this script the rest.
 set -uo pipefail
 OUT="$1"
 WORK="$(mktemp -d)"
 mkdir -p "$OUT"
 gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" \
-  --jq '.artifacts[] | select((.name | startswith("result-")) or .name == "plan") | "\(.id) \(.name)"' \
-  | sort -n > "$WORK/list"   # by id: after a re-run, the artifact of the last attempt is unpacked last and wins
-echo "$(wc -l < "$WORK/list") artifacts to download"
+  --jq '.artifacts[] | select(.name | startswith("result-")) | "\(.id) \(.name)"' \
+  | sort -n > "$WORK/all"   # by id: after a re-run, the artifact of the last attempt is unpacked last and wins
+# the artifact result-<project>-<label> holds results/<project>-<label>.status
+while read -r id name; do
+  [ -f "$OUT/results/${name#result-}.status" ] || echo "$id $name"
+done < "$WORK/all" > "$WORK/list"
+echo "$(wc -l < "$WORK/all") result artifacts, $(wc -l < "$WORK/list") to download"
 
 fetch() {
   local id="$1" attempt

@@ -30,15 +30,6 @@ of a repository are limited to 10 GB, so only the projects with the longest down
 the time spent in the compiler plugin alone and does not include the downloads.
 A build that fails on a network error (a 502 from Maven Central, a timeout) is tried again, up to 3 times.
 
-## What a run builds
-
-Only the head ECJ changes from one night to the next. The result of a baseline or javac build is kept
-(`scripts/reference.py`, stored with `actions/cache`) for as long as the project entry, its JDK, the released ECJ and
-the build scripts are the same, and for a month at most (the key does not know the updates of the JDK and of the
-runner). A run builds only what has no kept result: every project with the head ECJ, and the
-baseline and javac builds that are new or out of date. The input `refresh` of a run started by hand builds everything
-again. A cache that is not read for 7 days is dropped by GitHub: the next run then builds everything.
-
 Metrics (`scripts/metrics.py`): wall and CPU time, compile time (the time spent in the compiler plugin, from the time
 stamps of the Maven log), peak memory, garbage collections (`-Xlog:gc,gc+cpu`: pauses, CPU time of the GC threads,
 allocated memory) and the class files produced (the number says whether both compilers did the same work).

@@ -19,10 +19,6 @@ on:
       jdk:
         description: "JDK of the builds, unless a project gives its own one (default: 27)"
         required: false
-      refresh:
-        description: "Build the baseline and javac again, even when their results of an earlier run are still valid (default: false)"
-        required: false
-        default: "false"
   workflow_call:
     inputs:
       ecj_ref:
@@ -33,7 +29,8 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.plan.outputs.matrix }}
+      shards: ${{ steps.projects.outputs.shards }}
+      shard_indexes: ${{ steps.projects.outputs.shard_indexes }}
       baseline: ${{ steps.baseline.outputs.version }}
     steps:
       - uses: actions/checkout@v5
@@ -45,32 +42,20 @@ jobs:
           [ -n "$V" ] || V=$(curl -fsS https://repo1.maven.org/maven2/org/eclipse/jdt/ecj/maven-metadata.xml | sed -n 's:.*<release>\(.*\)</release>.*:\1:p')
           [ -n "$V" ] || { echo "cannot determine the baseline ECJ version"; exit 1; }
           echo "version=$V" >> "$GITHUB_OUTPUT"
-      # The baseline and javac results of the earlier runs (scripts/reference.py): the newest cache is restored (the
-      # key itself never matches), and the compare job saves a new one (about 40 MB).
-      - uses: actions/cache/restore@v4
-        with:
-          path: reference
-          key: reference-${{ github.run_id }}
-          restore-keys: reference-
-      - id: plan
+      - id: projects
         env:
           INPUT_PROJECTS: ${{ github.event.inputs.projects }}
-          INPUT_JDK: ${{ github.event.inputs.jdk || '27' }}
-          INPUT_REFRESH: ${{ github.event.inputs.refresh }}
-          BASELINE: ${{ steps.baseline.outputs.version }}
         run: |
-          REFRESH=; [ "$INPUT_REFRESH" != true ] || REFRESH=--refresh
-          MATRIX="$(python3 scripts/reference.py plan --reference reference --baseline "$BASELINE" --jdk "$INPUT_JDK" \
-            --projects "$INPUT_PROJECTS" $REFRESH --plan plan.json)"
-          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
-          jq -r '"Builds: " + ([.build | to_entries[] | "\(.key) \(.value | length)"] | join(", ")) + "; kept from earlier runs: \(.kept | length)"' plan.json | tee -a "$GITHUB_STEP_SUMMARY"
-      # the compare job gets the kept results the plan was made with: hours later the cache may be another one, or gone
-      - uses: actions/upload-artifact@v4
-        with:
-          name: plan
-          path: |
-            plan.json
-            reference
+          SEL="$(echo "$INPUT_PROJECTS" | tr -d ' ')"
+          if [ -n "$SEL" ]; then
+            FILTER='[.[] | select(.name as $n | ($sel | split(",") | index($n)))]'
+          else
+            FILTER='.'
+          fi
+          # a matrix cannot generate more than 256 jobs: the projects are split in shards, each one a matrix of its own
+          SHARDS="$(jq -c --arg sel "$SEL" "$FILTER | [.[].name] | . as \$names | [range(0; length; 100) | \$names[.:.+100]]" projects.json)"
+          echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
+          echo "shard_indexes=$(jq -c '[range(0; length)]' <<< "$SHARDS")" >> "$GITHUB_OUTPUT"
 
   build-ecj:
     runs-on: ubuntu-latest
@@ -92,17 +77,18 @@ jobs:
       - uses: actions/upload-artifact@v4
         with: { name: ecj-HEAD.jar, path: ecj-HEAD.jar }
 
-  # baseline, head and javac run in parallel; the baseline and javac builds are only those the plan asks for
+  # baseline, head and javac run in parallel and do not share ~/.m2
   build:
     needs: [setup, build-ecj]
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(needs.setup.outputs.matrix) }}
+        label: [baseline, head, javac]
+        shard: ${{ fromJSON(needs.setup.outputs.shard_indexes) }}
     name: ${{ matrix.label }} ${{ matrix.shard }}
     uses: ./.github/workflows/ecj-build.yml
     with:
-      projects: ${{ toJSON(matrix.projects) }}
+      projects: ${{ toJSON(fromJSON(needs.setup.outputs.shards)[matrix.shard]) }}
       label: ${{ matrix.label }}
       baseline: ${{ needs.setup.outputs.baseline }}
       jfr: ${{ github.event.inputs.jfr }}
@@ -117,24 +103,18 @@ jobs:
       actions: read
     steps:
       - uses: actions/checkout@v5
-      - name: Download the results
+      # A full run has about 2,000 artifacts (results, JFR) and this action only sees the first 1,000 of them: the
+      # compare job got about half of the results. The script downloads the others through the REST API, which lists
+      # them all but allows 1,000 requests an hour: too few for every result, enough for those the action left.
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          pattern: result-*
+          path: artifacts
+          merge-multiple: true
+      - name: Download the results the action did not see
         env:
           GH_TOKEN: ${{ github.token }}
         run: bash scripts/download-results.sh artifacts
-      - name: Results kept from the earlier runs
-        env:
-          # the results of another JDK or of another baseline do not replace the kept ones
-          NO_UPDATE: ${{ (github.event.inputs.jdk || github.event.inputs.baseline) && '--no-update' || '' }}
-        run: |
-          set -o pipefail   # a missing kept result must fail the step, behind tee as well
-          mv artifacts/plan.json plan.json
-          [ ! -d artifacts/reference ] || mv artifacts/reference reference
-          python3 scripts/reference.py merge --reference reference --plan plan.json --artifacts artifacts $NO_UPDATE | tee -a "$GITHUB_STEP_SUMMARY"
-      - uses: actions/cache/save@v4
-        if: ${{ !(github.event.inputs.jdk || github.event.inputs.baseline) }}
-        with:
-          path: reference
-          key: reference-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Compare
         env:
           ECJ_SHA: ${{ needs.build-ecj.outputs.sha }}
