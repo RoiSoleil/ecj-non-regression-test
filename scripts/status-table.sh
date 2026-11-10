@@ -7,7 +7,8 @@ set -euo pipefail
 results="$1"
 expected=""
 if [ -n "${2:-}" ]; then
-  expected="$(jq -r --arg sel "$(tr -d ' ' <<< "${3:-}")" '.[].name | select($sel == "" or (. as $n | $sel | split(",") | index($n)))' "$2")"
+  # without a selection, the projects on trial (optional) are not part of the run; "optional" selects them
+  expected="$(jq -r --arg sel "$(tr -d ' ' <<< "${3:-}")" '.[] | select(if $sel == "" then (.optional | not) elif $sel == "optional" then .optional else (.name as $n | $sel | split(",") | index($n)) end) | .name' "$2")"
 fi
 echo "| Project | Released ECJ | Head ECJ | javac |"
 echo "|---|---|---|---|"
