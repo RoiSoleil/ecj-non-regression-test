@@ -42,18 +42,20 @@ jobs:
           [ -n "$V" ] || V=$(curl -fsS https://repo1.maven.org/maven2/org/eclipse/jdt/ecj/maven-metadata.xml | sed -n 's:.*<release>\(.*\)</release>.*:\1:p')
           [ -n "$V" ] || { echo "cannot determine the baseline ECJ version"; exit 1; }
           echo "version=$V" >> "$GITHUB_OUTPUT"
+      # The durations of the last full run, to group the short projects and start the longest jobs first
+      # (scripts/plan.py). Without them (first run, site down) every project counts as a short build.
+      - name: Durations of the last full run
+        run: |
+          SITE="https://${GITHUB_REPOSITORY_OWNER,,}.github.io/${GITHUB_REPOSITORY#*/}"
+          RUN="$(curl -fsS --retry 3 "$SITE/data/runs.json" | jq -r '[(if type == "array" then . else .runs end)[] | select(.partial | not)][0].id // empty')" || true
+          [ -z "$RUN" ] || curl -fsS --retry 3 -o durations.json "$SITE/data/runs/$RUN/summary.json" || true
       - id: projects
         env:
           INPUT_PROJECTS: ${{ github.event.inputs.projects }}
+          INPUT_JDK: ${{ github.event.inputs.jdk || '27' }}
         run: |
-          SEL="$(echo "$INPUT_PROJECTS" | tr -d ' ')"
-          if [ -n "$SEL" ]; then
-            FILTER='[.[] | select(.name as $n | ($sel | split(",") | index($n)))]'
-          else
-            FILTER='.'
-          fi
-          # a matrix cannot generate more than 256 jobs: the projects are split in shards, each one a matrix of its own
-          SHARDS="$(jq -c --arg sel "$SEL" "$FILTER | [.[].name] | . as \$names | [range(0; length; 100) | \$names[.:.+100]]" projects.json)"
+          SHARDS="$(python3 scripts/plan.py --jdk "$INPUT_JDK" --projects "$INPUT_PROJECTS" --durations durations.json 2> plan.txt)" || { cat plan.txt; exit 1; }
+          cat plan.txt | tee -a "$GITHUB_STEP_SUMMARY"
           echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
           echo "shard_indexes=$(jq -c '[range(0; length)]' <<< "$SHARDS")" >> "$GITHUB_OUTPUT"
 
@@ -77,22 +79,19 @@ jobs:
       - uses: actions/upload-artifact@v4
         with: { name: ecj-HEAD.jar, path: ecj-HEAD.jar }
 
-  # baseline, head and javac run in parallel and do not share ~/.m2
+  # the jobs planned by scripts/plan.py: a group of projects and a label each, the longest jobs in the first shard
   build:
     needs: [setup, build-ecj]
     strategy:
       fail-fast: false
       matrix:
-        label: [baseline, head, javac]
         shard: ${{ fromJSON(needs.setup.outputs.shard_indexes) }}
-    name: ${{ matrix.label }} ${{ matrix.shard }}
+    name: shard ${{ matrix.shard }}
     uses: ./.github/workflows/ecj-build.yml
     with:
-      projects: ${{ toJSON(fromJSON(needs.setup.outputs.shards)[matrix.shard]) }}
-      label: ${{ matrix.label }}
+      jobs: ${{ toJSON(fromJSON(needs.setup.outputs.shards)[matrix.shard]) }}
       baseline: ${{ needs.setup.outputs.baseline }}
       jfr: ${{ github.event.inputs.jfr }}
-      jdk: ${{ github.event.inputs.jdk }}
 
   compare:
     needs: [setup, build-ecj, build]
@@ -103,9 +102,8 @@ jobs:
       actions: read
     steps:
       - uses: actions/checkout@v5
-      # A full run has about 2,000 artifacts (results, JFR) and this action only sees the first 1,000 of them: the
-      # compare job got about half of the results. The script downloads the others through the REST API, which lists
-      # them all but allows 1,000 requests an hour: too few for every result, enough for those the action left.
+      # This action only sees the first 1,000 artifacts of a run: the script downloads the others through the REST API,
+      # which lists them all but allows 1,000 requests an hour. With the projects grouped per job a run has far fewer.
       - uses: actions/download-artifact@v8.0.2
         with:
           pattern: result-*

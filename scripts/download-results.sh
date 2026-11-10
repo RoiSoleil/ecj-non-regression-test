@@ -11,9 +11,9 @@ mkdir -p "$OUT"
 gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" \
   --jq '.artifacts[] | select(.name | startswith("result-")) | "\(.id) \(.name)"' \
   | sort -n > "$WORK/all"   # by id: after a re-run, the artifact of the last attempt is unpacked last and wins
-# the artifact result-<project>-<label> holds results/<project>-<label>.status
+# every artifact holds markers/<its name> (the older ones, of one project each, results/<project>-<label>.status)
 while read -r id name; do
-  [ -f "$OUT/results/${name#result-}.status" ] || echo "$id $name"
+  [ -f "$OUT/markers/$name" ] || [ -f "$OUT/results/${name#result-}.status" ] || echo "$id $name"
 done < "$WORK/all" > "$WORK/list"
 echo "$(wc -l < "$WORK/all") result artifacts, $(wc -l < "$WORK/list") to download"
 

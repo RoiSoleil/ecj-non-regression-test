@@ -130,13 +130,31 @@ def read_jsonl(path):
 
 
 def job_links(jobs):
-    """{(project, label): url} from job names such as 'head 0 / build (Guava, head)'."""
+    """{(project, label): url} from job names such as 'shard 0 / build (g007 head: Guava, Gson)', and of the older
+    runs, one project per job, such as 'head 0 / build (Guava, head)'."""
     links = {}
     for job in jobs:
-        match = re.search(r'build \(([^,]+), ([^)]+)\)$', job.get('name', ''))
+        name = job.get('name', '')
+        match = re.search(r'build \((g\d+) (\w+): (.*)\)$', name)
+        if match:
+            for project in match.group(3).split(','):
+                links[(project.strip(), match.group(2))] = job.get('html_url')
+            continue
+        match = re.search(r'build \(([^,]+), ([^)]+)\)$', name)
         if match:
             links[(match.group(1).strip(), match.group(2).strip())] = job.get('html_url')
     return links
+
+
+def job_groups(jobs):
+    """{project: group id} from the job names of a run whose projects are grouped (see job_links)."""
+    groups = {}
+    for job in jobs:
+        match = re.search(r'build \((g\d+) (\w+): (.*)\)$', job.get('name', ''))
+        if match:
+            for project in match.group(3).split(','):
+                groups[project.strip()] = match.group(1)
+    return groups
 
 
 def artifact_links(artifacts, repo, run_id):
@@ -205,7 +223,16 @@ def main():
         shutil.rmtree(raw_dir)
 
     definitions = {project['name']: project for project in read_json(pathlib.Path(options.projects), [])}
-    jobs = job_links(read_jsonl(options.jobs))
+    job_list = read_jsonl(options.jobs)
+    jobs = job_links(job_list)
+    groups = job_groups(job_list)
+
+    def result_artifact(name, label):
+        # result-<group>-<label> holds the results of the projects of a group (older runs: result-<project>-<label>)
+        return artifacts.get(f'result-{groups[name]}-{label}') if name in groups else artifacts.get(f'result-{name}-{label}')
+
+    def jfr_artifact(name):
+        return artifacts.get(f'jfr-{groups[name]}') if name in groups else artifacts.get(f'jfr-{name}')
     artifacts = artifact_links(read_jsonl(options.artifacts), options.repo, run_id)
     # a project whose build job was cancelled or crashed has no result at all: the jobs of the run still name it, and it
     # is shown as missing instead of disappearing
@@ -297,7 +324,7 @@ def main():
                 'metrics': {key: metrics[key] for key in METRICS if key in metrics},
                 # since the warm-up build is gone every build is measured (its wall time may include downloads); the
                 # older results were only measured after a warm-up build, offline
-                'measured': bool(metrics.get('single_build') or (metrics.get('warmup') and metrics.get('offline'))),
+                'measured': not metrics.get('shared_runner') and bool(metrics.get('single_build') or (metrics.get('warmup') and metrics.get('offline'))),
                 'raw': sorted(files),  # the raw files the site has: the dashboard links to the others on GitHub
             }
             project_labels[label] = {
@@ -341,17 +368,16 @@ def main():
                 head_vs_base.append(value)
         summary_projects.append({
             'name': name, 'labels': summary_labels, 'new': len(new), 'fixed': len(fixed), 'regression': regression,
-            'tested': tested, 'ratios': project_ratios, 'jfr': artifacts.get(f'jfr-{name}'),
+            'tested': tested, 'ratios': project_ratios, 'jfr': jfr_artifact(name),
             'jobs': {label: jobs.get((name, label)) for label in LABELS if jobs.get((name, label))},
-            'artifacts': {label: artifacts.get(f'result-{name}-{label}') for label in LABELS
-                          if artifacts.get(f'result-{name}-{label}')},
+            'artifacts': {label: result_artifact(name, label) for label in LABELS if result_artifact(name, label)},
         })
         write_json(run_dir / 'projects' / f'{name}.json', {
             'name': name, 'run': run_id, 'url': definition.get('url', ''), 'ref': definition.get('ref', ''),
             'cmd': definition.get('cmd', ''), 'jdk': definition.get('jdk', ''), 'labels': project_labels,
             'new': new[:MAX_DIFF], 'fixed': fixed[:MAX_DIFF], 'new_count': len(new), 'fixed_count': len(fixed),
-            'regression': regression, 'raw': raw, 'jfr': artifacts.get(f'jfr-{name}'),
-            'result_artifacts': {label: artifacts.get(f'result-{name}-{label}') for label in LABELS},
+            'regression': regression, 'raw': raw, 'jfr': jfr_artifact(name),
+            'result_artifacts': {label: result_artifact(name, label) for label in LABELS},
         })
 
     family_list = sorted(({'family': fam, **{label: entry[label] for label in LABELS},

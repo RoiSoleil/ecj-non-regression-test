@@ -7,6 +7,7 @@ peak resident set size in KB), `gc-<pid>.log` files (-Xlog:gc,gc+cpu), `run.log`
 and `classes` (number and size in bytes of the class files produced). The reported run is the median one by wall time.
 """
 import json
+import os
 import pathlib
 import re
 import sys
@@ -86,6 +87,8 @@ if not runs:
     sys.exit('metrics.py: no measured build')
 median = dict(runs[len(runs) // 2])
 # single_build: one online build, no warm-up build (the results of the older runs do not have the field)
+# shared_runner: built next to another build (the baseline), no performance measure
 median.update({'warmup': warmed, 'offline': offline, 'single_build': not warmed, 'runs': len(runs),
+               'shared_runner': bool(os.environ.get('SHARED_RUNNER')),
                'wall_min_s': runs[0]['wall_s'], 'wall_max_s': runs[-1]['wall_s']})
 print(json.dumps(median))

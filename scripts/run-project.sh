@@ -111,6 +111,8 @@ BASE_MAVEN_OPTS="$MAVEN_OPTS"
 # Maven (3.9 and later) reads these arguments from the environment: time stamps on every log line give the time spent
 # in the compiler plugin alone.
 BASE_MAVEN_ARGS="-Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss.SSS"
+# two builds at a time on the runner (SHARED_RUNNER): the Maven processes lock the local repository between them
+[ -z "${SHARED_RUNNER:-}" ] || BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.syncContext.named.factory=file-lock -Daether.syncContext.named.nameMapper=file-gav"
 RUNS="$DIR/../$NAME-$LABEL-runs"   # the directory of the measured build (1): time, GC logs, Maven log, produced classes
 rm -rf "$RUNS"; mkdir -p "$RUNS"
 echo "== $NAME with ECJ $ECJ_VERSION ($LABEL): $CMD" | tee -a "$LOG"
@@ -178,4 +180,6 @@ fi
 } | sort -u > "$ROOT/results/$NAME-$LABEL.errors"
 python3 "$ROOT/scripts/metrics.py" 0 0 "$RUNS"/* > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
 rm -rf "$RUNS"
+# the next projects of the job need the disk space
+cd "$ROOT" && rm -rf "$DIR"
 echo "$(wc -l < "$ROOT/results/$NAME-$LABEL.errors") compile errors, status $(cat "$ROOT/results/$NAME-$LABEL.status")"

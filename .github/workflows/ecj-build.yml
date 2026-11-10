@@ -1,16 +1,12 @@
-name: ECJ build of one label
+name: ECJ builds of one shard
 
-# One job per project of a shard for one label (baseline, head or javac). A matrix cannot generate more than 256 jobs,
-# so ecj-matrix.yml calls this workflow for each shard and label instead of having one matrix of projects x labels.
+# One job per group of projects and label, as planned by scripts/plan.py. A matrix cannot generate more than 256 jobs,
+# so ecj-matrix.yml calls this workflow for each shard of the plan.
 on:
   workflow_call:
     inputs:
-      projects:
-        description: "JSON array of project names"
-        type: string
-        required: true
-      label:
-        description: "baseline, head or javac"
+      jobs:
+        description: "JSON array of jobs: {id, label, projects, jdk, parallel, cache_key, minutes}"
         type: string
         required: true
       baseline:
@@ -21,10 +17,6 @@ on:
         description: "'false' turns off the Java Flight Recording of the head builds"
         type: string
         required: false
-      jdk:
-        description: "JDK of the builds (default 27), unless the project gives its own one (field jdk of projects.json)"
-        type: string
-        required: false
 
 jobs:
   build:
@@ -33,20 +25,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        name: ${{ fromJSON(inputs.projects) }}
-    name: build (${{ matrix.name }}, ${{ inputs.label }})
+        include: ${{ fromJSON(inputs.jobs) }}
+    # dashboard-data.py reads the projects of a job from its name
+    name: "build (${{ matrix.id }} ${{ matrix.label }}: ${{ join(matrix.projects, ', ') }})"
     steps:
       - uses: actions/checkout@v5
-      - id: jdk
-        env:
-          PROJECT: ${{ matrix.name }}
-          DEFAULT_JDK: ${{ inputs.jdk || '27' }}
-        run: |
-          echo "version=$(jq -r --arg name "$PROJECT" --arg jdk "$DEFAULT_JDK" '.[] | select(.name == $name) | .jdk // $jdk' projects.json)" >> "$GITHUB_OUTPUT"
-          echo "cache_m2=$(jq -r --arg name "$PROJECT" '.[] | select(.name == $name) | .cache_m2 // false' projects.json)" >> "$GITHUB_OUTPUT"
-          echo "ref=$(jq -r --arg name "$PROJECT" '.[] | select(.name == $name) | .ref' projects.json)" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-java@v5
-        with: { distribution: temurin, java-version: "${{ steps.jdk.outputs.version }}" }
+        with: { distribution: temurin, java-version: "${{ matrix.jdk }}" }
       # The large builds need more than the free space of a runner. Deleting these tools took 90 seconds of every job,
       # more than the build of most projects: it now runs in the background, with a low CPU and I/O priority (not the idle
       # one: a build that keeps the disk busy must not stop it), and
@@ -63,15 +48,15 @@ jobs:
             https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.9.9/apache-maven-3.9.9-bin.tar.gz
           tar xzf "$RUNNER_TEMP/maven.tar.gz" -C "$HOME"
           echo "$HOME/apache-maven-3.9.9/bin" >> "$GITHUB_PATH"
-      # Only the projects that ask for it (cache_m2 in projects.json, those whose dependencies are long to download):
-      # the caches of a repository are limited to 10 GB, far less than the dependencies of every project.
-      # One cache for the three labels of a project. It must stay before the installation of the head ECJ, which
-      # replaces the HEAD-SNAPSHOT that a saved cache may hold.
+      # Only the projects that ask for it (cache_m2 in projects.json, those whose dependencies are long to download;
+      # plan.py gives them a job of their own): the caches of a repository are limited to 10 GB, far less than the
+      # dependencies of every project. One cache for the three labels of a project. It must stay before the
+      # installation of the head ECJ, which replaces the HEAD-SNAPSHOT that a saved cache may hold.
       - uses: actions/cache@v4
-        if: steps.jdk.outputs.cache_m2 == 'true'
+        if: matrix.cache_key != ''
         with:
           path: ~/.m2/repository
-          key: m2-${{ matrix.name }}-${{ steps.jdk.outputs.ref }}
+          key: ${{ matrix.cache_key }}
       - name: Install the head ECJ in the local Maven repository
         run: |
           for i in 1 2 3; do
@@ -79,32 +64,42 @@ jobs:
             sleep 15
           done
           exit 1
-      - name: Build ${{ matrix.name }} (${{ inputs.label }})
+      - name: "Build ${{ join(matrix.projects, ', ') }} (${{ matrix.label }})"
         env:
           BASELINE: ${{ inputs.baseline }}
           JFR: ${{ inputs.jfr }}
-          LABEL: ${{ inputs.label }}
-          PROJECT: ${{ matrix.name }}
+          LABEL: ${{ matrix.label }}
+          PROJECTS: ${{ toJSON(matrix.projects) }}
+          PARALLEL: ${{ matrix.parallel }}
         run: |
           VERSION="$BASELINE"
           [ "$LABEL" != javac ] || VERSION=javac   # untouched project, built with the JDK's javac
-          if [ "$LABEL" = head ]; then
-            VERSION=HEAD-SNAPSHOT
+          [ "$LABEL" != head ] || VERSION=HEAD-SNAPSHOT
+          export LABEL VERSION JFR
+          # builds that share the runner (the baseline, two at a time) are no performance measure; Maven locks its
+          # local repository between processes
+          [ "$PARALLEL" = 1 ] || export SHARED_RUNNER=1
+          build() {
             # the head ECJ is the one to profile (the baseline run is only the reference)
-            [ "$JFR" = false ] || export JFR_FILE="$PWD/jfr/$PROJECT.jfr"
-          fi
-          bash scripts/run-project.sh "$PROJECT" "$LABEL" "$VERSION"
+            if [ "$LABEL" = head ] && [ "$JFR" != false ]; then export JFR_FILE="$PWD/jfr/$1.jfr"; fi
+            bash scripts/run-project.sh "$1" "$LABEL" "$VERSION" || echo "::warning::the build script of $1 failed"
+          }
+          export -f build
+          jq -r '.[]' <<< "$PROJECTS" | xargs -P "$PARALLEL" -I{} bash -c 'build "$1"' _ {}
+          # tells scripts/download-results.sh that the artifact is downloaded
+          mkdir -p markers && touch "markers/result-${{ matrix.id }}-$LABEL"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: result-${{ matrix.name }}-${{ inputs.label }}
+          name: result-${{ matrix.id }}-${{ matrix.label }}
           path: |
             results
             logs
+            markers
       - uses: actions/upload-artifact@v4
-        if: always() && inputs.label == 'head'
+        if: always() && matrix.label == 'head'
         with:
-          name: jfr-${{ matrix.name }}
+          name: jfr-${{ matrix.id }}
           path: jfr/*.jfr
           if-no-files-found: ignore
           retention-days: 14
