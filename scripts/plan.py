@@ -12,7 +12,7 @@ conditions (the first project of a group downloads what the next ones find in ~/
 The baseline builds only give the reference compile errors, never a performance measure: they run two at a time.
 
 usage: plan.py --jdk DEFAULT_JDK [--projects a,b] [--durations summary.json] > shards.json
-  prints [[job, ...], ...]: shards of at most 256 jobs (a matrix cannot have more), the longest jobs in the first shard.
+  prints [[job, ...], ...]: shards of at most 256 jobs (a matrix cannot have more), each one longest job first.
   job = {"id": "g007", "label": "head", "projects": [...], "jdk": "27", "parallel": 1, "cache_key": "", "minutes": 12}
 """
 import argparse
@@ -78,7 +78,10 @@ def main():
     open_groups = {}
     for project in sorted(projects, key=lambda project: -cost(project['name'])):
         name, jdk = project['name'], project.get('jdk') or options.jdk
-        if project.get('cache_m2') or cost(name) >= ALONE_SECONDS:
+        # a project that installs into ~/.m2 (mvn install, a pre command) could change what a later project of its
+        # group resolves: it gets a job of its own too
+        installs = bool(project.get('pre')) or ' install' in project.get('cmd', '')
+        if project.get('cache_m2') or installs or cost(name) >= ALONE_SECONDS:
             groups.append({'projects': [name], 'jdk': jdk, 'cache': bool(project.get('cache_m2')), 'ref': project.get('ref', '')})
             continue
         for group in open_groups.setdefault(jdk, []):
@@ -103,7 +106,11 @@ def main():
             jobs.append({'id': f'g{index:03d}', 'label': label, 'projects': group['projects'], 'jdk': group['jdk'],
                          'parallel': parallel, 'cache_key': cache_key, 'minutes': round(total / 60, 1)})
     jobs.sort(key=lambda job: -job['minutes'])
-    shards = [jobs[index:index + SHARD] for index in range(0, len(jobs), SHARD)]
+    # The shards are matrices of their own, queued at the same time: each one gets every n-th job, so that each one
+    # starts with its longest jobs (n consecutive shards of the sorted list would let the short jobs of the last
+    # shards take runners before the long jobs of the first one).
+    count = max(1, -(-len(jobs) // SHARD))
+    shards = [jobs[index::count] for index in range(count)]
     total = sum(job['minutes'] for job in jobs)
     print(f'{len(projects)} projects, {len(groups)} groups, {len(jobs)} jobs, about {total / 60:.1f} runner hours, '
           f'about {total / 60 / 20:.1f} h on 20 runners', file=sys.stderr)

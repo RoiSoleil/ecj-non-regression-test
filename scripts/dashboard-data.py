@@ -129,16 +129,17 @@ def read_jsonl(path):
     return items
 
 
-def job_links(jobs):
-    """{(project, label): url} from job names such as 'shard 0 / build (g007 head: Guava, Gson)', and of the older
-    runs, one project per job, such as 'head 0 / build (Guava, head)'."""
+def job_links(jobs, plan):
+    """{(project, label): url}. The jobs of a run whose projects are grouped are named such as
+    'shard 0 / build (g007 head: Guava, Gson)': the group and the label give the projects, from the plan (a long name
+    may be cut). The older runs had one project per job, such as 'head 0 / build (Guava, head)'."""
     links = {}
     for job in jobs:
         name = job.get('name', '')
-        match = re.search(r'build \((g\d+) (\w+): (.*)\)$', name)
+        match = re.search(r'build \((g\d+) (\w+)', name)
         if match:
-            for project in match.group(3).split(','):
-                links[(project.strip(), match.group(2))] = job.get('html_url')
+            for project in plan.get(match.group(1), []):
+                links[(project, match.group(2))] = job.get('html_url')
             continue
         match = re.search(r'build \(([^,]+), ([^)]+)\)$', name)
         if match:
@@ -146,14 +147,14 @@ def job_links(jobs):
     return links
 
 
-def job_groups(jobs):
-    """{project: group id} from the job names of a run whose projects are grouped (see job_links)."""
+def plan_groups(path):
+    """{group id: [projects]} from the plan of the run (scripts/plan.py), if given."""
+    if not path or not pathlib.Path(path).exists():
+        return {}
     groups = {}
-    for job in jobs:
-        match = re.search(r'build \((g\d+) (\w+): (.*)\)$', job.get('name', ''))
-        if match:
-            for project in match.group(3).split(','):
-                groups[project.strip()] = match.group(1)
+    for shard in json.loads(pathlib.Path(path).read_text()):
+        for job in shard:
+            groups[job['id']] = job['projects']
     return groups
 
 
@@ -199,6 +200,7 @@ def main():
     parser.add_argument('--projects', default='projects.json')
     parser.add_argument('--jobs', help='jobs of the run, JSON lines with name and html_url')
     parser.add_argument('--artifacts', help='artifacts of the run, JSON lines with name and id')
+    parser.add_argument('--plan', help='plan.json of the run (scripts/plan.py): the projects of every job')
     parser.add_argument('--runs-keep', type=int, default=60)
     parser.add_argument('--partial-keep', type=int, default=10, help='partial runs to keep, besides')
     parser.add_argument('--raw-keep', type=int, default=10, help='full runs with their raw files')
@@ -223,9 +225,9 @@ def main():
         shutil.rmtree(raw_dir)
 
     definitions = {project['name']: project for project in read_json(pathlib.Path(options.projects), [])}
-    job_list = read_jsonl(options.jobs)
-    jobs = job_links(job_list)
-    groups = job_groups(job_list)
+    plan = plan_groups(options.plan)
+    jobs = job_links(read_jsonl(options.jobs), plan)
+    groups = {project: group for group, projects in plan.items() for project in projects}
 
     def result_artifact(name, label):
         # result-<group>-<label> holds the results of the projects of a group (older runs: result-<project>-<label>)
@@ -370,7 +372,7 @@ def main():
             'name': name, 'labels': summary_labels, 'new': len(new), 'fixed': len(fixed), 'regression': regression,
             'tested': tested, 'ratios': project_ratios, 'jfr': jfr_artifact(name),
             'jobs': {label: jobs.get((name, label)) for label in LABELS if jobs.get((name, label))},
-            'artifacts': {label: result_artifact(name, label) for label in LABELS if result_artifact(name, label)},
+            'artifacts': {label: link for label in LABELS if (link := result_artifact(name, label))},
         })
         write_json(run_dir / 'projects' / f'{name}.json', {
             'name': name, 'run': run_id, 'url': definition.get('url', ''), 'ref': definition.get('ref', ''),

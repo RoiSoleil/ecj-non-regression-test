@@ -57,7 +57,11 @@ jobs:
           SHARDS="$(python3 scripts/plan.py --jdk "$INPUT_JDK" --projects "$INPUT_PROJECTS" --durations durations.json 2> plan.txt)" || { cat plan.txt; exit 1; }
           cat plan.txt | tee -a "$GITHUB_STEP_SUMMARY"
           echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
+          echo "$SHARDS" > plan.json
           echo "shard_indexes=$(jq -c '[range(0; length)]' <<< "$SHARDS")" >> "$GITHUB_OUTPUT"
+      # the projects of every job, for the links of the dashboard
+      - uses: actions/upload-artifact@v4
+        with: { name: plan, path: plan.json }
 
   build-ecj:
     runs-on: ubuntu-latest
@@ -109,6 +113,8 @@ jobs:
           pattern: result-*
           path: artifacts
           merge-multiple: true
+      - uses: actions/download-artifact@v8.0.2
+        with: { name: plan }
       - name: Download the results the action did not see
         env:
           GH_TOKEN: ${{ github.token }}
@@ -165,5 +171,5 @@ jobs:
             --ecj-sha "$ECJ_SHA" --baseline "$BASELINE" --jdk "$INPUT_JDK" \
             --selection "$INPUT_PROJECTS" --jfr "$INPUT_JFR" --repo-sha "$GITHUB_SHA" \
             --baseline-input "$INPUT_BASELINE" --ref-input "$REF_INPUT" \
-            --jobs jobs.jsonl --artifacts artifacts.jsonl
+            --jobs jobs.jsonl --artifacts artifacts.jsonl --plan plan.json
           echo "Dashboard: https://${GITHUB_REPOSITORY_OWNER,,}.github.io/${GITHUB_REPOSITORY#*/}/#/?run=$GITHUB_RUN_ID" >> "$GITHUB_STEP_SUMMARY"

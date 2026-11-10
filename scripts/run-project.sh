@@ -30,6 +30,8 @@ DIR="$ROOT/work/$NAME-$LABEL"
 : > "$LOG"
 
 rm -rf "$DIR"
+# the next projects of the job need the disk space, also after an early exit (clone or patch failed)
+trap 'cd "$ROOT" && rm -rf "$DIR"' EXIT
 if [ -n "$URL" ]; then
   git init -q "$DIR"
   git -C "$DIR" remote add origin "$URL"
@@ -64,7 +66,9 @@ if [ -n "${CI:-}" ] && [ -n "${JAVA_HOME:-}" ]; then # only on CI: this file als
       echo "  <toolchain><type>jdk</type><provides><version>$v</version></provides><configuration><jdkHome>$JAVA_HOME</jdkHome></configuration></toolchain>"
     done
     echo '</toolchains>'
-  } > "$HOME/.m2/toolchains.xml"
+  } > "$HOME/.m2/toolchains.xml.$$"
+  # renamed in one step: a build running next to this one (SHARED_RUNNER) may be reading the file
+  mv -f "$HOME/.m2/toolchains.xml.$$" "$HOME/.m2/toolchains.xml"
 fi
 cd "$DIR/${SUBDIR:-.}"
 
@@ -180,6 +184,4 @@ fi
 } | sort -u > "$ROOT/results/$NAME-$LABEL.errors"
 python3 "$ROOT/scripts/metrics.py" 0 0 "$RUNS"/* > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
 rm -rf "$RUNS"
-# the next projects of the job need the disk space
-cd "$ROOT" && rm -rf "$DIR"
 echo "$(wc -l < "$ROOT/results/$NAME-$LABEL.errors") compile errors, status $(cat "$ROOT/results/$NAME-$LABEL.status")"
