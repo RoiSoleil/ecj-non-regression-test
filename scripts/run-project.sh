@@ -136,7 +136,9 @@ measured_build() {
   export GC_OPTS="-Xlog:gc,gc+cpu:file=$rd/gc-%p.log:uptime:filecount=0"
   export MAVEN_OPTS="$MAVEN_OPTS $GC_OPTS"
   export MAVEN_ARGS="$BASE_MAVEN_ARGS"
-  /usr/bin/time -f '%e %U %S %M' -o "$rd/time" bash -c "$CMD" >"$rd/run.log" 2>&1
+  # a build that hangs (HummerRisk waited 3.5 hours for nothing) must not hold the whole job: the longest build, NiFi
+  # with javac, takes about 75 minutes. It exits with 124, or 137 when the build ignored SIGTERM and was killed
+  /usr/bin/time -f '%e %U %S %M' -o "$rd/time" timeout -k 60 "${BUILD_TIMEOUT:-5400}" bash -c "$CMD" >"$rd/run.log" 2>&1
   local rc=$?
   cat "$rd/run.log" >>"$LOG"
   # the work done: number and size of the class files (ECJ does not print the number of source files it compiles)
@@ -157,7 +159,7 @@ for attempt in 1 2 3; do
   echo "== build, attempt $attempt" >>"$LOG"
   measured_build 1
   STATUS=$?
-  [ "$STATUS" != 0 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] \
+  [ "$STATUS" != 0 ] && [ "$STATUS" != 124 ] && [ "$STATUS" != 137 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] \
     && grep -q -E 'Could not transfer artifact|status code: 5[0-9][0-9]|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length' "$RUNS/1/run.log" \
     && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:' "$RUNS/1/run.log" || break
   echo "== build failed on a network error" >>"$LOG"
@@ -166,6 +168,10 @@ for attempt in 1 2 3; do
 done
 if [ "$STATUS" = 0 ]; then
   echo "success" > "$ROOT/results/$NAME-$LABEL.status"
+elif [ "$STATUS" = 124 ] || [ "$STATUS" = 137 ]; then
+  # 137 is also a build that the kernel killed for lack of memory
+  echo "== build killed (exit $STATUS: stopped after ${BUILD_TIMEOUT:-5400} seconds, or out of memory)" >>"$LOG"
+  echo "build failed" > "$ROOT/results/$NAME-$LABEL.status"
 else
   echo "build failed" > "$ROOT/results/$NAME-$LABEL.status"
 fi

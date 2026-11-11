@@ -30,7 +30,13 @@ jobs:
     name: "build (${{ matrix.id }} ${{ matrix.label }}: ${{ join(matrix.projects, ', ') }})"
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-java@v5
+      # the download of the JDK sometimes fails on an error page of the CDN: try once more
+      - id: java
+        uses: actions/setup-java@v5
+        continue-on-error: true
+        with: { distribution: temurin, java-version: "${{ matrix.jdk }}" }
+      - if: steps.java.outcome == 'failure'
+        uses: actions/setup-java@v5
         with: { distribution: temurin, java-version: "${{ matrix.jdk }}" }
       # The large builds need more than the free space of a runner. Deleting these tools took 90 seconds of every job,
       # more than the build of most projects: it now runs in the background, with a low CPU and I/O priority (not the idle

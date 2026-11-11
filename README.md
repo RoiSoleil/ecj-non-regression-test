@@ -92,7 +92,11 @@ the raw file it comes from. Each failing case has to be analysed one by one: a b
    `scripts/publish-dashboard.sh` publishes them with the site (`dashboard/`) on the `gh-pages` branch: summaries of
    the last 60 runs, raw files (`.status`, `.metrics`, `.errors`, build logs) of the last 10.
 
-The workflow `ECJ Non-regression Builds` (`.github/workflows/ecj-matrix.yml`) runs three jobs per project (baseline ECJ, head ECJ and javac, in parallel) and a final `compare` job. A matrix cannot generate more than 256 jobs, so the projects are split in shards of 100, one call of `ecj-build.yml` per shard and label: adding projects only takes `projects.json`. The
+The workflow `ECJ Non-regression Builds` (`.github/workflows/ecj-matrix.yml`) builds every project three times (baseline ECJ, head ECJ and javac) and ends with a `compare` job. `scripts/plan.py`
+packs the short projects in groups of up to 8 per job (the long ones get a job of their own), with the durations of the
+last run, and starts the longest jobs first. A matrix cannot generate more than 256 jobs, so the jobs are split in
+shards, one call of `ecj-build.yml` per shard: adding projects only takes `projects.json`. A build stops after
+90 minutes (`BUILD_TIMEOUT`). The
 `ECJ Commit Watcher` workflow (`ecj-check.yml`) runs it every night when `eclipse.jdt.core` has a new commit; a
 successfully tested commit gets a `tested/<sha>` tag, a failing run is retried the next night.
 
@@ -103,7 +107,11 @@ successfully tested commit gets a `tested/<sha>` tag, a failing run is retried t
 * `ecj_ref`: branch, tag or commit of `eclipse.jdt.core` (a pull request head works: `refs/pull/<n>/head`).
   Default: `master`.
 * `baseline`: released ECJ version to compare with (default: the latest release on Maven Central).
-* `projects`: comma separated names, for example `Quarkus,Camel`. Default: all projects.
+* `projects`: comma separated names, for example `Quarkus,Camel`. Default: all projects but the ones on trial
+  (`"optional": true` in `projects.json`); `optional` builds only those.
+* `jdk`: JDK of the builds, unless a project gives its own (`"jdk"` in `projects.json`). Default: 27.
+* `labels`: `baseline`, `head`, `javac` (default: all three; a run with a selection of labels does not publish the dashboard). `javac` alone tries new
+  projects.
 * `jfr`: `true` (default) records a [Java Flight Recording](https://dev.java/learn/jvm/jfr/) of each build with the head ECJ.
 
 Each head job uploads its recording as the artifact `jfr-<project>` (kept 14 days, at most 300 MB per project,
