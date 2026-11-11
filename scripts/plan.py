@@ -12,7 +12,12 @@ conditions (the first project of a group downloads what the next ones find in ~/
 The baseline builds only give the reference compile errors, never a performance measure: they run two at a time.
 
 usage: plan.py --jdk DEFAULT_JDK [--projects a,b | --projects optional] [--labels baseline,head,javac]
-               [--durations summary.json] > shards.json
+               [--durations summary.json] [--alone --id-prefix c] > shards.json
+  --alone gives every project a job of its own (the confirmation builds of scripts/compare.py --suspects).
+  --ignore-unknown leaves out the selected projects that projects.json does not have (a suspect of a run that a later
+  commit renamed or removed), instead of failing.
+  The JDK of a job is the exact version that jdks.json gives for its feature release: a new update of the JDK changes
+  the results of javac and of the builds (removed APIs, new warnings), so it comes in a commit of its own.
   prints [[job, ...], ...]: shards of at most 256 jobs (a matrix cannot have more), each one longest job first.
   job = {"id": "g007", "label": "head", "projects": [...], "jdk": "27", "parallel": 1, "cache_key": "", "minutes": 12}
 """
@@ -30,6 +35,7 @@ GROUP_MAX = 8             # and its number of projects
 OVERHEAD_SECONDS = 15     # per job
 BASELINE_PARALLEL = 2
 SHARD = 256
+JDKS = json.loads((ROOT / 'jdks.json').read_text())
 
 
 def durations(path):
@@ -55,6 +61,9 @@ def main():
     parser.add_argument('--projects', default='')
     parser.add_argument('--labels', default=','.join(LABELS))
     parser.add_argument('--durations', default='')
+    parser.add_argument('--alone', action='store_true')
+    parser.add_argument('--ignore-unknown', action='store_true')
+    parser.add_argument('--id-prefix', default='g')
     options = parser.parse_args()
 
     projects = json.loads((ROOT / 'projects.json').read_text())
@@ -68,8 +77,15 @@ def main():
     if selection:
         projects = [project for project in projects if project['name'] in selection]
         unknown = sorted(set(selection) - {project['name'] for project in projects})
-        if unknown:
+        if unknown and options.ignore_unknown:
+            # a suspect of a run that a later commit renamed or removed: the others still get their second build
+            print('not in projects.json: ' + ', '.join(unknown), file=sys.stderr)
+        elif unknown:
             sys.exit('unknown projects: ' + ', '.join(unknown))
+    # every JDK is pinned to an update (see above): a feature release that jdks.json does not give is an error
+    missing = sorted({project.get('jdk') or options.jdk for project in projects} - set(JDKS))
+    if missing:
+        sys.exit(f'no exact version in jdks.json for JDK {", ".join(missing)}')
     labels = [label for label in options.labels.replace(' ', '').split(',') if label]
     known = durations(options.durations)
 
@@ -88,7 +104,7 @@ def main():
         # a project that installs into ~/.m2 (mvn install, a pre command) could change what a later project of its
         # group resolves: it gets a job of its own too
         installs = bool(project.get('pre')) or ' install' in project.get('cmd', '')
-        if project.get('cache_m2') or installs or cost(name) >= ALONE_SECONDS:
+        if options.alone or project.get('cache_m2') or installs or cost(name) >= ALONE_SECONDS:
             groups.append({'projects': [name], 'jdk': jdk, 'cache': bool(project.get('cache_m2')), 'ref': project.get('ref', '')})
             continue
         for group in open_groups.setdefault(jdk, []):
@@ -110,7 +126,8 @@ def main():
             if group['cache']:
                 # one cache per project and pinned commit, shared by its three labels
                 cache_key = f"m2-{group['projects'][0]}-{group['ref']}"
-            jobs.append({'id': f'g{index:03d}', 'label': label, 'projects': group['projects'], 'jdk': group['jdk'],
+            jobs.append({'id': f'{options.id_prefix}{index:03d}', 'label': label, 'projects': group['projects'],
+                         'jdk': JDKS[group['jdk']],
                          'parallel': parallel, 'cache_key': cache_key, 'minutes': round(total / 60, 1)})
     jobs.sort(key=lambda job: -job['minutes'])
     # The shards are matrices of their own, queued at the same time: each one gets every n-th job, so that each one

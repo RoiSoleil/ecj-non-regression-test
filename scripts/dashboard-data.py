@@ -216,6 +216,8 @@ def main():
     run_dir = site / 'data' / 'runs' / run_id
     raw_dir = site / 'raw' / run_id
     names = {path.name.rsplit('-', 1)[0] for path in results.glob('*.status')}
+    confirmation_file = results / 'confirmation.json'
+    confirmation = json.loads(confirmation_file.read_text()) if confirmation_file.exists() else {}
     if not names:
         print(f'no result in {results}', file=sys.stderr)
         sys.exit(NO_RESULT)  # before any change of the site: the caller can skip the run
@@ -347,6 +349,10 @@ def main():
             new = sorted(errors_head - errors_base)
             fixed = sorted(errors_base - errors_head)
             regression = bool(new) or (base['status'] == 'success' and head['status'] != 'success')
+            # the verdict of the second builds of the suspect projects (scripts/compare.py --confirm), which decides the
+            # run: a regression that they did not show is no regression of the run either
+            if regression and confirmation.get(name) == 'not reproduced':
+                regression = False
             regressions += regression
             fixes += bool(fixed) and not new
         # performance: only builds that succeeded and were measured say something
@@ -369,7 +375,7 @@ def main():
             if value is not None:
                 head_vs_base.append(value)
         summary_projects.append({
-            'name': name, 'labels': summary_labels, 'new': len(new), 'fixed': len(fixed), 'regression': regression,
+            'name': name, 'labels': summary_labels, 'new': len(new), 'fixed': len(fixed), 'regression': regression, 'confirmation': confirmation.get(name, ''),
             'tested': tested, 'ratios': project_ratios, 'jfr': jfr_artifact(name),
             'jobs': {label: jobs.get((name, label)) for label in LABELS if jobs.get((name, label))},
             'artifacts': {label: link for label in LABELS if (link := result_artifact(name, label))},
@@ -378,7 +384,7 @@ def main():
             'name': name, 'run': run_id, 'url': definition.get('url', ''), 'ref': definition.get('ref', ''),
             'cmd': definition.get('cmd', ''), 'jdk': definition.get('jdk', ''), 'labels': project_labels,
             'new': new[:MAX_DIFF], 'fixed': fixed[:MAX_DIFF], 'new_count': len(new), 'fixed_count': len(fixed),
-            'regression': regression, 'raw': raw, 'jfr': jfr_artifact(name),
+            'regression': regression, 'raw': raw, 'jfr': jfr_artifact(name), 'confirmation': confirmation.get(name, ''),
             'result_artifacts': {label: result_artifact(name, label) for label in LABELS},
         })
 

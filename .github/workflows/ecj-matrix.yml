@@ -17,7 +17,7 @@ on:
         required: false
         default: "true"
       jdk:
-        description: "JDK of the builds, unless a project gives its own one (default: 27)"
+        description: "JDK feature release of the builds, unless a project gives its own one; jdks.json gives its exact update (default: 27)"
         required: false
       labels:
         description: "Comma separated labels to build: baseline, head, javac (default: all three; javac alone tries new projects)"
@@ -30,11 +30,12 @@ on:
 
 jobs:
   setup:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       shards: ${{ steps.projects.outputs.shards }}
       shard_indexes: ${{ steps.projects.outputs.shard_indexes }}
       baseline: ${{ steps.baseline.outputs.version }}
+      jdk: ${{ steps.projects.outputs.jdk }}
     steps:
       - uses: actions/checkout@v5
       - id: baseline
@@ -61,6 +62,7 @@ jobs:
           SHARDS="$(python3 scripts/plan.py --jdk "$INPUT_JDK" --projects "$INPUT_PROJECTS" --labels "$INPUT_LABELS" --durations durations.json 2> plan.txt)" || { cat plan.txt; exit 1; }
           cat plan.txt | tee -a "$GITHUB_STEP_SUMMARY"
           echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
+          echo "jdk=$INPUT_JDK" >> "$GITHUB_OUTPUT"   # the same default JDK for the second builds of the suspects
           echo "$SHARDS" > plan.json
           echo "shard_indexes=$(jq -c '[range(0; length)]' <<< "$SHARDS")" >> "$GITHUB_OUTPUT"
       # the projects of every job, for the links of the dashboard
@@ -68,19 +70,34 @@ jobs:
         with: { name: plan, path: plan.json }
 
   build-ecj:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       sha: ${{ steps.build.outputs.sha }}
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-java@v5
-        # the annotation processing classes of ECJ need the JDK 25 API; the jar still targets Java 21
-        with: { distribution: temurin, java-version: 25 }
+      - id: jdk
+        run: echo "version=$(jq -r '."25"' jdks.json)" >> "$GITHUB_OUTPUT"
+      # the annotation processing classes of ECJ need the JDK 25 API; the jar still targets Java 21. The download of the
+      # JDK sometimes fails on an error page of the CDN: try once more
+      - id: java
+        uses: actions/setup-java@v5
+        continue-on-error: true
+        with: { distribution: temurin, java-version: "${{ steps.jdk.outputs.version }}" }
+      - if: steps.java.outcome == 'failure'
+        uses: actions/setup-java@v5
+        with: { distribution: temurin, java-version: "${{ steps.jdk.outputs.version }}" }
       - id: build
         env:
           REF: ${{ github.event.inputs.ecj_ref || inputs.ecj_ref }}
         run: |
-          git clone --filter=blob:none https://github.com/eclipse-jdt/eclipse.jdt.core.git ecj
+          # GitHub answers a clone with an error now and then: a failing clone fails the whole run, try 3 times
+          # (not the fetch of the ref: a ref that does not exist fails at once)
+          for attempt in 1 2 3; do
+            rm -rf ecj
+            git clone -q --filter=blob:none https://github.com/eclipse-jdt/eclipse.jdt.core.git ecj && break
+            [ "$attempt" = 3 ] && exit 1
+            sleep 30
+          done
           [ -z "$REF" ] || { git -C ecj fetch -q origin "$REF" && git -C ecj checkout -q FETCH_HEAD; }
           echo "sha=$(git -C ecj rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           bash scripts/build-ecj.sh ecj ecj-HEAD.jar
@@ -101,18 +118,84 @@ jobs:
       baseline: ${{ needs.setup.outputs.baseline }}
       jfr: ${{ github.event.inputs.jfr }}
 
-  compare:
+  # The projects that look like regressions are built a second time, alone in their job, with both compilers: a failure
+  # of the shared runner (a lost runner, a download that fails, a slow disk) must not fail the run. More than 100
+  # suspects is no accident of a runner: they are not built again.
+  suspects:
     needs: [setup, build-ecj, build]
+    # not for a run without baseline or head builds (the trial of new projects with javac)
+    if: >-
+      always() && needs.build-ecj.result == 'success' && needs.build.result != 'skipped'
+      && (!github.event.inputs.labels || (contains(github.event.inputs.labels, 'baseline') && contains(github.event.inputs.labels, 'head')))
+    runs-on: ubuntu-24.04
+    outputs:
+      jobs: ${{ steps.plan.outputs.jobs }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          pattern: result-*
+          path: artifacts
+          merge-multiple: true
+      - name: Download the results the action did not see
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/download-results.sh artifacts
+      - id: plan
+        shell: bash   # with pipefail: a failure of plan.py must not give an empty list of jobs
+        env:
+          INPUT_JDK: ${{ needs.setup.outputs.jdk }}
+        run: |
+          python3 scripts/compare.py artifacts/results baseline head --suspects > suspects.txt
+          COUNT=$(wc -l < suspects.txt)
+          echo "$COUNT suspect project(s): $(paste -sd, suspects.txt)" | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ "$COUNT" = 0 ] || [ "$COUNT" -gt 100 ]; then echo "jobs=[]" >> "$GITHUB_OUTPUT"; exit 0; fi
+          JOBS="$(python3 scripts/plan.py --jdk "$INPUT_JDK" --projects "$(paste -sd, suspects.txt)" --labels baseline,head \
+            --alone --ignore-unknown --id-prefix c --durations /dev/null | jq -c '.[0] // []')"
+          echo "jobs=$JOBS" >> "$GITHUB_OUTPUT"
+      # the compare job takes these results instead of downloading every artifact again: the token of a workflow has
+      # 1,000 REST requests an hour, and download-results.sh may already have used most of them
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: first-results
+          path: artifacts
+
+  confirm:
+    needs: [setup, suspects]
+    if: always() && needs.suspects.result == 'success' && needs.suspects.outputs.jobs != '[]'
+    uses: ./.github/workflows/ecj-build.yml
+    with:
+      jobs: ${{ needs.suspects.outputs.jobs }}
+      baseline: ${{ needs.setup.outputs.baseline }}
+      jfr: "false"
+      prefix: confirm
+
+  compare:
+    needs: [setup, build-ecj, build, suspects, confirm]
     if: always() && needs.build.result != 'skipped'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
       actions: read
     steps:
       - uses: actions/checkout@v5
-      # This action only sees the first 1,000 artifacts of a run: the script downloads the others through the REST API,
-      # which lists them all but allows 1,000 requests an hour. With the projects grouped per job a run has far fewer.
+      # The results that the suspects job downloaded (one artifact, found by name through the REST API), or, without
+      # it, every result artifact. download-artifact only sees the first 1,000 artifacts of a run: download-results.sh
+      # downloads the others through the REST API, which lists them all but allows 1,000 requests an hour.
+      - name: Download the results of the suspects job
+        id: first
+        if: needs.suspects.result == 'success'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ID="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?name=first-results" --jq '.artifacts[0].id')"
+          [ -n "$ID" ] && [ "$ID" != null ]
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$ID/zip" > first-results.zip
+          mkdir -p artifacts && unzip -q -o first-results.zip -d artifacts && rm first-results.zip
       - uses: actions/download-artifact@v8.0.2
+        if: needs.suspects.result != 'success' || steps.first.outcome != 'success'
         with:
           pattern: result-*
           path: artifacts
@@ -120,15 +203,29 @@ jobs:
       - uses: actions/download-artifact@v8.0.2
         with: { name: plan }
       - name: Download the results the action did not see
+        if: needs.suspects.result != 'success' || steps.first.outcome != 'success'
         env:
           GH_TOKEN: ${{ github.token }}
         run: bash scripts/download-results.sh artifacts
+      - uses: actions/download-artifact@v8.0.2
+        if: needs.confirm.result != 'skipped'
+        continue-on-error: true   # the script below downloads what this action did not
+        with:
+          pattern: confirm-*
+          path: confirm
+          merge-multiple: true
+      - name: Download the second builds the action did not see
+        if: needs.confirm.result != 'skipped'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/download-results.sh confirm confirm
       - name: Compare
         env:
           ECJ_SHA: ${{ needs.build-ecj.outputs.sha }}
         run: |
           echo "Head ECJ: eclipse.jdt.core $ECJ_SHA" >> "$GITHUB_STEP_SUMMARY"
-          python3 scripts/compare.py artifacts/results baseline head | tee -a "$GITHUB_STEP_SUMMARY"
+          CONFIRM=(); [ -d confirm/results ] && CONFIRM=(--confirm confirm)
+          python3 scripts/compare.py artifacts/results baseline head "${CONFIRM[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
           exit "${PIPESTATUS[0]}"
       - name: Performance, javac against ECJ
         if: always()

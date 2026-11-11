@@ -88,6 +88,10 @@ the raw file it comes from. Each failing case has to be analysed one by one: a b
    does not, when a project that builds with the baseline does not build with head.
    A project that does not build with the baseline ECJ, or that was not tested at all
    (clone or patch failure), is shown with `⚠️` in the table but does not fail the run: only new problems do.
+   Before it fails a run, every suspect project is built a second time, alone in its job, with both compilers (jobs
+   `suspects` and `confirm`): a project is a regression only when the second builds show it too. A project that built
+   normally the second time is reported as "not reproduced" (a lost runner, a download that failed three times...).
+
 5. `scripts/dashboard-data.py` turns the results of the run into the JSON files of the dashboard, and
    `scripts/publish-dashboard.sh` publishes them with the site (`dashboard/`) on the `gh-pages` branch: summaries of
    the last 60 runs, raw files (`.status`, `.metrics`, `.errors`, build logs) of the last 10.
@@ -99,6 +103,16 @@ shards, one call of `ecj-build.yml` per shard: adding projects only takes `proje
 90 minutes (`BUILD_TIMEOUT`). The
 `ECJ Commit Watcher` workflow (`ecj-check.yml`) runs it every night when `eclipse.jdt.core` has a new commit; a
 successfully tested commit gets a `tested/<sha>` tag, a failing run is retried the next night.
+
+### Reliability
+
+A run must only fail for the compiler. Besides the second build of the suspect projects:
+* the environment is fixed: the runner image (`ubuntu-24.04`), Maven (3.9.9) and the exact JDK of each feature
+  release (`jdks.json`). A new JDK update changes the results (removed APIs, a source level the baseline ECJ does not
+  know): update `jdks.json` in a commit of its own, and check its run;
+* every download is tried again: the clone of a project and of `eclipse.jdt.core` (3 times), the JDK (twice), Maven and
+  the baseline ECJ (`curl --retry 5`), the dependencies of a build (3 builds when the log shows a network error);
+* a build stops after 90 minutes, so that a hanging build cannot hold its job until the 6-hour limit of GitHub.
 
 ## Run it
 

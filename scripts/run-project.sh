@@ -35,10 +35,17 @@ trap 'cd "$ROOT" && rm -rf "$DIR"' EXIT
 if [ -n "$URL" ]; then
   git init -q "$DIR"
   git -C "$DIR" remote add origin "$URL"
-  if ! git -C "$DIR" fetch -q --depth 1 origin "${REF:-HEAD}" >>"$LOG" 2>&1; then
-    echo "clone failed" > "$ROOT/results/$NAME-$LABEL.status"
-    exit 0
-  fi
+  # GitHub answers a fetch with an error now and then (a 5xx, a reset connection): try 3 times
+  for attempt in 1 2 3; do
+    git -C "$DIR" fetch -q --depth 1 origin "${REF:-HEAD}" >>"$LOG" 2>&1 && break
+    # a pinned commit or a repository that no longer exists fails at once
+    if [ "$attempt" = 3 ] || tail -5 "$LOG" | grep -q -i -E "not our ref|couldn't find remote ref|repository '.*' not found|Repository not found|could not read Username|Authentication failed"; then
+      echo "clone failed" > "$ROOT/results/$NAME-$LABEL.status"
+      exit 0
+    fi
+    echo "== fetch failed, attempt $attempt" >>"$LOG"
+    sleep 30
+  done
   git -C "$DIR" checkout -q FETCH_HEAD >>"$LOG" 2>&1
   git -C "$DIR" log --oneline -1 >> "$LOG"
 else

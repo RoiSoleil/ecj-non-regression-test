@@ -17,10 +17,16 @@ on:
         description: "'false' turns off the Java Flight Recording of the head builds"
         type: string
         required: false
+      prefix:
+        description: "Prefix of the result artifacts: 'confirm' for the second build of the suspect projects"
+        type: string
+        required: false
+        default: result
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # a fixed image: a new one (other tools, other kernel) must not change the results without a commit
+    runs-on: ubuntu-24.04
     timeout-minutes: 350
     strategy:
       fail-fast: false
@@ -111,11 +117,11 @@ jobs:
       - name: Marker of the artifact
         if: always()
         # tells scripts/download-results.sh that the artifact is downloaded
-        run: mkdir -p markers && touch "markers/result-${{ matrix.id }}-${{ matrix.label }}"
+        run: mkdir -p markers && touch "markers/${{ inputs.prefix }}-${{ matrix.id }}-${{ matrix.label }}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: result-${{ matrix.id }}-${{ matrix.label }}
+          name: ${{ inputs.prefix }}-${{ matrix.id }}-${{ matrix.label }}
           path: |
             results
             logs

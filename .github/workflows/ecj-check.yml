@@ -8,7 +8,7 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       changed: ${{ steps.check.outputs.changed }}
       sha: ${{ steps.check.outputs.sha }}
@@ -39,7 +39,7 @@ jobs:
   record:
     needs: [check, run]
     if: needs.run.result == 'success'   # a failing run is retried every night until it is fixed
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
     steps:
