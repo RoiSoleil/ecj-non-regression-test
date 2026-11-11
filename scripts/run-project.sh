@@ -90,15 +90,21 @@ elif [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; then
   fi
 fi
 # The Develocity (Gradle Enterprise) Maven extension reads the poms and fails on the rewritten ones (James), and its
-# build cache could skip a compilation that this test must measure: it is removed, for every label.
+# build cache could skip a compilation that this test must measure: it is removed, for every label, with the
+# extensions that build on it (Quarkus's quarkus-project-develocity-extension, which otherwise breaks the
+# configuration of surefire).
 # (Maven looks for .mvn from the build directory up to the root of the repository)
 for extensions in "$DIR/.mvn/extensions.xml" .mvn/extensions.xml; do
-  [ -f "$extensions" ] && grep -q '<groupId>[[:space:]]*com\.gradle' "$extensions" || continue
+  [ -f "$extensions" ] && grep -q -i -E 'com\.gradle|develocity' "$extensions" || continue
   if python3 - "$extensions" <<'PY'
 import re, sys
 path = sys.argv[1]
 text = open(path).read()
-cleaned = re.sub(r'\s*<extension>(?:(?!</extension>).)*?<groupId>\s*com\.gradle\s*</groupId>.*?</extension>', '', text, flags=re.S)
+def develocity(block):
+    group = re.search(r'<groupId>\s*([^<\s]+)\s*</groupId>', block)
+    artifact = re.search(r'<artifactId>\s*([^<\s]+)\s*</artifactId>', block)
+    return bool(group and group.group(1) == 'com.gradle') or bool(artifact and 'develocity' in artifact.group(1).lower())
+cleaned = re.sub(r'\s*<extension>.*?</extension>', lambda m: '' if develocity(m.group(0)) else m.group(0), text, flags=re.S)
 open(path, 'w').write(cleaned)
 sys.exit(0 if cleaned != text else 1)
 PY
@@ -172,6 +178,9 @@ BASE_MAVEN_ARGS="-Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLo
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dsort.skip=true"
 # editorconfig-maven-plugin checks the formatting of every file, the poms that enable-ecj-maven.py rewrote too (Stormcrawler)
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Deditorconfig.skip=true"
+# pgpverify-maven-plugin asks a key server for the signature of every dependency: a key server that answers 404 failed
+# Dropwizard, with javac too (nothing to do with the compiler)
+BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dpgpverify.skip=true"
 # two builds at a time on the runner (SHARED_RUNNER): the Maven processes lock the local repository between them
 [ -z "${SHARED_RUNNER:-}" ] || BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.syncContext.named.factory=file-lock -Daether.syncContext.named.nameMapper=file-gav"
 RUNS="$DIR/../$NAME-$LABEL-runs"   # the directory of the measured build (1): time, GC logs, Maven log, produced classes
