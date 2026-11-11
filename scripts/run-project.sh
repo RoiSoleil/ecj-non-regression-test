@@ -122,6 +122,9 @@ BASE_MAVEN_OPTS="$MAVEN_OPTS"
 # Maven (3.9 and later) reads these arguments from the environment: time stamps on every log line give the time spent
 # in the compiler plugin alone.
 BASE_MAVEN_ARGS="-Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss.SSS"
+# sortpom verifies that the poms are sorted: the compiler plugin that enable-ecj-maven.py adds is not (Ranger, Slice,
+# Aircompressor, Spring Data Neo4j). Skipped for every label, so that javac and ECJ build in the same conditions.
+BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dsort.skip=true"
 # two builds at a time on the runner (SHARED_RUNNER): the Maven processes lock the local repository between them
 [ -z "${SHARED_RUNNER:-}" ] || BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.syncContext.named.factory=file-lock -Daether.syncContext.named.nameMapper=file-gav"
 RUNS="$DIR/../$NAME-$LABEL-runs"   # the directory of the measured build (1): time, GC logs, Maven log, produced classes

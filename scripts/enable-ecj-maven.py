@@ -15,7 +15,11 @@ COMPILER_PLUGIN = "3.13.0"
 
 # keep the comments: some builds read them (Camel's camel-package-maven-plugin looks for "<!-- camel ...: START -->"
 # markers in parent/pom.xml and fails with a NullPointerException without them)
-tree = ET.parse(POM, parser=ET.XMLParser(target=ET.TreeBuilder(insert_comments=True, insert_pis=True)))
+with open(POM, 'rb') as source:
+    original = source.read()
+xml_parser = ET.XMLParser(target=ET.TreeBuilder(insert_comments=True, insert_pis=True))
+xml_parser.feed(original)
+tree = ET.ElementTree(xml_parser.close())
 project = tree.getroot()
 ns = project.tag[1:].partition('}')[0] if project.tag.startswith('{') else ''  # a pom may have no namespace
 if ns:
@@ -180,5 +184,29 @@ else:
     plugins = child(build, 'plugins')
     if not compiler_plugins(plugins):
         add_ecj(new_compiler(plugins))
-tree.write(POM, encoding='UTF-8', xml_declaration=True)
+# ElementTree drops what comes before and after the root element (the license header that apache-rat and the copyright
+# plugins check, the XML declaration that sortpom compares) and writes its own declaration: keep the original ones.
+# The prolog: a byte order mark, the declaration, comments, processing instructions and a DOCTYPE (with its internal
+# subset); the epilogue: everything after the last end tag of the root element.
+def original_text():
+    declared = re.match(rb'(?:\xef\xbb\xbf)?\s*<\?xml[^>]*encoding=["\']([^"\']+)', original)
+    encoding = declared.group(1).decode('ascii') if declared else 'UTF-8'
+    try:
+        return original.decode(encoding), encoding
+    except (LookupError, UnicodeDecodeError):
+        return None, None
+
+text, encoding = original_text()
+prolog = epilogue = None
+if text is not None:
+    prolog = re.match(r'\ufeff?(?:\s|<\?.*?\?>|<!--.*?-->|<!DOCTYPE[^>\[]*(?:\[.*?\])?\s*>)*', text, re.S).group(0)
+    ends = list(re.finditer(r'</(?:[\w.-]+:)?project\s*>', text))
+    epilogue = text[ends[-1].end():] if ends else None
+if prolog is not None and epilogue is not None:
+    body = ET.tostring(project, encoding='unicode')
+    with open(POM, 'wb') as target:
+        target.write((prolog + body + epilogue).encode(encoding, 'xmlcharrefreplace'))
+else:
+    # an encoding that Python does not know, or no end tag found: the pom compiles with ECJ all the same
+    tree.write(POM, encoding='UTF-8', xml_declaration=True)
 print(f'{POM}: compiling with ECJ {ECJ_VERSION}')
