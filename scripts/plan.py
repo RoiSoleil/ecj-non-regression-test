@@ -82,7 +82,8 @@ def main():
             print('not in projects.json: ' + ', '.join(unknown), file=sys.stderr)
         elif unknown:
             sys.exit('unknown projects: ' + ', '.join(unknown))
-    # every JDK is pinned to an update (see above): a feature release that jdks.json does not give is an error
+    # every JDK is pinned to an update (see above): a feature release that jdks.json does not give is an error. There is
+    # no JDK older than 21 in it: the ECJ jar targets Java 21 and does not load on an older JDK (Robovm, Bistoury)
     missing = sorted({project.get('jdk') or options.jdk for project in projects} - set(JDKS))
     if missing:
         sys.exit(f'no exact version in jdks.json for JDK {", ".join(missing)}')
