@@ -11,7 +11,7 @@ The groups are the same for the three labels, so that javac and the head ECJ bui
 conditions (the first project of a group downloads what the next ones find in ~/.m2).
 The baseline builds only give the reference compile errors, never a performance measure: they run two at a time.
 
-usage: plan.py --jdk DEFAULT_JDK [--projects a,b | --projects optional] [--labels baseline,head,javac]
+usage: plan.py --jdk DEFAULT_JDK [--projects a,b] [--labels baseline,head,javac]
                [--durations summary.json] [--alone --id-prefix c] > shards.json
   --alone gives every project a job of its own (the confirmation builds of scripts/compare.py --suspects).
   --ignore-unknown leaves out the selected projects that projects.json does not have (a suspect of a run that a later
@@ -68,12 +68,6 @@ def main():
 
     projects = json.loads((ROOT / 'projects.json').read_text())
     selection = [name for name in options.projects.replace(' ', '').split(',') if name]
-    # "optional" selects the projects on trial (optional in projects.json); without a selection they are left out
-    if selection == ['optional']:
-        projects = [project for project in projects if project.get('optional')]
-        selection = []
-    elif not selection:
-        projects = [project for project in projects if not project.get('optional')]
     if selection:
         projects = [project for project in projects if project['name'] in selection]
         unknown = sorted(set(selection) - {project['name'] for project in projects})

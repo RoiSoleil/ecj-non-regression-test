@@ -10,7 +10,7 @@ on:
         description: "Baseline ECJ version from Maven Central (default: latest release)"
         required: false
       projects:
-        description: "Comma separated project names, or 'optional' for the projects on trial (default: all non optional)"
+        description: "Comma separated project names (default: all; to try new projects, add them to projects.json on a branch and run this workflow on it with labels=javac)"
         required: false
       jfr:
         description: "Record a Java Flight Recording of the build with the head ECJ (default: true)"

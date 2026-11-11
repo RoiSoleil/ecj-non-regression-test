@@ -121,8 +121,9 @@ A run must only fail for the compiler. Besides the second build of the suspect p
 * `ecj_ref`: branch, tag or commit of `eclipse.jdt.core` (a pull request head works: `refs/pull/<n>/head`).
   Default: `master`.
 * `baseline`: released ECJ version to compare with (default: the latest release on Maven Central).
-* `projects`: comma separated names, for example `Quarkus,Camel`. Default: all projects but the ones on trial
-  (`"optional": true` in `projects.json`); `optional` builds only those.
+* `projects`: comma separated names, for example `Quarkus,Camel`. Default: all projects. To try new
+  projects, add them to `projects.json` on a branch and run the workflow on that branch (`labels=javac` first, then
+  all three), so that main only has projects that build.
 * `jdk`: JDK of the builds, unless a project gives its own (`"jdk"` in `projects.json`). Default: 27.
 * `labels`: `baseline`, `head`, `javac` (default: all three; a run with a selection of labels does not publish the dashboard). `javac` alone tries new
   projects.
