@@ -36,12 +36,22 @@ jobs:
     name: "build (${{ matrix.id }} ${{ matrix.label }}: ${{ join(matrix.projects, ', ') }})"
     steps:
       - uses: actions/checkout@v5
-      # the download of the JDK sometimes fails on an error page of the CDN: try once more
+      # the download of the JDK sometimes fails on an error page of the CDN of api.adoptium.net, at times for a few
+      # minutes (two attempts a few seconds apart both failed): three attempts, one and three minutes apart
       - id: java
         uses: actions/setup-java@v5
         continue-on-error: true
         with: { distribution: temurin, java-version: "${{ matrix.jdk }}" }
       - if: steps.java.outcome == 'failure'
+        run: sleep 60
+      - id: java2
+        if: steps.java.outcome == 'failure'
+        uses: actions/setup-java@v5
+        continue-on-error: true
+        with: { distribution: temurin, java-version: "${{ matrix.jdk }}" }
+      - if: steps.java.outcome == 'failure' && steps.java2.outcome == 'failure'
+        run: sleep 180
+      - if: steps.java.outcome == 'failure' && steps.java2.outcome == 'failure'
         uses: actions/setup-java@v5
         with: { distribution: temurin, java-version: "${{ matrix.jdk }}" }
       # The large builds need more than the free space of a runner. Deleting these tools took 90 seconds of every job,
