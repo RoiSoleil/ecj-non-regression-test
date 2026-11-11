@@ -88,7 +88,25 @@ elif [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; then
     echo "patch failed" > "$ROOT/results/$NAME-$LABEL.status"
     exit 0
   fi
-elif [ -f pom.xml ]; then
+fi
+# The Develocity (Gradle Enterprise) Maven extension reads the poms and fails on the rewritten ones (James), and its
+# build cache could skip a compilation that this test must measure: it is removed, for every label.
+# (Maven looks for .mvn from the build directory up to the root of the repository)
+for extensions in "$DIR/.mvn/extensions.xml" .mvn/extensions.xml; do
+  [ -f "$extensions" ] && grep -q '<groupId>[[:space:]]*com\.gradle' "$extensions" || continue
+  if python3 - "$extensions" <<'PY'
+import re, sys
+path = sys.argv[1]
+text = open(path).read()
+cleaned = re.sub(r'\s*<extension>(?:(?!</extension>).)*?<groupId>\s*com\.gradle\s*</groupId>.*?</extension>', '', text, flags=re.S)
+open(path, 'w').write(cleaned)
+sys.exit(0 if cleaned != text else 1)
+PY
+  then
+    echo "== Develocity extension removed from $extensions" >>"$LOG"
+  fi
+done
+if [ "$ECJ_VERSION" != javac ] && ! { [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; } && [ -f pom.xml ]; then
   # every pom: the modules do not always inherit from the root pom
   find . -name pom.xml -not -path '*/src/*' -not -path '*/target/*' | while read -r pom; do
     python3 "$ROOT/scripts/enable-ecj-maven.py" "$pom" "$ECJ_VERSION" >>"$LOG" 2>&1
@@ -118,6 +136,33 @@ fi
 # runner with fewer than 2 CPUs) differ between machines. compile-jdk.sh uses the same HEAP_OPTS.
 export HEAP_OPTS="${HEAP_OPTS:--Xms4g -Xmx4g -XX:+UseG1GC}"
 export MAVEN_OPTS="${MAVEN_OPTS:-} $HEAP_OPTS"
+# Lombok generates its members in javac through an annotation processor, but in ECJ only through its Java agent, which
+# patches the compiler in the JVM that runs it (Maven's, plexus-compiler-eclipse compiles in process). Without it a
+# Lombok project fails with ECJ for no reason of the compiler (getters, builders, log fields and constructors missing).
+# One pinned version of the agent for every project: it handles the annotations of the older versions too.
+# Limits: a project that gets Lombok from a parent pom outside its repository is not detected, a compiler forked in
+# another JVM does not get the agent, and the agent adds a little to the measured time of the ECJ builds.
+LOMBOK_VERSION=1.18.48
+if [ "$ECJ_VERSION" != javac ] && grep -rlq --include=pom.xml 'org.projectlombok' "$DIR" 2>/dev/null; then
+  LOMBOK_JAR="$HOME/.cache/ecj-non-regression/lombok-$LOMBOK_VERSION.jar"
+  if [ ! -s "$LOMBOK_JAR" ]; then
+    mkdir -p "$(dirname "$LOMBOK_JAR")"
+    # two builds of a job may download it at the same time: each one to a file of its own, then renamed
+    url="https://repo1.maven.org/maven2/org/projectlombok/lombok/$LOMBOK_VERSION/lombok-$LOMBOK_VERSION.jar"
+    # checked against the SHA-1 that Maven Central publishes: a truncated jar would stay in the cache
+    if curl -fsSL --retry 5 --retry-all-errors --retry-delay 10 -o "$LOMBOK_JAR.$$" "$url" >>"$LOG" 2>&1 \
+      && [ "$(sha1sum "$LOMBOK_JAR.$$" | cut -d' ' -f1)" = "$(curl -fsSL --retry 5 "$url.sha1" | cut -c1-40)" ]; then
+      mv -f "$LOMBOK_JAR.$$" "$LOMBOK_JAR"
+    else
+      rm -f "$LOMBOK_JAR.$$"
+      echo "== Lombok agent: download failed" >>"$LOG"
+    fi
+  fi
+  if [ -s "$LOMBOK_JAR" ]; then
+    export MAVEN_OPTS="$MAVEN_OPTS -javaagent:$LOMBOK_JAR=ECJ"
+    echo "== Lombok agent $LOMBOK_VERSION for ECJ" >>"$LOG"
+  fi
+fi
 BASE_MAVEN_OPTS="$MAVEN_OPTS"
 # Maven (3.9 and later) reads these arguments from the environment: time stamps on every log line give the time spent
 # in the compiler plugin alone.
@@ -125,6 +170,8 @@ BASE_MAVEN_ARGS="-Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLo
 # sortpom verifies that the poms are sorted: the compiler plugin that enable-ecj-maven.py adds is not (Ranger, Slice,
 # Aircompressor, Spring Data Neo4j). Skipped for every label, so that javac and ECJ build in the same conditions.
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dsort.skip=true"
+# editorconfig-maven-plugin checks the formatting of every file, the poms that enable-ecj-maven.py rewrote too (Stormcrawler)
+BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Deditorconfig.skip=true"
 # two builds at a time on the runner (SHARED_RUNNER): the Maven processes lock the local repository between them
 [ -z "${SHARED_RUNNER:-}" ] || BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.syncContext.named.factory=file-lock -Daether.syncContext.named.nameMapper=file-gav"
 RUNS="$DIR/../$NAME-$LABEL-runs"   # the directory of the measured build (1): time, GC logs, Maven log, produced classes
