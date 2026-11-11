@@ -80,6 +80,19 @@ function statusChip(s, errors) {
 // ---------- raw data ----------
 // A raw link opens the file in the side panel (when the run still has its raw files on the site), or links to the
 // GitHub artifact (90 days) or job log otherwise.
+// the verdict of the second builds of a suspect project (scripts/compare.py --confirm)
+const CONFIRMATION_TITLES = {
+	'not reproduced': 'failed once, built normally the second time: the shared runner, not the compiler',
+	'reproduced': 'built a second time with both compilers: the regression is confirmed',
+	'intermittent': 'new compile errors in one of two builds: a compiler that is not deterministic',
+	'no valid second build': 'the second builds did not run normally: the first verdict stays',
+};
+function confirmationChip(p) {
+	if (!p.confirmation) return '';
+	const cls = p.confirmation === 'reproduced' || p.confirmation === 'intermittent' ? 'ko' : 'warn';
+	return ` <span class="chip ${cls}" title="${esc(CONFIRMATION_TITLES[p.confirmation] || '')}">${esc(p.confirmation)}</span>`;
+}
+
 function rawButton(text, path, opts = {}) {
 	if (!path) return opts.fallback ? `<a href="${esc(opts.fallback)}" target="_blank" rel="noopener" title="${esc(opts.fallbackTitle || 'GitHub (needs a login, 90 days)')}">${text}</a>` : text;
 	const data = `data-raw="${esc(path)}"${opts.key ? ` data-key="${esc(opts.key)}"` : ''}${opts.line ? ` data-line="${opts.line}"` : ''}${opts.grep ? ` data-grep="${esc(opts.grep)}"` : ''}`;
@@ -209,6 +222,10 @@ async function viewOverview() {
 	const t = run.totals;
 	const projects = summary.projects;
 	const javacOkHeadKo = projects.filter(p => p.labels.javac?.status === 'success' && p.labels.head?.status === 'build failed');
+	// the probable cause of each of them (scripts/causes.py), most frequent first; the older runs have none
+	const causeCounts = {};
+	javacOkHeadKo.forEach(p => { if (p.cause) causeCounts[p.cause] = (causeCounts[p.cause] || 0) + 1; });
+	const causes = Object.entries(causeCounts).sort((a, b) => b[1] - a[1]);
 	app.innerHTML = `
 		<h1>All the projects</h1>
 		${runHeader(run, summaryPath)}
@@ -224,6 +241,8 @@ async function viewOverview() {
 			<div class="card"><h2>Projects that do not compile, over the runs</h2><div class="chart" id="trend-failed"></div></div>
 			<div class="card"><h2>Most frequent compile errors (head ECJ)</h2><div class="chart" id="families"></div></div>
 		</div>
+		${causes.length ? `<div class="card"><h2>Why the head ECJ does not compile what javac compiles (probable cause)</h2>
+			<div class="chart" id="causes" style="height:${Math.max(220, causes.length * 24 + 40)}px"></div></div>` : ''}
 		<h2>Projects</h2>
 		<div class="filters">
 			<label>Show</label>
@@ -234,6 +253,7 @@ async function viewOverview() {
 				<option value="javacok">compiling with javac, not with head ECJ</option>
 				<option value="fixed">gone errors, no new one</option>
 			</select>
+			${causes.length ? `<select id="cause"><option value="">any cause</option>${causes.map(([c, n]) => `<option value="${esc(c)}">${esc(c)} (${n})</option>`).join('')}</select>` : ''}
 			<input id="search" placeholder="Filter by name…">
 			<span id="count" class="muted"></span>
 		</div>
@@ -244,8 +264,26 @@ async function viewOverview() {
 		tooltip: { trigger: 'axis' }, legend: { bottom: 0 }, grid: { left: 50, right: 16, top: 34, bottom: 60 },
 		xAxis: { type: 'category', data: trend.map(r => (r.date || r.id).slice(0, 10)) },
 		yAxis: { type: 'value', name: 'projects' },
-		series: LABELS.map(l => ({ name: LABEL_NAMES[l], type: 'line', color: COLORS[l], data: trend.map(r => r.totals[l].failed + r.totals[l].other) })),
+		series: [...LABELS.map(l => ({ name: LABEL_NAMES[l], type: 'line', color: COLORS[l], data: trend.map(r => r.totals[l].failed + r.totals[l].other) })),
+			// the gap to close: projects that javac compiles and the head ECJ does not (counted since November 2026)
+			{ name: 'javac yes, head ECJ no', type: 'line', lineStyle: { type: 'dashed' }, connectNulls: false, data: trend.map(r => r.javac_only ?? null) }],
 	}).on('click', p => { location.hash = href('overview', null, { run: trend[p.dataIndex].id }); });
+
+	if (causes.length) {
+		const shown = [...causes].reverse();
+		chart(document.getElementById('causes'), {
+			tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+			grid: { left: 10, right: 30, top: 10, bottom: 20, containLabel: true },
+			xAxis: { type: 'value', minInterval: 1 },
+			yAxis: { type: 'category', data: shown.map(([c]) => c.length > 70 ? c.slice(0, 67) + '…' : c), axisLabel: { fontSize: 11 } },
+			series: [{ type: 'bar', color: COLORS.head, data: shown.map(([, n]) => n), label: { show: true, position: 'right' } }],
+		}).on('click', p => {
+			document.getElementById('filter').value = 'javacok';
+			document.getElementById('cause').value = shown[p.dataIndex][0];
+			render();
+			document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
+		});
+	}
 
 	const families = summary.families.slice(0, 15).reverse();
 	chart(document.getElementById('families'), {
@@ -266,6 +304,10 @@ async function viewOverview() {
 		if (filter === 'headko') rows = rows.filter(p => p.labels.head?.status === 'build failed');
 		if (filter === 'javacok') rows = rows.filter(p => javacOkHeadKo.includes(p));
 		if (filter === 'fixed') rows = rows.filter(p => p.fixed > 0 && !p.new);
+		const cause = document.getElementById('cause')?.value;
+		if (cause) rows = rows.filter(p => p.cause === cause);
+		// in the address, so that a reload or a shared link keeps the selection
+		history.replaceState(null, '', href('overview', null, { filter: filter === 'all' ? '' : filter, cause }));
 		const value = (p, key) => key === 'name' ? p.name.toLowerCase()
 			: key.startsWith('err_') ? p.labels[key.slice(4)]?.errors ?? -1
 			: key.startsWith('ratio_') ? p.ratios[key.slice(6)] ?? Infinity : p[key];
@@ -276,7 +318,8 @@ async function viewOverview() {
 			${th('new', 'New errors', 'num')}${th('fixed', 'Gone errors', 'num')}
 			${th('ratio_head_javac_wall_s', 'Wall time vs javac', 'num')}${th('ratio_head_javac_rss_mb', 'Memory vs javac', 'num')}</tr></thead>
 			<tbody>${rows.map(p => `<tr>
-				<td><a href="${href('project', p.name)}">${esc(p.name)}</a>${p.regression ? ' <span class="chip ko">regression</span>' : ''}</td>
+				<td><a href="${href('project', p.name)}">${esc(p.name)}</a>${p.regression ? ' <span class="chip ko">regression</span>' : ''}${confirmationChip(p)}
+					${p.cause ? `<div class="muted small" title="Probable cause: javac compiles it, the head ECJ does not">${esc(p.cause)}</div>` : ''}</td>
 				${LABELS.map(l => { const s = p.labels[l]; return `<td>${s ? rawButton(statusChip(s, s.errors), s.errors ? rawPath(run, p.name, l, 'errors') : rawPath(run, p.name, l, 'status'), { fallback: p.artifacts?.[l] || p.jobs?.[l] }) : statusChip(null)}
 					${p.jobs?.[l] ? ` <a class="muted" href="${esc(p.jobs[l])}" target="_blank" rel="noopener" title="Job log on GitHub">log</a>` : ''}</td>`; }).join('')}
 				<td class="num">${p.new ? `<a href="${href('project', p.name, { tab: 'diff' })}">${fmt(p.new, 0)}</a>` : ''}</td>
@@ -290,6 +333,10 @@ async function viewOverview() {
 	document.getElementById('filter').value = route().params.get('filter') || 'all';
 	document.getElementById('filter').onchange = render;
 	document.getElementById('search').oninput = render;
+	if (document.getElementById('cause')) {
+		document.getElementById('cause').value = route().params.get('cause') || '';
+		document.getElementById('cause').onchange = render;
+	}
 	render();
 }
 
@@ -472,6 +519,10 @@ async function viewProject(name) {
 			<span title="${esc(detail.cmd)}"><code>${esc(detail.cmd.length > 90 ? detail.cmd.slice(0, 87) + '…' : detail.cmd)}</code></span>
 			${entry.jfr ? `<span><a href="${esc(entry.jfr)}" target="_blank" rel="noopener">JFR recording (artifact, 14 days)</a></span>` : ''}
 		</div>` : '<p class="muted">The details of the older runs are not kept: summary only.</p>'}
+		${entry.cause ? `<p>javac compiles it, the head ECJ does not. Probable cause: <strong>${esc(entry.cause)}</strong>
+			<span class="muted">(from its compile errors and build log, scripts/causes.py)</span></p>` : ''}
+		${entry.confirmation ? `<p>Second build of this suspect project:${confirmationChip(entry)}
+			<span class="muted">${esc(CONFIRMATION_TITLES[entry.confirmation] || '')}</span></p>` : ''}
 		<div class="tiles">${LABELS.map(l => {
 			const s = entry.labels[l];
 			return `<div class="tile"><div class="label">${LABEL_NAMES[l]}</div><div class="value">${statusChip(s, s?.errors)}</div>

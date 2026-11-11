@@ -24,6 +24,9 @@ import shutil
 import statistics
 import sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import causes  # noqa: E402
+
 LABELS = ('baseline', 'head', 'javac')
 DEFAULT_JDK = '27'  # keep in sync with ecj-build.yml
 NO_RESULT = 3  # exit status
@@ -218,6 +221,23 @@ def main():
     names = {path.name.rsplit('-', 1)[0] for path in results.glob('*.status')}
     confirmation_file = results / 'confirmation.json'
     confirmation = json.loads(confirmation_file.read_text()) if confirmation_file.exists() else {}
+    cause_counts = {}
+
+    def log_text(name, label):
+        """The build log, for scripts/causes.py (at most its first 50 MB)."""
+        if not logs:
+            return ''
+        log, log_gz = logs / f'{name}-{label}.log', logs / f'{name}-{label}.log.gz'
+        try:
+            if log.exists():
+                with log.open('rb') as source:
+                    return source.read(50_000_000).decode('utf-8', 'replace')
+            if log_gz.exists():
+                with gzip.open(log_gz, 'rb') as source:
+                    return source.read(50_000_000).decode('utf-8', 'replace')
+        except OSError:
+            pass
+        return ''
     if not names:
         print(f'no result in {results}', file=sys.stderr)
         sys.exit(NO_RESULT)  # before any change of the site: the caller can skip the run
@@ -355,6 +375,11 @@ def main():
                 regression = False
             regressions += regression
             fixes += bool(fixed) and not new
+        # a project that javac compiles and the head ECJ does not: its probable cause (scripts/causes.py)
+        cause = ''
+        if labels.get('javac') and labels['javac']['status'] == 'success' and head and head['status'] == 'build failed':
+            cause = causes.cause('\n'.join(head['errors']), log_text(name, 'head'))
+            cause_counts[cause] = cause_counts.get(cause, 0) + 1
         # performance: only builds that succeeded and were measured say something
         def perf(label):
             data = summary_labels.get(label)
@@ -375,7 +400,7 @@ def main():
             if value is not None:
                 head_vs_base.append(value)
         summary_projects.append({
-            'name': name, 'labels': summary_labels, 'new': len(new), 'fixed': len(fixed), 'regression': regression, 'confirmation': confirmation.get(name, ''),
+            'name': name, 'labels': summary_labels, 'new': len(new), 'fixed': len(fixed), 'regression': regression, 'confirmation': confirmation.get(name, ''), 'cause': cause,
             'tested': tested, 'ratios': project_ratios, 'jfr': jfr_artifact(name),
             'jobs': {label: jobs.get((name, label)) for label in LABELS if jobs.get((name, label))},
             'artifacts': {label: link for label in LABELS if (link := result_artifact(name, label))},
@@ -385,6 +410,7 @@ def main():
             'cmd': definition.get('cmd', ''), 'jdk': definition.get('jdk', ''), 'labels': project_labels,
             'new': new[:MAX_DIFF], 'fixed': fixed[:MAX_DIFF], 'new_count': len(new), 'fixed_count': len(fixed),
             'regression': regression, 'raw': raw, 'jfr': jfr_artifact(name), 'confirmation': confirmation.get(name, ''),
+            'cause': cause,
             'result_artifacts': {label: result_artifact(name, label) for label in LABELS},
         })
 
@@ -395,6 +421,10 @@ def main():
     run['projects'] = len(names)
     run['regressions'] = regressions
     run['fixes'] = fixes
+    # the projects that javac compiles and the head ECJ does not, and why (the goal: none)
+    # (none when the run has no javac build: no gap measured, not a gap of 0)
+    has_javac = any(path.name.endswith('-javac.status') for path in results.glob('*.status'))
+    run['javac_only'] = sum(cause_counts.values()) if has_javac else None
     run['median'] = {f'head_javac_{key}': median(values) for key, values in ratios.items()}
     run['median']['head_baseline_wall_s'] = median(head_vs_base)
     write_json(run_dir / 'summary.json', {'run': run, 'projects': summary_projects, 'families': family_list})

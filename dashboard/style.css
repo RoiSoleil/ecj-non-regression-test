@@ -67,6 +67,7 @@ tr:hover td { background: color-mix(in srgb, var(--accent) 5%, transparent); }
 .raw-link { border: 0; background: none; padding: 0; color: var(--accent); cursor: pointer; font: inherit; }
 .raw-link:hover { text-decoration: underline; }
 .raw-link.small { font-size: 12px; }
+.muted.small { font-size: 12px; margin-top: 2px; white-space: normal; }
 .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
 .filters label { color: var(--muted); }
 .better { color: var(--ok); }
