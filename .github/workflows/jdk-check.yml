@@ -1,0 +1,42 @@
+name: JDK Update Check
+
+# Every week, compares the JDKs of jdks.json and jdk-downloads.json with the releases of Adoptium (scripts/check-jdks.sh)
+# and keeps an issue open while one is out of date. The update itself stays a commit of its own, with its run: a new
+# JDK changes the results (see the README).
+on:
+  schedule:
+    - cron: "37 5 * * 1"   # Monday morning; a minute off the hour, which GitHub delays less
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          TITLE: "JDK updates to pin"
+        run: |
+          report=$(scripts/check-jdks.sh)
+          issue=$(gh issue list --state open --search "in:title \"$TITLE\"" --json number,title \
+            | jq -r --arg t "$TITLE" '.[] | select(.title == $t) | .number' | head -1)
+          if [ -z "$report" ]; then
+            echo "The JDKs are up to date."
+            [ -n "$issue" ] && gh issue close "$issue" --comment "The JDKs are up to date (run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."
+            exit 0
+          fi
+          body="$report
+
+          Update \`jdks.json\` and \`jdk-downloads.json\` in a commit of their own and check its run: a new JDK changes
+          the results. Checked by $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID; this issue is
+          closed by the first check that finds the JDKs up to date."
+          echo "$report" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$issue" ]; then
+            gh issue edit "$issue" --body "$body"
+          else
+            gh issue create --title "$TITLE" --body "$body"
+          fi
