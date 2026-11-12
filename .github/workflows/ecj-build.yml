@@ -10,9 +10,19 @@ on:
         type: string
         required: true
       baseline:
-        description: "Baseline ECJ version from Maven Central"
+        description: "Baseline ECJ version from Maven Central, or BASE-SNAPSHOT with baseline_jar"
         type: string
         required: true
+      baseline_jar:
+        description: "The baseline is the ecj-BASE.jar artifact of the run (built from a ref), installed as BASE-SNAPSHOT"
+        type: boolean
+        required: false
+        default: false
+      bytecode:
+        description: "Not empty: list the class files of the baseline and head builds (scripts/bytecode.py)"
+        type: string
+        required: false
+        default: ""
       jfr:
         description: "'false' turns off the Java Flight Recording of the head builds"
         type: string
@@ -62,21 +72,35 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ matrix.cache_key }}
-      # Only the head builds use the jar of this run. It is copied into the local repository with a minimal pom
-      # (Maven resolves such a SNAPSHOT as one installed locally): mvn install:install-file took 3 seconds.
+      # The head builds use the jar of this run, and so do the baseline builds when the baseline is built from a ref
+      # (baseline_ref input of ecj-matrix.yml): HEAD-SNAPSHOT, BASE-SNAPSHOT. It is copied into the local repository with
+      # a minimal pom (Maven resolves such a SNAPSHOT as one installed locally): mvn install:install-file took 3 seconds.
       - uses: actions/download-artifact@v5
-        if: matrix.label == 'head'
-        with: { name: ecj-HEAD.jar }
-      - name: Install the head ECJ in the local Maven repository
-        if: matrix.label == 'head'
+        if: matrix.label == 'head' || (matrix.label == 'baseline' && inputs.baseline_jar)
+        with: { name: "${{ matrix.label == 'head' && 'ecj-HEAD.jar' || 'ecj-BASE.jar' }}" }
+      - name: Install the ECJ of this run in the local Maven repository
+        if: matrix.label == 'head' || (matrix.label == 'baseline' && inputs.baseline_jar)
+        env:
+          JAR: ${{ matrix.label == 'head' && 'HEAD' || 'BASE' }}
         run: |
-          D="$HOME/.m2/repository/org/eclipse/jdt/ecj/HEAD-SNAPSHOT"
+          D="$HOME/.m2/repository/org/eclipse/jdt/ecj/$JAR-SNAPSHOT"
           mkdir -p "$D"
-          cp ecj-HEAD.jar "$D/ecj-HEAD-SNAPSHOT.jar"
-          echo '<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion><groupId>org.eclipse.jdt</groupId><artifactId>ecj</artifactId><version>HEAD-SNAPSHOT</version></project>' > "$D/ecj-HEAD-SNAPSHOT.pom"
+          cp "ecj-$JAR.jar" "$D/ecj-$JAR-SNAPSHOT.jar"
+          echo "<project xmlns=\"http://maven.apache.org/POM/4.0.0\"><modelVersion>4.0.0</modelVersion><groupId>org.eclipse.jdt</groupId><artifactId>ecj</artifactId><version>$JAR-SNAPSHOT</version></project>" > "$D/ecj-$JAR-SNAPSHOT.pom"
+      # the class files to keep for the javap diff, in the second builds of the projects whose class files differ
+      # (the keep field that the suspects job of ecj-matrix.yml adds to their job)
+      - name: List the class files to keep
+        if: matrix.keep
+        env:
+          KEEP: ${{ toJSON(matrix.keep) }}
+        run: |
+          mkdir -p bytecode-lists
+          jq -r 'keys[]' <<< "$KEEP" | while IFS= read -r p; do
+            jq -r --arg p "$p" '.[$p][]' <<< "$KEEP" > "bytecode-lists/$p.txt"
+          done
       # the baseline ECJ once for the job, before the builds that run two at a time
       - name: Download the baseline ECJ
-        if: matrix.label == 'baseline'
+        if: matrix.label == 'baseline' && !inputs.baseline_jar
         env:
           BASELINE: ${{ inputs.baseline }}
         # straight from Maven Central into the local repository: mvn dependency:get took 8 seconds
@@ -94,11 +118,13 @@ jobs:
           LABEL: ${{ matrix.label }}
           PROJECTS: ${{ toJSON(matrix.projects) }}
           PARALLEL: ${{ matrix.parallel }}
+          CLASS_DIGESTS: ${{ inputs.bytecode != '' && '1' || '' }}
+          KEEP_CLASSES_LISTS: ${{ inputs.bytecode != '' && inputs.prefix == 'confirm' && format('{0}/bytecode-lists', github.workspace) || '' }}
         run: |
           VERSION="$BASELINE"
           [ "$LABEL" != javac ] || VERSION=javac   # untouched project, built with the JDK's javac
           [ "$LABEL" != head ] || VERSION=HEAD-SNAPSHOT
-          export LABEL VERSION JFR
+          export LABEL VERSION JFR CLASS_DIGESTS KEEP_CLASSES_LISTS
           # builds that share the runner (the baseline, two at a time) are no performance measure; Maven locks its
           # local repository between processes
           [ "$PARALLEL" = 1 ] || export SHARED_RUNNER=1
@@ -121,6 +147,7 @@ jobs:
             results
             logs
             markers
+            classes
       - uses: actions/upload-artifact@v4
         if: always() && matrix.label == 'head'
         with:

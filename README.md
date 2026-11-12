@@ -126,6 +126,18 @@ A run must only fail for the compiler. Besides the second build of the suspect p
 * `ecj_ref`: branch, tag or commit of `eclipse.jdt.core` (a pull request head works: `refs/pull/<n>/head`).
   Default: `master`.
 * `baseline`: released ECJ version to compare with (default: the latest release on Maven Central).
+* `baseline_ref`: branch, tag or full commit SHA of `eclipse.jdt.core` to build the baseline ECJ from, instead of a
+  release: for a pull request, the commit it branched from (`git merge-base`), not its target branch, which may have
+  moved on, against its head as `ecj_ref` (such a run does not publish the dashboard).
+* `bytecode`: `report` compares the class files of the baseline and head builds, `fail` also fails the run when they
+  differ (only with `baseline_ref`): for a change that must not change the generated code. Every build lists the SHA-256
+  of its class files (a few seconds); the two builds of a project are compared when both succeeded.
+  With `baseline_ref`, the projects whose class files differ (at most 30) are built a second time with both compilers
+  (against a release, every project differs: no second builds), and a class file that
+  differs between the two builds of one compiler (a time stamp in a generated source...) is ignored and listed, even if
+  the compiler also changed it, and the summary shows a `javap -v -p -c` diff of the others (`scripts/bytecode.py`; at
+  most 3 per project, among the 20 class files that the second builds keep). A build that failed is compared by
+  `compare.py`, not here. Default: off.
 * `projects`: comma separated names, for example `Quarkus,Camel`. Default: all projects. To try new
   projects, add them to `projects.json` on a branch and run the workflow on that branch (`labels=javac` first, then
   all three), so that main only has projects that build.

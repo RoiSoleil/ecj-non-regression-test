@@ -9,6 +9,12 @@ on:
       baseline:
         description: "Baseline ECJ version from Maven Central (default: latest release)"
         required: false
+      baseline_ref:
+        description: "eclipse.jdt.core commit, branch or pull request ref to build the baseline ECJ from, instead of a release (for example the base of a pull request)"
+        required: false
+      bytecode:
+        description: "Compare the class files of the baseline and head builds: report, or fail to also fail the run (for a change that must not change the generated code, with baseline_ref; default: off)"
+        required: false
       projects:
         description: "Comma separated project names (default: all; to try new projects, add them to projects.json on a branch and run this workflow on it with labels=javac)"
         required: false
@@ -45,8 +51,24 @@ jobs:
       - id: baseline
         env:
           INPUT_BASELINE: ${{ github.event.inputs.baseline }}
+          INPUT_BASELINE_REF: ${{ github.event.inputs.baseline_ref }}
+          INPUT_BYTECODE: ${{ github.event.inputs.bytecode }}
+          INPUT_LABELS: ${{ github.event.inputs.labels }}
         run: |
+          case "$INPUT_BYTECODE" in ''|report|fail) ;; *) echo "bytecode is report, fail or empty: $INPUT_BYTECODE"; exit 1 ;; esac
+          # against a release, the class files differ for every change of ECJ since: only a report makes sense
+          if [ "$INPUT_BYTECODE" = fail ] && [ -z "$INPUT_BASELINE_REF" ]; then echo "bytecode=fail needs baseline_ref"; exit 1; fi
+          if [ -n "$INPUT_BASELINE" ] && [ -n "$INPUT_BASELINE_REF" ]; then echo "baseline and baseline_ref exclude each other"; exit 1; fi
+          if [ -n "$INPUT_BASELINE_REF" ] && [ -n "$INPUT_LABELS" ] && [[ ",${INPUT_LABELS// /}," != *,baseline,* ]]; then
+            echo "baseline_ref without the baseline label"; exit 1
+          fi
+          if [ -n "$INPUT_BYTECODE" ] && [ -n "$INPUT_LABELS" ] \
+              && { [[ ",${INPUT_LABELS// /}," != *,baseline,* ]] || [[ ",${INPUT_LABELS// /}," != *,head,* ]]; }; then
+            echo "bytecode compares the baseline and head builds: both labels are needed"; exit 1
+          fi
           V="$INPUT_BASELINE"
+          # a baseline built from a ref by the build-ecj job, installed under this version by the build jobs
+          [ -z "$INPUT_BASELINE_REF" ] || V=BASE-SNAPSHOT
           [ -n "$V" ] || V=$(curl -fsS https://repo1.maven.org/maven2/org/eclipse/jdt/ecj/maven-metadata.xml | sed -n 's:.*<release>\(.*\)</release>.*:\1:p')
           [ -n "$V" ] || { echo "cannot determine the baseline ECJ version"; exit 1; }
           echo "version=$V" >> "$GITHUB_OUTPUT"
@@ -100,6 +122,7 @@ jobs:
     runs-on: ubuntu-24.04
     outputs:
       sha: ${{ steps.build.outputs.sha }}
+      base_sha: ${{ steps.build.outputs.base_sha }}
     steps:
       - uses: actions/checkout@v5
       - id: jdk
@@ -110,6 +133,7 @@ jobs:
       - id: build
         env:
           REF: ${{ github.event.inputs.ecj_ref || inputs.ecj_ref }}
+          BASE_REF: ${{ github.event.inputs.baseline_ref }}
         run: |
           # GitHub answers a clone with an error now and then: a failing clone fails the whole run, try 3 times
           # (not the fetch of the ref: a ref that does not exist fails at once)
@@ -122,8 +146,17 @@ jobs:
           [ -z "$REF" ] || { git -C ecj fetch -q origin "$REF" && git -C ecj checkout -q FETCH_HEAD; }
           echo "sha=$(git -C ecj rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           bash scripts/build-ecj.sh ecj ecj-HEAD.jar
+          if [ -n "$BASE_REF" ]; then
+            git -C ecj fetch -q origin "$BASE_REF" || { echo "cannot fetch baseline_ref $BASE_REF"; exit 1; }
+            git -C ecj checkout -q FETCH_HEAD
+            echo "base_sha=$(git -C ecj rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+            bash scripts/build-ecj.sh ecj ecj-BASE.jar
+          fi
       - uses: actions/upload-artifact@v4
         with: { name: ecj-HEAD.jar, path: ecj-HEAD.jar }
+      - uses: actions/upload-artifact@v4
+        if: github.event.inputs.baseline_ref != ''
+        with: { name: ecj-BASE.jar, path: ecj-BASE.jar }
 
   # the jobs planned by scripts/plan.py: a group of projects and a label each, the longest jobs in the first shard
   build:
@@ -137,6 +170,8 @@ jobs:
     with:
       jobs: ${{ toJSON(fromJSON(needs.setup.outputs.shards)[matrix.shard]) }}
       baseline: ${{ needs.setup.outputs.baseline }}
+      baseline_jar: ${{ github.event.inputs.baseline_ref != '' }}
+      bytecode: ${{ github.event.inputs.bytecode }}
       jfr: ${{ github.event.inputs.jfr }}
 
   # The projects that look like regressions are built a second time, alone in their job, with both compilers: a failure
@@ -151,6 +186,8 @@ jobs:
     runs-on: ubuntu-24.04
     outputs:
       jobs: ${{ steps.plan.outputs.jobs }}
+      # the projects whose class files differ that are built a second time (bytecode input)
+      bytecode_suspects: ${{ steps.plan.outputs.bytecode_suspects }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/download-artifact@v8.0.2
@@ -166,13 +203,35 @@ jobs:
         shell: bash   # with pipefail: a failure of plan.py must not give an empty list of jobs
         env:
           INPUT_JDK: ${{ needs.setup.outputs.jdk }}
+          INPUT_BYTECODE: ${{ github.event.inputs.bytecode }}
+          INPUT_BASELINE_REF: ${{ github.event.inputs.baseline_ref }}
         run: |
           python3 scripts/compare.py artifacts/results baseline head --suspects > suspects.txt
           COUNT=$(wc -l < suspects.txt)
           echo "$COUNT suspect project(s): $(paste -sd, suspects.txt)" | tee -a "$GITHUB_STEP_SUMMARY"
-          if [ "$COUNT" = 0 ] || [ "$COUNT" -gt 100 ]; then echo "jobs=[]" >> "$GITHUB_OUTPUT"; exit 0; fi
+          [ "$COUNT" -le 100 ] || : > suspects.txt
+          # the projects whose class files differ are built again too: a class file that differs between the two builds
+          # of one compiler says nothing of the compiler (scripts/bytecode.py); the second builds keep the class files
+          # listed in bytecode-lists for the javap diff. Not against a release: every project differs then
+          # at most 128 projects in all: 256 jobs, a shard of plan.py
+          MAX=$(( 128 - $(wc -l < suspects.txt) )); [ "$MAX" -le 30 ] || MAX=30
+          if [ -n "$INPUT_BYTECODE" ] && [ -n "$INPUT_BASELINE_REF" ] && [ "$MAX" -gt 0 ]; then
+            # a failure here must not take the second builds from the suspect regressions
+            python3 scripts/bytecode.py suspects artifacts/results baseline head bytecode-lists --max "$MAX" > bytecode-suspects.txt \
+              || { echo "::warning::bytecode.py suspects failed"; : > bytecode-suspects.txt; }
+            echo "$(wc -l < bytecode-suspects.txt) project(s) with different class files: $(paste -sd, bytecode-suspects.txt)" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "bytecode_suspects=$(paste -sd, bytecode-suspects.txt)" >> "$GITHUB_OUTPUT"
+            sort -u suspects.txt bytecode-suspects.txt -o suspects.txt
+          fi
+          if [ ! -s suspects.txt ]; then echo "jobs=[]" >> "$GITHUB_OUTPUT"; exit 0; fi
           JOBS="$(python3 scripts/plan.py --jdk "$INPUT_JDK" --projects "$(paste -sd, suspects.txt)" --labels baseline,head \
             --alone --ignore-unknown --id-prefix c --durations /dev/null | jq -c '.[0] // []')"
+          # the class files that the second builds keep for the javap diff, in the matrix of the confirm jobs (an
+          # artifact would cost them REST requests, which download-results.sh needs)
+          if [ -d bytecode-lists ]; then
+            KEPT="$(python3 scripts/bytecode.py keep bytecode-lists <<< "$JOBS")" && JOBS="$KEPT" \
+              || echo "::warning::bytecode.py keep failed: no javap diff"
+          fi
           echo "jobs=$JOBS" >> "$GITHUB_OUTPUT"
       # the compare job takes these results instead of downloading every artifact again: the token of a workflow has
       # 1,000 REST requests an hour, and download-results.sh may already have used most of them
@@ -189,6 +248,8 @@ jobs:
     with:
       jobs: ${{ needs.suspects.outputs.jobs }}
       baseline: ${{ needs.setup.outputs.baseline }}
+      baseline_jar: ${{ github.event.inputs.baseline_ref != '' }}
+      bytecode: ${{ github.event.inputs.bytecode }}
       jfr: "false"
       prefix: confirm
 
@@ -243,10 +304,35 @@ jobs:
       - name: Compare
         env:
           ECJ_SHA: ${{ needs.build-ecj.outputs.sha }}
+          BASE_SHA: ${{ needs.build-ecj.outputs.base_sha }}
         run: |
           echo "Head ECJ: eclipse.jdt.core $ECJ_SHA" >> "$GITHUB_STEP_SUMMARY"
+          [ -z "$BASE_SHA" ] || echo "Baseline ECJ: eclipse.jdt.core $BASE_SHA" >> "$GITHUB_STEP_SUMMARY"
           CONFIRM=(); [ -d confirm/results ] && CONFIRM=(--confirm confirm)
           python3 scripts/compare.py artifacts/results baseline head "${CONFIRM[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+          exit "${PIPESTATUS[0]}"
+      # javap, for the diffs of the class files
+      - id: jdk
+        if: always() && github.event.inputs.bytecode != '' && needs.setup.outputs.jdk != ''
+        env:
+          INPUT_JDK: ${{ needs.setup.outputs.jdk }}
+        run: echo "version=$(jq -r --arg f "$INPUT_JDK" '.[$f]' jdks.json)" >> "$GITHUB_OUTPUT"
+      - uses: ./.github/actions/setup-jdk
+        if: always() && steps.jdk.outputs.version != '' && steps.jdk.outputs.version != 'null'
+        continue-on-error: true   # bytecode.py leaves the javap diffs out without it
+        with: { version: "${{ steps.jdk.outputs.version }}" }
+      - name: Class files
+        if: always() && github.event.inputs.bytecode != ''
+        env:
+          INPUT_BYTECODE: ${{ github.event.inputs.bytecode }}
+          INPUT_BASELINE_REF: ${{ github.event.inputs.baseline_ref }}
+          BYTECODE_SUSPECTS: ${{ needs.suspects.outputs.bytecode_suspects }}
+        run: |
+          ARGS=(); [ "$INPUT_BYTECODE" = fail ] && ARGS=(--fail)
+          # the projects whose class files differ are built a second time against a baseline built from a ref only
+          [ -z "$INPUT_BASELINE_REF" ] || ARGS+=(--second-builds --planned "$BYTECODE_SUSPECTS")
+          [ -d confirm/results ] && ARGS+=(--confirm confirm)
+          python3 scripts/bytecode.py report artifacts/results baseline head "${ARGS[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
           exit "${PIPESTATUS[0]}"
       - name: Performance, javac against ECJ
         if: always()
@@ -272,7 +358,8 @@ jobs:
         # after the upload of all-results, so that the dashboard links to it; only the runs of main publish, so that a
         # branch under test does not replace the site
         # nor a run of some labels only (the trial of new projects with javac): it is no comparison of ECJ
-        if: always() && needs.build-ecj.result == 'success' && github.ref == 'refs/heads/main' && !github.event.inputs.labels
+        # nor a run against a baseline built from a ref: the dashboard compares with releases
+        if: always() && needs.build-ecj.result == 'success' && github.ref == 'refs/heads/main' && !github.event.inputs.labels && !github.event.inputs.baseline_ref
         env:
           GH_TOKEN: ${{ github.token }}
           ECJ_SHA: ${{ needs.build-ecj.outputs.sha }}

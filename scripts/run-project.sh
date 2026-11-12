@@ -27,6 +27,15 @@ NO_REBUILD="$(field no_rebuild)"
 mkdir -p "$ROOT/logs" "$ROOT/results" "$ROOT/work"
 LOG="$ROOT/logs/$NAME-$LABEL.log"
 DIR="$ROOT/work/$NAME-$LABEL"
+# when the class files of the baseline and head builds are compared (bytecode input), the same directory for both: a
+# generated source that holds the path of the build directory must not make them differ. The workflow never builds two
+# labels of one project on the same runner.
+if [ -n "${CLASS_DIGESTS:-}" ]; then
+  DIR="$ROOT/work/$NAME"
+  # released when the script ends, even when it is killed (the build does not inherit it: a Gradle daemon would keep it)
+  exec 9>"$DIR.lock"
+  flock -n 9 || { echo "another build of $NAME uses $DIR" | tee -a "$LOG" >&2; exit 1; }
+fi
 : > "$LOG"
 
 rm -rf "$DIR"
@@ -183,9 +192,12 @@ BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Deditorconfig.skip=true"
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dpgpverify.skip=true"
 # two builds at a time on the runner (SHARED_RUNNER): the Maven processes lock the local repository between them
 [ -z "${SHARED_RUNNER:-}" ] || BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.syncContext.named.factory=file-lock -Daether.syncContext.named.nameMapper=file-gav"
-RUNS="$DIR/../$NAME-$LABEL-runs"   # the directory of the measured build (1): time, GC logs, Maven log, produced classes
+RUNS="$ROOT/work/$NAME-$LABEL-runs"   # the directory of the measured build (1): time, GC logs, Maven log, produced classes
 rm -rf "$RUNS"; mkdir -p "$RUNS"
 echo "== $NAME with ECJ $ECJ_VERSION ($LABEL): $CMD" | tee -a "$LOG"
+
+# the class files that a build writes (see also clean_build)
+CLASS_FILES=( \( -path '*/target/classes/*' -o -path '*/target/test-classes/*' -o -path '*/build/classes/*' -o -path './out-java.*' \) -name '*.class' )
 
 clean_build() {
   # drop the compiled classes so that the next build compiles everything again
@@ -204,11 +216,11 @@ measured_build() {
   export MAVEN_ARGS="$BASE_MAVEN_ARGS"
   # a build that hangs (HummerRisk waited 3.5 hours for nothing) must not hold the whole job: the longest build, NiFi
   # with javac, takes about 75 minutes. It exits with 124, or 137 when the build ignored SIGTERM and was killed
-  /usr/bin/time -f '%e %U %S %M' -o "$rd/time" timeout -k 60 "${BUILD_TIMEOUT:-5400}" bash -c "$CMD" >"$rd/run.log" 2>&1
+  /usr/bin/time -f '%e %U %S %M' -o "$rd/time" timeout -k 60 "${BUILD_TIMEOUT:-5400}" bash -c "$CMD" >"$rd/run.log" 2>&1 9>&-
   local rc=$?
   cat "$rd/run.log" >>"$LOG"
   # the work done: number and size of the class files (ECJ does not print the number of source files it compiles)
-  find . \( -path '*/target/classes/*' -o -path '*/target/test-classes/*' -o -path '*/build/classes/*' -o -path './out-java.*' \) -name '*.class' -printf '%s\n' \
+  find . "${CLASS_FILES[@]}" -printf '%s\n' \
     | awk '{n++; b+=$1} END{print n+0, b+0}' > "$rd/classes"
   return $rc
 }
@@ -255,5 +267,23 @@ fi
   awk -v d="$DIR/" '/^[0-9]+\. ERROR in /{sub(d,""); f=$4; l=$7; sub(/\)/,"",l); getline; getline; getline; print f ":" l " " $0}' "$LOG"
 } | sort -u > "$ROOT/results/$NAME-$LABEL.errors"
 python3 "$ROOT/scripts/metrics.py" 0 0 "$RUNS"/* > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
+
+# The class files, when the run compares those of the baseline and head builds (bytecode input of the workflow): one line
+# per class file, "<path relative to the build directory> <the first 16 hex digits of its SHA-256>", sorted (a path that
+# sha256sum escapes, with a backslash or a new line, is left out). A few seconds for the largest projects. The second
+# build of a project whose class files differ (confirm jobs) also keeps the class files listed in
+# $KEEP_CLASSES_LISTS/<project>.txt, for the javap diff of scripts/bytecode.py.
+if [ -n "${CLASS_DIGESTS:-}" ] && [ "$ECJ_VERSION" != javac ]; then
+  find . "${CLASS_FILES[@]}" -type f -print0 \
+    | xargs -0 -r sha256sum | sed -n -E 's#^([0-9a-f]{16})[0-9a-f]* [ *]?\./(.*)$#\2 \1#p' | LC_ALL=C sort \
+    > "$ROOT/results/$NAME-$LABEL.classes"
+  if [ -n "${KEEP_CLASSES_LISTS:-}" ] && [ -f "$KEEP_CLASSES_LISTS/$NAME.txt" ]; then
+    while IFS= read -r f; do
+      [ -f "$f" ] || continue
+      mkdir -p "$ROOT/classes/$NAME-$LABEL/$(dirname "$f")"
+      cp "$f" "$ROOT/classes/$NAME-$LABEL/$f"
+    done < "$KEEP_CLASSES_LISTS/$NAME.txt"
+  fi
+fi
 rm -rf "$RUNS"
 echo "$(wc -l < "$ROOT/results/$NAME-$LABEL.errors") compile errors, status $(cat "$ROOT/results/$NAME-$LABEL.status")"
