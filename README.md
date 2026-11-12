@@ -109,8 +109,10 @@ successfully tested commit gets a `tested/<sha>` tag, a failing run is retried t
 A run must only fail for the compiler. Besides the second build of the suspect projects:
 * the environment is fixed: the runner image (`ubuntu-24.04`), Maven (3.9.9) and the exact JDK of each feature
   release (`jdks.json`). A new JDK update changes the results (removed APIs, a source level the baseline ECJ does not
-  know): update `jdks.json` in a commit of its own, and check its run;
-* every download is tried again: the clone of a project and of `eclipse.jdt.core` (3 times), the JDK (twice), Maven and
+  know): update `jdks.json` in a commit of its own, with the archive and checksum of the update in
+  `jdk-downloads.json`, and check its run. The JDK comes straight from the GitHub releases of Adoptium:
+  `api.adoptium.net`, which `setup-java` asks for the build of an update, blocks some runners behind Cloudflare;
+* every download is tried again: the clone of a project and of `eclipse.jdt.core` (3 times), the JDK, Maven and
   the baseline ECJ (`curl --retry 5`), the dependencies of a build (3 builds when the log shows a network error);
 * a build stops after 90 minutes, so that a hanging build cannot hold its job until the 6-hour limit of GitHub.
 

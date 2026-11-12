@@ -36,6 +36,8 @@ OVERHEAD_SECONDS = 15     # per job
 BASELINE_PARALLEL = 2
 SHARD = 256
 JDKS = json.loads((ROOT / 'jdks.json').read_text())
+# the archive of each exact version (the setup-jdk action of the workflows)
+JDK_DOWNLOADS = json.loads((ROOT / 'jdk-downloads.json').read_text())
 
 
 def durations(path):
@@ -81,6 +83,9 @@ def main():
     missing = sorted({project.get('jdk') or options.jdk for project in projects} - set(JDKS))
     if missing:
         sys.exit(f'no exact version in jdks.json for JDK {", ".join(missing)}')
+    missing = sorted(set(JDKS.values()) - set(JDK_DOWNLOADS))
+    if missing:
+        sys.exit(f'no download in jdk-downloads.json for JDK {", ".join(missing)}')
     labels = [label for label in options.labels.replace(' ', '').split(',') if label]
     known = durations(options.durations)
 

@@ -1,0 +1,37 @@
+name: Set up the JDK
+description: >
+  Installs an exact Temurin JDK update from the archive that jdk-downloads.json gives for it, without api.adoptium.net.
+  setup-java with "distribution: temurin" asks api.adoptium.net which build an update is, even for an exact version;
+  Cloudflare in front of it blocks some runner addresses ("Sorry, you have been blocked") and then every attempt of the
+  job fails. The archive itself comes from the GitHub releases of Adoptium, as with setup-java.
+inputs:
+  version:
+    description: "exact JDK update (a key of jdk-downloads.json), for example 27.0.1"
+    required: true
+runs:
+  using: composite
+  steps:
+    - id: download
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+      run: |
+        downloads="$GITHUB_WORKSPACE/jdk-downloads.json"
+        url=$(jq -er --arg v "$VERSION" '.[$v].url' "$downloads") \
+          && sha256=$(jq -er --arg v "$VERSION" '.[$v].sha256' "$downloads") \
+          || { echo "::error::no url and sha256 of JDK $VERSION in jdk-downloads.json"; exit 1; }
+        archive="$RUNNER_TEMP/jdk-$VERSION.tar.gz"
+        curl -fsSL --retry 5 --retry-all-errors --retry-delay 10 -o "$archive" "$url"
+        echo "$sha256  $archive" | sha256sum -c --quiet
+        echo "archive=$archive" >> "$GITHUB_OUTPUT"
+    - uses: actions/setup-java@v5
+      with:
+        distribution: jdkfile
+        jdkFile: ${{ steps.download.outputs.archive }}
+        java-version: ${{ inputs.version }}
+        architecture: x64
+        # the vendor of the toolchains.xml that setup-java writes, as with "distribution: temurin"
+        mvn-toolchain-vendor: temurin
+    # the large builds need the free space of the runner
+    - shell: bash
+      run: rm -f "${{ steps.download.outputs.archive }}"

@@ -104,15 +104,9 @@ jobs:
       - uses: actions/checkout@v5
       - id: jdk
         run: echo "version=$(jq -r '."25"' jdks.json)" >> "$GITHUB_OUTPUT"
-      # the annotation processing classes of ECJ need the JDK 25 API; the jar still targets Java 21. The download of the
-      # JDK sometimes fails on an error page of the CDN: try once more
-      - id: java
-        uses: actions/setup-java@v5
-        continue-on-error: true
-        with: { distribution: temurin, java-version: "${{ steps.jdk.outputs.version }}" }
-      - if: steps.java.outcome == 'failure'
-        uses: actions/setup-java@v5
-        with: { distribution: temurin, java-version: "${{ steps.jdk.outputs.version }}" }
+      # the annotation processing classes of ECJ need the JDK 25 API; the jar still targets Java 21
+      - uses: ./.github/actions/setup-jdk
+        with: { version: "${{ steps.jdk.outputs.version }}" }
       - id: build
         env:
           REF: ${{ github.event.inputs.ecj_ref || inputs.ecj_ref }}
