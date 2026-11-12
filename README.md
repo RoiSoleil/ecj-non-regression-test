@@ -127,6 +127,9 @@ A run must only fail for the compiler. Besides the second build of the suspect p
 * `jdk`: JDK of the builds, unless a project gives its own (`"jdk"` in `projects.json`). Default: 27.
 * `labels`: `baseline`, `head`, `javac` (default: all three; a run with a selection of labels does not publish the dashboard). `javac` alone tries new
   projects.
+* `failed_from`: id of an earlier run on the dashboard: only its projects whose build failed or is missing with one of
+  the `labels` are built (among `projects`, if given), for example after fixing `projects.json` or the scripts.
+  Default: every project.
 * `jfr`: `true` (default) records a [Java Flight Recording](https://dev.java/learn/jvm/jfr/) of each build with the head ECJ.
 
 Each head job uploads its recording as the artifact `jfr-<project>` (kept 14 days, at most 300 MB per project,

@@ -22,6 +22,9 @@ on:
       labels:
         description: "Comma separated labels to build: baseline, head, javac (default: all three; javac alone tries new projects)"
         required: false
+      failed_from:
+        description: "Id of an earlier run on the dashboard: build only its projects whose build failed or is missing with one of the labels (default: every project)"
+        required: false
   workflow_call:
     inputs:
       ecj_ref:
@@ -36,6 +39,7 @@ jobs:
       shard_indexes: ${{ steps.projects.outputs.shard_indexes }}
       baseline: ${{ steps.baseline.outputs.version }}
       jdk: ${{ steps.projects.outputs.jdk }}
+      projects: ${{ steps.failed.outputs.projects }}
     steps:
       - uses: actions/checkout@v5
       - id: baseline
@@ -53,13 +57,36 @@ jobs:
           SITE="https://${GITHUB_REPOSITORY_OWNER,,}.github.io/${GITHUB_REPOSITORY#*/}"
           RUN="$(curl -fsS --retry 3 "$SITE/data/runs.json" | jq -r '[(if type == "array" then . else .runs end)[] | select(.partial | not)][0].id // empty')" || true
           [ -z "$RUN" ] || curl -fsS --retry 3 -o durations.json "$SITE/data/runs/$RUN/summary.json" || true
-      - id: projects
+      # The projects input, or, with failed_from, the projects of that run whose build failed or is missing with one of
+      # the labels to build (among the projects input, if given). A project that a later commit renamed or removed is
+      # left out by plan.py.
+      - id: failed
         env:
           INPUT_PROJECTS: ${{ github.event.inputs.projects }}
+          INPUT_FAILED_FROM: ${{ github.event.inputs.failed_from }}
+          INPUT_LABELS: ${{ github.event.inputs.labels || 'baseline,head,javac' }}
+        run: |
+          if [ -z "$INPUT_FAILED_FROM" ]; then echo "projects=$INPUT_PROJECTS" >> "$GITHUB_OUTPUT"; exit 0; fi
+          [[ "$INPUT_FAILED_FROM" =~ ^[0-9]+$ ]] || { echo "failed_from is no run id: $INPUT_FAILED_FROM"; exit 1; }
+          SITE="https://${GITHUB_REPOSITORY_OWNER,,}.github.io/${GITHUB_REPOSITORY#*/}"
+          curl -fsS --retry 3 -o failed-from.json "$SITE/data/runs/$INPUT_FAILED_FROM/summary.json" \
+            || { echo "run $INPUT_FAILED_FROM is not on the dashboard"; exit 1; }
+          FAILED="$(jq -r --arg labels "$INPUT_LABELS" --arg only "$INPUT_PROJECTS" '
+            ($labels | gsub(" "; "") | split(",") | map(select(. != ""))) as $labels
+            | ($only | gsub(" "; "") | split(",") | map(select(. != ""))) as $only
+            | [.projects[] | select(($only | length) == 0 or (.name as $n | $only | index($n)))
+               | select(.labels as $l | any($labels[]; $l[.].status != "success")) | .name] | join(",")' failed-from.json)"
+          [ -n "$FAILED" ] || { echo "no failed build in run $INPUT_FAILED_FROM"; exit 1; }
+          echo "$(tr ',' '\n' <<< "$FAILED" | wc -l) failed project(s) of run $INPUT_FAILED_FROM" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "projects=$FAILED" >> "$GITHUB_OUTPUT"
+      - id: projects
+        env:
+          INPUT_PROJECTS: ${{ steps.failed.outputs.projects }}
+          IGNORE_UNKNOWN: ${{ github.event.inputs.failed_from && '--ignore-unknown' || '' }}
           INPUT_JDK: ${{ github.event.inputs.jdk || '27' }}
           INPUT_LABELS: ${{ github.event.inputs.labels || 'baseline,head,javac' }}
         run: |
-          SHARDS="$(python3 scripts/plan.py --jdk "$INPUT_JDK" --projects "$INPUT_PROJECTS" --labels "$INPUT_LABELS" --durations durations.json 2> plan.txt)" || { cat plan.txt; exit 1; }
+          SHARDS="$(python3 scripts/plan.py --jdk "$INPUT_JDK" --projects "$INPUT_PROJECTS" $IGNORE_UNKNOWN --labels "$INPUT_LABELS" --durations durations.json 2> plan.txt)" || { cat plan.txt; exit 1; }
           cat plan.txt | tee -a "$GITHUB_STEP_SUMMARY"
           echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
           echo "jdk=$INPUT_JDK" >> "$GITHUB_OUTPUT"   # the same default JDK for the second builds of the suspects
@@ -244,7 +271,7 @@ jobs:
       - name: Status of every project
         if: always()
         env:
-          INPUT_PROJECTS: ${{ github.event.inputs.projects }}
+          INPUT_PROJECTS: ${{ needs.setup.outputs.projects }}
         run: |
           { echo; echo "### Status"; echo; bash scripts/status-table.sh artifacts/results projects.json "$INPUT_PROJECTS"; } >> "$GITHUB_STEP_SUMMARY"
       - name: Publish the dashboard
@@ -256,7 +283,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           ECJ_SHA: ${{ needs.build-ecj.outputs.sha }}
           BASELINE: ${{ needs.setup.outputs.baseline }}
-          INPUT_PROJECTS: ${{ github.event.inputs.projects }}
+          INPUT_PROJECTS: ${{ needs.setup.outputs.projects }}
           INPUT_JDK: ${{ github.event.inputs.jdk }}
           INPUT_JFR: ${{ github.event.inputs.jfr }}
           INPUT_BASELINE: ${{ github.event.inputs.baseline }}
