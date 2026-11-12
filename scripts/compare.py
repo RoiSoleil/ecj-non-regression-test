@@ -84,9 +84,11 @@ for name in names:
             confirmation[name] = 'reproduced'
             note = ' (built twice)'
             current = second
-        elif first[4]:
+        elif first[4] and first[0] in TESTED:
             # new compile errors are the compiler's output: errors that only one of two builds gives are a compiler
-            # that is not deterministic, not a runner failure; the run fails
+            # that is not deterministic, not a runner failure; the run fails. Not when the first baseline build did not
+            # run (ecj not used, a dependency that could not be downloaded): every error of the head build was "new"
+            # then, and the valid second builds are the only comparison
             confirmation[name] = 'intermittent'
             note = ' (intermittent: new errors in one of two builds)'
         else:

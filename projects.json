@@ -1234,7 +1234,7 @@
   {
     "name": "JacksonModulesBase",
     "url": "https://github.com/FasterXML/jackson-modules-base.git",
-    "ref": "fcb9aae45247dae450bdc8178b580c31957ce6ba",
+    "ref": "693e88f48fc337012b1fa7ae28abef90a66cf3b4",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
