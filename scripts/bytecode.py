@@ -54,12 +54,14 @@ for mode in ('suspects', 'report'):
         sub.add_argument('--fail', action='store_true')
 modes.add_parser('keep').add_argument('lists', type=pathlib.Path)
 options = parser.parse_args()
+# a class file name need not be UTF-8: its undecodable bytes are shown escaped
+sys.stdout.reconfigure(errors='backslashreplace')
 
 if options.mode == 'keep':
     jobs = json.load(sys.stdin)
     for job in jobs:
         lists = {p: options.lists / f'{p}.txt' for p in job['projects']}
-        keep = {p: path.read_text().splitlines() for p, path in lists.items() if path.exists()}
+        keep = {p: path.read_text(errors='surrogateescape').splitlines() for p, path in lists.items() if path.exists()}
         if keep:
             job['keep'] = keep
     print(json.dumps(jobs, separators=(',', ':')))
@@ -68,7 +70,8 @@ if options.mode == 'keep':
 
 def lines(directory, name, label, extension):
     path = directory / f'{name}-{label}.{extension}'
-    return path.read_text().splitlines() if path.exists() else None
+    # surrogateescape: a class file name need not be UTF-8 (scripts/class-digests.py writes bytes)
+    return path.read_text(errors='surrogateescape').splitlines() if path.exists() else None
 
 
 def manifest(directory, name, label):
@@ -112,7 +115,7 @@ if options.mode == 'suspects':
             found.append((name, changed))
     options.lists.mkdir(parents=True, exist_ok=True)
     for name, changed in found[:options.max]:
-        (options.lists / f'{name}.txt').write_text(''.join(p + '\n' for p in changed[:KEEP]))
+        (options.lists / f'{name}.txt').write_text(''.join(p + '\n' for p in changed[:KEEP]), errors='surrogateescape')
         print(name)
     sys.exit(0)
 
@@ -133,7 +136,7 @@ planned = set(filter(None, options.planned.split(',')))
 def detail(text):
     """a <details> block, when the summary still has room for it"""
     global budget, left_out
-    size = len(text.encode())
+    size = len(text.encode(errors='backslashreplace'))
     if size <= budget:
         details.append(text)
         budget -= size
@@ -188,7 +191,7 @@ for name in names:
                 'not reproducible': '⚠️ not reproducible: the builds of one compiler differ',
                 'not planned': '⚠️ not built a second time (no baseline built from a ref)'}[verdict]
     rows.append(f'| {name} | {len(left)} | {len(changed)} | {len(only_left)} | {len(only_right)} | {mark} |')
-    budget -= len(rows[-1].encode()) + 1
+    budget -= len(rows[-1].encode(errors='backslashreplace')) + 1
     listed = [f'changed: {p}' for p in changed] + [f'only {options.baseline}: {p}' for p in only_left] \
         + [f'only {options.head}: {p}' for p in only_right]
     if listed:

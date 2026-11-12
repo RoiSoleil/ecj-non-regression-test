@@ -269,14 +269,14 @@ fi
 python3 "$ROOT/scripts/metrics.py" 0 0 "$RUNS"/* > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
 
 # The class files, when the run compares those of the baseline and head builds (bytecode input of the workflow): one line
-# per class file, "<path relative to the build directory> <the first 16 hex digits of its SHA-256>", sorted (a path that
-# sha256sum escapes, with a backslash or a new line, is left out). A few seconds for the largest projects. The second
-# build of a project whose class files differ (confirm jobs) also keeps the class files listed in
-# $KEEP_CLASSES_LISTS/<project>.txt, for the javap diff of scripts/bytecode.py.
+# per class file compiled from Java sources, "<path relative to the build directory> <the first 16 hex digits of its
+# SHA-256>", sorted (scripts/class-digests.py; a few seconds for the largest projects). The second build of a project
+# whose class files differ (confirm jobs) also keeps the class files listed in $KEEP_CLASSES_LISTS/<project>.txt, for the
+# javap diff of scripts/bytecode.py.
 if [ -n "${CLASS_DIGESTS:-}" ] && [ "$ECJ_VERSION" != javac ]; then
-  find . "${CLASS_FILES[@]}" -type f -print0 \
-    | xargs -0 -r sha256sum | sed -n -E 's#^([0-9a-f]{16})[0-9a-f]* [ *]?\./(.*)$#\2 \1#p' | LC_ALL=C sort \
-    > "$ROOT/results/$NAME-$LABEL.classes"
+  # no list at all when it fails: the project is not compared, rather than compared with an empty list
+  python3 "$ROOT/scripts/class-digests.py" . > "$ROOT/results/$NAME-$LABEL.classes" 2>>"$LOG" \
+    || rm -f "$ROOT/results/$NAME-$LABEL.classes"
   if [ -n "${KEEP_CLASSES_LISTS:-}" ] && [ -f "$KEEP_CLASSES_LISTS/$NAME.txt" ]; then
     while IFS= read -r f; do
       [ -f "$f" ] || continue

@@ -131,7 +131,9 @@ A run must only fail for the compiler. Besides the second build of the suspect p
   moved on, against its head as `ecj_ref` (such a run does not publish the dashboard).
 * `bytecode`: `report` compares the class files of the baseline and head builds, `fail` also fails the run when they
   differ (only with `baseline_ref`): for a change that must not change the generated code. Every build lists the SHA-256
-  of its class files (a few seconds); the two builds of a project are compared when both succeeded.
+  of its class files compiled from Java sources (`scripts/class-digests.py`, a few seconds: not those of Clojure,
+  Kotlin, Groovy..., whose output can change with the state of the JVM); the two builds of a project are compared when
+  both succeeded.
   With `baseline_ref`, the projects whose class files differ (at most 30) are built a second time with both compilers
   (against a release, every project differs: no second builds), and a class file that
   differs between the two builds of one compiler (a time stamp in a generated source...) is ignored and listed, even if
