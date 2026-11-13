@@ -93,6 +93,18 @@ function confirmationChip(p) {
 	return ` <span class="chip ${cls}" title="${esc(CONFIRMATION_TITLES[p.confirmation] || '')}">${esc(p.confirmation)}</span>`;
 }
 
+// the test run of a build (projects.json test: the second builds of the projects whose class files differ, or every
+// build of a run with tests=all) and the verdict of the project (scripts/test_runs.py)
+function testsText(t) {
+	return `${esc(t.status)}: ${fmt(t.tests, 0)} tests, ${fmt(t.failed, 0)} failed, ${fmt(t.seconds, 0)} s`;
+}
+function testsChip(p) {
+	if (!p.tests) return '';
+	if (p.tests.verdict === 'regression') return ` <span class="chip ko" title="${esc(p.tests.reason)}">tests regress</span>`;
+	if (p.tests.verdict === 'same') return ' <span class="chip ok" title="Same test results with the released and head ECJ">tests</span>';
+	return ' <span class="chip warn" title="The test runs cannot be compared (one is missing, or the released ECJ one did not run)">tests</span>';
+}
+
 function rawButton(text, path, opts = {}) {
 	if (!path) return opts.fallback ? `<a href="${esc(opts.fallback)}" target="_blank" rel="noopener" title="${esc(opts.fallbackTitle || 'GitHub (needs a login, 90 days)')}">${text}</a>` : text;
 	const data = `data-raw="${esc(path)}"${opts.key ? ` data-key="${esc(opts.key)}"` : ''}${opts.line ? ` data-line="${opts.line}"` : ''}${opts.grep ? ` data-grep="${esc(opts.grep)}"` : ''}`;
@@ -233,6 +245,7 @@ async function viewOverview() {
 			${LABELS.map(l => tile(`${fmt(t[l].success, 0)} / ${fmt(t[l].success + t[l].failed + t[l].other, 0)}`, `${LABEL_NAMES[l]}: projects that compile`, { path: summaryPath, key: 'totals' })).join('')}
 			${tile(`<span class="${run.regressions ? 'worse' : ''}">${fmt(run.regressions, 0)}</span>`, 'Regressions (head against released)', { path: summaryPath, key: 'regressions' })}
 			${tile(fmt(run.fixes, 0), 'Projects with gone errors and no new one', { path: summaryPath, key: 'fixes' })}
+			${run.test_suites ? tile(`<span class="${run.test_regressions ? 'worse' : ''}">${fmt(run.test_regressions, 0)}</span> / ${fmt(run.test_suites, 0)}`, 'Test suites that fail only with head ECJ / run', { path: summaryPath, key: 'test_regressions' }) : ''}
 			${tile(fmt(javacOkHeadKo.length, 0), 'Compile with javac, not with head ECJ')}
 			${tile(`${fmt(t.baseline.errors, 0)} → ${fmt(t.head.errors, 0)}`, 'Compile errors, released → head', { path: summaryPath, key: 'errors' })}
 			${tile(pct(run.median?.head_javac_wall_s), 'Median wall time, head ECJ against javac', { path: summaryPath, key: 'head_javac_wall_s' })}
@@ -252,6 +265,7 @@ async function viewOverview() {
 				<option value="headko">not compiling with head ECJ</option>
 				<option value="javacok">compiling with javac, not with head ECJ</option>
 				<option value="fixed">gone errors, no new one</option>
+				${run.test_suites ? '<option value="tests">ran their tests</option><option value="testreg">tests that fail only with head ECJ</option>' : ''}
 			</select>
 			${causes.length ? `<select id="cause"><option value="">any cause</option>${causes.map(([c, n]) => `<option value="${esc(c)}">${esc(c)} (${n})</option>`).join('')}</select>` : ''}
 			<input id="search" placeholder="Filter by name…">
@@ -304,6 +318,8 @@ async function viewOverview() {
 		if (filter === 'headko') rows = rows.filter(p => p.labels.head?.status === 'build failed');
 		if (filter === 'javacok') rows = rows.filter(p => javacOkHeadKo.includes(p));
 		if (filter === 'fixed') rows = rows.filter(p => p.fixed > 0 && !p.new);
+		if (filter === 'tests') rows = rows.filter(p => p.tests);
+		if (filter === 'testreg') rows = rows.filter(p => p.tests?.verdict === 'regression');
 		const cause = document.getElementById('cause')?.value;
 		if (cause) rows = rows.filter(p => p.cause === cause);
 		// in the address, so that a reload or a shared link keeps the selection
@@ -318,7 +334,7 @@ async function viewOverview() {
 			${th('new', 'New errors', 'num')}${th('fixed', 'Gone errors', 'num')}
 			${th('ratio_head_javac_wall_s', 'Wall time vs javac', 'num')}${th('ratio_head_javac_rss_mb', 'Memory vs javac', 'num')}</tr></thead>
 			<tbody>${rows.map(p => `<tr>
-				<td><a href="${href('project', p.name)}">${esc(p.name)}</a>${p.regression ? ' <span class="chip ko">regression</span>' : ''}${confirmationChip(p)}
+				<td><a href="${href('project', p.name)}">${esc(p.name)}</a>${p.regression ? ' <span class="chip ko">regression</span>' : ''}${confirmationChip(p)}${testsChip(p)}
 					${p.cause ? `<div class="muted small" title="Probable cause: javac compiles it, the head ECJ does not">${esc(p.cause)}</div>` : ''}</td>
 				${LABELS.map(l => { const s = p.labels[l]; return `<td>${s ? rawButton(statusChip(s, s.errors), s.errors ? rawPath(run, p.name, l, 'errors') : rawPath(run, p.name, l, 'status'), { fallback: p.artifacts?.[l] || p.jobs?.[l] }) : statusChip(null)}
 					${p.jobs?.[l] ? ` <a class="muted" href="${esc(p.jobs[l])}" target="_blank" rel="noopener" title="Job log on GitHub">log</a>` : ''}</td>`; }).join('')}
@@ -521,6 +537,9 @@ async function viewProject(name) {
 		</div>` : '<p class="muted">The details of the older runs are not kept: summary only.</p>'}
 		${entry.cause ? `<p>javac compiles it, the head ECJ does not. Probable cause: <strong>${esc(entry.cause)}</strong>
 			<span class="muted">(from its compile errors and build log, scripts/causes.py)</span></p>` : ''}
+		${entry.tests ? `<p>Test suite:${testsChip(entry)} <span class="muted">${esc(entry.tests.reason || '')}</span></p>
+			${detail?.tests?.new?.length ? `<details><summary>Tests that fail only with the head ECJ (${fmt(detail.tests.new_count, 0)})</summary>
+				<ul class="examples mono">${detail.tests.new.map(t => `<li>${esc(t)}</li>`).join('')}</ul></details>` : ''}` : ''}
 		${entry.confirmation ? `<p>Second build of this suspect project:${confirmationChip(entry)}
 			<span class="muted">${esc(CONFIRMATION_TITLES[entry.confirmation] || '')}</span></p>` : ''}
 		<div class="tiles">${LABELS.map(l => {
@@ -531,8 +550,10 @@ async function viewProject(name) {
 					s.errors ? rawButton('errors', rawPath(run, name, l, 'errors'), { small: true, fallback: entry.artifacts?.[l] }) : '',
 					rawButton('metrics', rawPath(run, name, l, 'metrics'), { small: true, fallback: entry.artifacts?.[l] }),
 					rawButton('build log', rawPath(run, name, l, 'log'), { small: true, fallback: entry.jobs?.[l] || entry.artifacts?.[l] }),
+					s.tests ? rawButton('tests', rawPath(run, name, l, 'tests'), { small: true, fallback: entry.artifacts?.[l] }) : '',
 					entry.jobs?.[l] ? `<a href="${esc(entry.jobs[l])}" target="_blank" rel="noopener">job</a>` : '',
-				].filter(Boolean).join(' · ') : ''}</div></div>`;
+				].filter(Boolean).join(' · ') : ''}</div>
+				${s?.tests ? `<div class="label">tests ${testsText(s.tests)}</div>` : ''}</div>`;
 		}).join('')}</div>
 		<nav class="filters">
 			${['errors', 'diff', 'perf', 'history'].map(t => `<a href="${href('project', name, { tab: t })}" class="${t === tab ? 'chip ok' : 'chip none'}">${{ errors: 'Errors', diff: 'Head vs released', perf: 'Performance', history: 'History' }[t]}</a>`).join('')}

@@ -150,6 +150,10 @@ A run must only fail for the compiler. Besides the second build of the suspect p
 * `jdk`: JDK of the builds, unless a project gives its own (`"jdk"` in `projects.json`). Default: 27.
 * `labels`: `baseline`, `head`, `javac` (default: all three; a run with a selection of labels does not publish the dashboard). `javac` alone tries new
   projects.
+* `tests`: `all` runs the test command of every build (each project in a job of its own), to calibrate new `test`
+  commands with `labels=baseline,head`; such a run of main is published on the dashboard as a partial run, which shows
+  the results of the tests and the projects whose tests fail only with the head ECJ. Default: only the second builds
+  of the projects whose class files differ run their tests (see `bytecode`).
 * `failed_from`: id of an earlier run on the dashboard: only its projects whose build failed or is missing with one of
   the `labels` are built (among `projects`, if given), for example after fixing `projects.json` or the scripts.
   Default: every project.

@@ -26,6 +26,7 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import causes  # noqa: E402
+import test_runs  # noqa: E402
 
 LABELS = ('baseline', 'head', 'javac')
 DEFAULT_JDK = '27'  # keep in sync with ecj-build.yml
@@ -102,7 +103,7 @@ def load_label(results, name, label):
         except ValueError:
             metrics = None
     return {'status': status.strip() or 'unknown', 'errors': errors, 'lines': [number for number, _ in numbered],
-            'metrics': metrics}
+            'metrics': metrics, 'tests': test_runs.read(results / f'{name}-{label}.tests')}
 
 
 def is_tested(status):
@@ -197,6 +198,8 @@ def main():
                         'give the commit of master as ecj_ref, which is not another ref)')
     parser.add_argument('--jdk', default='', help='the jdk input; empty for the default JDK')
     parser.add_argument('--selection', default='', help='the projects input; empty for all the projects')
+    parser.add_argument('--labels', default='', help='the labels input (a calibration of the tests: baseline,head); '
+                        'empty for the three labels')
     parser.add_argument('--jfr', default='', help='the jfr input')
     parser.add_argument('--event', default='', help='github.event_name')
     parser.add_argument('--repo-sha', default='', help='commit of this repository that ran the builds')
@@ -273,6 +276,8 @@ def main():
     lost = sum(1 for name in names if not any((results / f'{name}-{label}.status').exists() for label in LABELS))
     incomplete = lost > 0.05 * len(names)
     partial = incomplete or any(value.strip() for value in (options.selection, jdk, options.baseline_input, options.ref_input))
+    # (an import may read the default of the labels input from an older log: the three labels are a full run)
+    partial = partial or bool(options.labels.strip()) and set(options.labels.replace(' ', '').split(',')) != set(LABELS)
     run = {
         'id': run_id, 'attempt': options.run_attempt, 'date': options.date, 'url': run_url, 'event': options.event,
         'ecj': {'sha': options.ecj_sha, 'ref': options.ref_input or 'master'}, 'baseline': options.baseline,
@@ -287,6 +292,7 @@ def main():
     head_vs_base = []
     totals = {label: {'success': 0, 'failed': 0, 'other': 0, 'missing': 0, 'errors': 0} for label in LABELS}
     regressions = fixes = 0
+    test_suites = test_regressions = 0  # the projects that ran their tests, those whose tests regressed
 
     for name in names:
         labels = {label: load_label(results, name, label) for label in LABELS}
@@ -302,7 +308,7 @@ def main():
             totals[label]['success' if status == 'success' else 'failed' if status == 'build failed' else 'other'] += 1
             totals[label]['errors'] += len(data['errors'])
             files = {}
-            for extension in ('status', 'metrics', 'errors'):
+            for extension in ('status', 'metrics', 'errors', 'tests'):
                 source = results / f'{name}-{label}.{extension}'
                 if source.exists():
                     target = raw_dir / 'results' / (source.name + ('.gz' if extension == 'errors' else ''))
@@ -351,6 +357,10 @@ def main():
                 'measured': not metrics.get('shared_runner') and bool(metrics.get('single_build') or (metrics.get('warmup') and metrics.get('offline'))),
                 'raw': sorted(files),  # the raw files the site has: the dashboard links to the others on GitHub
             }
+            # the test run of the build (projects.json test, scripts/run-project.sh), when it ran its tests
+            tests = data['tests']
+            if tests:
+                summary_labels[label]['tests'] = {key: value for key, value in tests.items() if key != 'failing'}
             project_labels[label] = {
                 'status': status, 'error_count': len(data['errors']), 'metrics': metrics,
                 # the families with their count and a few examples (with their line in the raw .errors file)
@@ -358,6 +368,8 @@ def main():
                                     for fam, count in label_families.items()), key=lambda item: -item['count']),
                 'job': jobs.get((name, label)),
             }
+            if tests:
+                project_labels[label]['tests'] = tests | {'failing': tests['failing'][:MAX_DIFF]}
 
         base, head = labels['baseline'], labels['head']
         new = fixed = []
@@ -375,6 +387,11 @@ def main():
                 regression = False
             regressions += regression
             fixes += bool(fixed) and not new
+        # the tests that fail only with the head ECJ (scripts/test_runs.py)
+        test_verdict, test_reason, test_new = test_runs.verdict(base and base['tests'], head and head['tests'])
+        ran_tests = any(data and data['tests'] for data in labels.values())
+        test_suites += ran_tests
+        test_regressions += test_verdict == 'regression'
         # a project that javac compiles and the head ECJ does not: its probable cause (scripts/causes.py)
         cause = ''
         if labels.get('javac') and labels['javac']['status'] == 'success' and head and head['status'] == 'build failed':
@@ -402,6 +419,8 @@ def main():
         summary_projects.append({
             'name': name, 'labels': summary_labels, 'new': len(new), 'fixed': len(fixed), 'regression': regression, 'confirmation': confirmation.get(name, ''), 'cause': cause,
             'tested': tested, 'ratios': project_ratios, 'jfr': jfr_artifact(name),
+            **({'tests': {'verdict': test_verdict, 'reason': test_reason, 'new': len(test_new)}}
+               if ran_tests else {}),
             'jobs': {label: jobs.get((name, label)) for label in LABELS if jobs.get((name, label))},
             'artifacts': {label: link for label in LABELS if (link := result_artifact(name, label))},
         })
@@ -411,6 +430,7 @@ def main():
             'new': new[:MAX_DIFF], 'fixed': fixed[:MAX_DIFF], 'new_count': len(new), 'fixed_count': len(fixed),
             'regression': regression, 'raw': raw, 'jfr': jfr_artifact(name), 'confirmation': confirmation.get(name, ''),
             'cause': cause,
+            'tests': {'verdict': test_verdict, 'reason': test_reason, 'new': test_new[:MAX_DIFF], 'new_count': len(test_new)},
             'result_artifacts': {label: result_artifact(name, label) for label in LABELS},
         })
 
@@ -421,6 +441,9 @@ def main():
     run['projects'] = len(names)
     run['regressions'] = regressions
     run['fixes'] = fixes
+    if test_suites:
+        run['test_suites'] = test_suites
+        run['test_regressions'] = test_regressions
     # the projects that javac compiles and the head ECJ does not, and why (the goal: none)
     # (none when the run has no javac build: no gap measured, not a gap of 0)
     has_javac = any(path.name.endswith('-javac.status') for path in results.glob('*.status'))

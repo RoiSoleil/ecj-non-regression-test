@@ -382,14 +382,16 @@ jobs:
       - name: Publish the dashboard
         # after the upload of all-results, so that the dashboard links to it; only the runs of main publish, so that a
         # branch under test does not replace the site
-        # nor a run of some labels only (the trial of new projects with javac): it is no comparison of ECJ
+        # nor a run of some labels only (the trial of new projects with javac): it is no comparison of ECJ, except a
+        # calibration of the test commands (tests=all, a partial run)
         # nor a run against a baseline built from a ref: the dashboard compares with releases
-        if: always() && needs.build-ecj.result == 'success' && github.ref == 'refs/heads/main' && !github.event.inputs.labels && !github.event.inputs.baseline_ref
+        if: always() && needs.build-ecj.result == 'success' && github.ref == 'refs/heads/main' && (!github.event.inputs.labels || github.event.inputs.tests == 'all') && !github.event.inputs.baseline_ref
         env:
           GH_TOKEN: ${{ github.token }}
           ECJ_SHA: ${{ needs.build-ecj.outputs.sha }}
           BASELINE: ${{ needs.setup.outputs.baseline }}
           INPUT_PROJECTS: ${{ needs.setup.outputs.projects }}
+          INPUT_LABELS: ${{ github.event.inputs.labels }}
           INPUT_JDK: ${{ github.event.inputs.jdk }}
           INPUT_JFR: ${{ github.event.inputs.jfr }}
           INPUT_BASELINE: ${{ github.event.inputs.baseline }}
@@ -404,7 +406,7 @@ jobs:
             --results artifacts/results --logs artifacts/logs --repo "$GITHUB_REPOSITORY" \
             --run-id "$GITHUB_RUN_ID" --run-attempt "$GITHUB_RUN_ATTEMPT" --date "$date" --event "$GITHUB_EVENT_NAME" \
             --ecj-sha "$ECJ_SHA" --baseline "$BASELINE" --jdk "$INPUT_JDK" \
-            --selection "$INPUT_PROJECTS" --jfr "$INPUT_JFR" --repo-sha "$GITHUB_SHA" \
+            --selection "$INPUT_PROJECTS" --labels "$INPUT_LABELS" --jfr "$INPUT_JFR" --repo-sha "$GITHUB_SHA" \
             --baseline-input "$INPUT_BASELINE" --ref-input "$REF_INPUT" \
             --jobs jobs.jsonl --artifacts artifacts.jsonl --plan plan.json
           echo "Dashboard: https://${GITHUB_REPOSITORY_OWNER,,}.github.io/${GITHUB_REPOSITORY#*/}/#/?run=$GITHUB_RUN_ID" >> "$GITHUB_STEP_SUMMARY"

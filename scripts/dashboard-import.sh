@@ -74,6 +74,8 @@ for id in "${ids[@]}"; do
   setup="$(job_log setup)"
   selection="$(env_value INPUT_PROJECTS <<< "$setup")"
   baseline_input="$(env_value INPUT_BASELINE <<< "$setup")"
+  # the labels input (the first INPUT_LABELS of the setup job is the input itself, without its default)
+  labels_input="$(env_value INPUT_LABELS <<< "$setup")"
   # a nightly run (ecj-check.yml) gives the commit of master as ecj_ref, a run started by hand gives its own input
   ref_input=""
   [ "$(jq -r .path <<< "$run")" = .github/workflows/ecj-matrix.yml ] && ref_input="$ref"
@@ -89,7 +91,7 @@ for id in "${ids[@]}"; do
   python3 scripts/dashboard-data.py --results "$results" ${logs:+--logs "$logs"} --repo "$REPO" \
     --run-id "$id" --run-attempt "$(jq -r .run_attempt <<< "$run")" --date "$(jq -r .created_at <<< "$run")" \
     --event "$(jq -r .event <<< "$run")" --repo-sha "$(jq -r .head_sha <<< "$run")" \
-    --ecj-sha "$sha" --baseline "$baseline" --selection "$selection" --jdk "$jdk" \
+    --ecj-sha "$sha" --baseline "$baseline" --selection "$selection" --labels "$labels_input" --jdk "$jdk" \
     --baseline-input "$baseline_input" --ref-input "$ref_input" \
     --jobs "$dir/jobs.jsonl" --artifacts "$dir/artifacts.jsonl" || {
     status=$?
