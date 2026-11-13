@@ -130,6 +130,8 @@ jobs:
       # the annotation processing classes of ECJ need the JDK 25 API; the jar still targets Java 21
       - uses: ./.github/actions/setup-jdk
         with: { version: "${{ steps.jdk.outputs.version }}" }
+      # saves the Maven archive in the cache before the build jobs need it (see the action)
+      - uses: ./.github/actions/setup-maven
       - id: build
         env:
           REF: ${{ github.event.inputs.ecj_ref || inputs.ecj_ref }}

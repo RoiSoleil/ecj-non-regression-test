@@ -1,0 +1,33 @@
+name: Set up Maven 3.9.9
+description: >
+  Puts Maven 3.9.9 on the PATH (newer Maven versions break Tycho based projects; Eclipse Collections: "No implementation
+  for MavenTargetLocationFactory"). The archive comes from the cache of the repository: when a full matrix downloads it
+  at once, Maven Central answers 429 or 404 to some jobs (run 43330189660), and archive.apache.org resets connections.
+  build-ecj, which every build job waits for, runs this action first, so that the cache is there before the matrix starts.
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v4
+      with:
+        path: ~/.cache/maven-dist
+        key: apache-maven-3.9.9-bin
+    - shell: bash
+      run: |
+        ARCHIVE="$HOME/.cache/maven-dist/apache-maven-3.9.9-bin.tar.gz"
+        SHA512=a555254d6b53d267965a3404ecb14e53c3827c09c3b94b5678835887ab404556bfaf78dcfe03ba76fa2508649dca8531c74bca4d5846513522404d48e8c4ac8b
+        check() { echo "$SHA512  $ARCHIVE" | sha512sum -c --quiet - > /dev/null 2>&1; }
+        if ! check; then
+          mkdir -p "$(dirname "$ARCHIVE")"
+          ok=
+          for attempt in 1 2 3; do
+            for url in https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.9.9/apache-maven-3.9.9-bin.tar.gz \
+                       https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz; do
+              if curl -fsSL --retry 2 --retry-all-errors --retry-delay 5 -o "$ARCHIVE" "$url" && check; then ok=1; break 2; fi
+              echo "::warning::Maven download failed from $url (attempt $attempt)"
+            done
+            sleep $((attempt * 30 + RANDOM % 30))
+          done
+          [ -n "$ok" ] || { echo "::error::Maven 3.9.9 could not be downloaded"; exit 1; }
+        fi
+        tar xzf "$ARCHIVE" -C "$HOME"
+        echo "$HOME/apache-maven-3.9.9/bin" >> "$GITHUB_PATH"

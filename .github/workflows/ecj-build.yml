@@ -55,14 +55,7 @@ jobs:
       # the space is there long before a large build needs it.
       - name: Free disk space (in the background)
         run: sudo nohup ionice -c 2 -n 7 nice -n 10 rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL > /dev/null 2>&1 &
-      - name: Use Maven 3.9.9
-        # newer Maven versions break Tycho based projects (Eclipse Collections: "No implementation for MavenTargetLocationFactory")
-        run: |
-          # Maven Central rather than archive.apache.org, which resets connections under the load of a full matrix
-          curl -fsSL --retry 5 --retry-all-errors --retry-delay 10 -o "$RUNNER_TEMP/maven.tar.gz" \
-            https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.9.9/apache-maven-3.9.9-bin.tar.gz
-          tar xzf "$RUNNER_TEMP/maven.tar.gz" -C "$HOME"
-          echo "$HOME/apache-maven-3.9.9/bin" >> "$GITHUB_PATH"
+      - uses: ./.github/actions/setup-maven
       # Only the projects that ask for it (cache_m2 in projects.json, those whose dependencies are long to download;
       # plan.py gives them a job of their own): the caches of a repository are limited to 10 GB, far less than the
       # dependencies of every project. One cache for the three labels of a project. It must stay before the
