@@ -199,3 +199,8 @@ The JDK project needs a JDK with `lib/src.zip`; otherwise set `JDK_SRC_DIR` to a
   classes are compiled with JDK 25 and run on the JDK of the build.
 
 This repository was written with the help of Claude (AI).
+
+## License
+
+Eclipse Public License 2.0 ([`LICENSE`](LICENSE), SPDX `EPL-2.0`). The projects of the corpus keep their own licenses: this
+repository only holds their names, URLs and commits, and the patches in `patches/`.
