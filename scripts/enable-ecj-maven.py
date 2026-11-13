@@ -108,6 +108,7 @@ def add_ecj(plugin):
         fail.text = 'false'
     for args in plugin.iter(q('compilerArgs')):
         clean_compiler_args(args)
+    add_proc_args(plugin, configuration)
     if ECJ_ARGS and plugin not in MANAGED:
         add_ecj_args(plugin, configuration)
 
@@ -139,6 +140,22 @@ def clean_compiler_args(args):
         for arg in list(args):
             args.remove(arg)
         args.text = None
+
+def add_proc_args(plugin, configuration):
+    """Passes <proc>none</proc> (or only) as an argument too: plexus-compiler-eclipse up to 2.18.0 drops it unless
+    processors or a processor path are configured as well, and ECJ then runs the processors that it finds on the class
+    path (Hibernate Validator's annotation-processor module: its own processor, listed in META-INF/services before it
+    is compiled, "Provider ... not found"). Fixed in plexus-compiler 9d3498e519, not released yet."""
+    configurations = [configuration] + plugin.findall(f"{q('executions')}/{q('execution')}/{q('configuration')}")
+    for config in configurations:
+        proc = (config.findtext(q('proc')) or '').strip()
+        if proc not in ('none', 'only'):
+            continue
+        args = config.find(q('compilerArgs'))
+        if args is None:
+            args = ET.SubElement(config, q('compilerArgs'), {'combine.children': 'append'})
+        if f'-proc:{proc}' not in [(arg.text or '').strip() for arg in args if isinstance(arg.tag, str)]:
+            text(args, 'arg', f'-proc:{proc}')
 
 def add_ecj_args(plugin, configuration):
     """Adds the projects.json ecj_compiler_args (WildFly: where the JBoss Logging processor looks for the translation

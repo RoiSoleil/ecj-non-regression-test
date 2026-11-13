@@ -119,8 +119,20 @@ sys.exit(0 if cleaned != text else 1)
 PY
   then
     echo "== Develocity extension removed from $extensions" >>"$LOG"
+    DEVELOCITY_REMOVED=1
   fi
 done
+# Without the extension, surefire reads the <predictiveSelection> block that the extension takes out of its
+# <properties> as a property, and fails ("Missing name in properties": Quarkus build-parent, even with -DskipTests)
+if [ -n "${DEVELOCITY_REMOVED:-}" ]; then
+  grep -rlZ --include=pom.xml --exclude-dir=src --exclude-dir=target '<predictiveSelection>' "$DIR" 2>/dev/null |
+    xargs -0 -r python3 -c '
+import re, sys
+for path in sys.argv[1:]:
+    text = open(path).read()
+    open(path, "w").write(re.sub(r"\s*<predictiveSelection>.*?</predictiveSelection>", "", text, flags=re.S))
+' && echo "== <predictiveSelection> removed from the poms" >>"$LOG"
+fi
 if [ "$ECJ_VERSION" != javac ] && ! { [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; } && [ -f pom.xml ]; then
   # every pom: the modules do not always inherit from the root pom
   find . -name pom.xml -not -path '*/src/*' -not -path '*/target/*' | while read -r pom; do

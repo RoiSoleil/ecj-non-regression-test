@@ -19,8 +19,10 @@ for m in $MODULES; do
   [ -s "files-$m.txt" ] || { echo "no sources found for $m" >&2; exit 1; }
   # -proceedOnError keeps going after the first error; the default limit of 100 problems per unit would hide errors
   if [ -z "${ECJ_JAR:-}" ]; then
-    # reference run with javac (the same JVM flags as for ECJ); -d to a scratch directory as javac has no "-d none"
-    java ${HEAP_OPTS:--Xms4g -Xmx4g -XX:+UseG1GC} ${JFR_OPTS:-} ${GC_OPTS:-} -m jdk.compiler/com.sun.tools.javac.Main --release "$RELEASE" -nowarn -Xmaxerrs 1000000 \
+    # reference run with javac (the same JVM flags as for ECJ); -d to a scratch directory as javac has no "-d none".
+    # No --release: it only gives the exported API, so a patched module would not see the internal packages that
+    # other modules export to it (java.net.http: jdk.internal.util, sun.net; java.desktop: 1429 errors)
+    java ${HEAP_OPTS:--Xms4g -Xmx4g -XX:+UseG1GC} ${JFR_OPTS:-} ${GC_OPTS:-} -m jdk.compiler/com.sun.tools.javac.Main -nowarn -Xmaxerrs 1000000 \
       -proc:none --patch-module "$m=src/$m" -d "out-$m" "@files-$m.txt" || status=1
   else
     java ${HEAP_OPTS:--Xms4g -Xmx4g -XX:+UseG1GC} ${JFR_OPTS:-} ${GC_OPTS:-} -cp "$ECJ_JAR" org.eclipse.jdt.internal.compiler.batch.Main "-$RELEASE" -nowarn -maxProblems 1000000 \

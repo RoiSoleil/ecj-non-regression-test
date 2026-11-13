@@ -76,13 +76,13 @@
     "name": "Guava",
     "url": "https://github.com/google/guava.git",
     "ref": "e641f0717a6122550231e89c4416513cc72bed72",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
+    "cmd": "mvn -B -fae install -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
     "name": "Gson",
     "url": "https://github.com/google/gson.git",
     "ref": "e2292f9c9f2e07a4791827e8eea34aa7d80545d6",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
+    "cmd": "mvn -B -fae install -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
     "name": "Guice",
@@ -118,7 +118,7 @@
     "name": "Netty",
     "url": "https://github.com/netty/netty.git",
     "ref": "19e950b3eb58b6b69785b80e9a4497d509e15d08",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
+    "cmd": "mvn -B -fae install -DskipTests -pl '!testsuite-jpms' -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
     "name": "ApacheMaven",
@@ -136,7 +136,8 @@
     "name": "Jetty",
     "url": "https://github.com/jetty/jetty.project.git",
     "ref": "5e0a2a8ee6e5b9608b61e318d93174308fcb93c1",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
+    "pre": "rm -rf ../maven-3.9.12 && mkdir -p ../maven-3.9.12 && for u in https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.9.12/apache-maven-3.9.12-bin.tar.gz https://archive.apache.org/dist/maven/maven-3/3.9.12/binaries/apache-maven-3.9.12-bin.tar.gz; do curl -fsSL --retry 5 --retry-all-errors --retry-delay 20 -o ../maven-3.9.12.tar.gz $u && echo '0a1be79f02466533fc1a80abbef8796e4f737c46c6574ede5658b110899942a94db634477dfd3745501c80aef9aac0d4f841d38574373f7e2d24cce89d694f70  ../maven-3.9.12.tar.gz' | sha512sum -c - && break; done && tar xzf ../maven-3.9.12.tar.gz -C ../maven-3.9.12 --strip-components=1",
+    "cmd": "../maven-3.9.12/bin/mvn -B -fae install -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
     "name": "CommonsBeanutils",
@@ -282,7 +283,7 @@
     "name": "Shiro",
     "url": "https://github.com/apache/shiro.git",
     "ref": "039425bbe18a556274cb85b408998ff6faabbf54",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
+    "cmd": "mvn -B -fae install -DskipTests -pl '!integration-tests/jakarta-ee' -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
     "name": "Curator",
@@ -398,7 +399,7 @@
     "name": "MavenSurefire",
     "url": "https://github.com/apache/maven-surefire.git",
     "ref": "ab7ce2fdf38aa53d63e8d0fbaab65e8facab54fe",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
+    "cmd": "mvn -B -fae install -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
     "name": "HttpcomponentsClient",
@@ -1246,7 +1247,7 @@
   {
     "name": "JacksonJakartaRsProviders",
     "url": "https://github.com/FasterXML/jackson-jakarta-rs-providers.git",
-    "ref": "6fb30ddba28bab5d166dd2338d2a76c63cda7552",
+    "ref": "d5c73bc6ae7ede1e181a1dbeac60efa78ae3c777",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
@@ -1272,6 +1273,7 @@
     "name": "Querydsl",
     "url": "https://github.com/querydsl/querydsl.git",
     "ref": "dd905aebf987599044e20b5822e7f035cee6a868",
+    "jdk": "21",
     "cmd": "mvn -B -Pall -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
@@ -1811,7 +1813,7 @@
     "name": "Ranger",
     "url": "https://github.com/apache/ranger.git",
     "ref": "c5be812d05b2981ec713bd69c42e47c38cb4edee",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -pl '!plugin-kylin,!ranger-kylin-plugin-shim' -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
     "jdk": "21"
   },
   {
@@ -3077,6 +3079,7 @@
     "name": "CiMaven",
     "url": "https://github.com/OpenLiberty/ci.maven.git",
     "ref": "8608f3daa7b5b3f3344290f05e68ff4f7011f4ca",
+    "pre": "rm -rf ../ci.common-dep && git clone -q https://github.com/OpenLiberty/ci.common.git ../ci.common-dep && git -C ../ci.common-dep checkout -q a02e6f98350f788d2e2001d4dc2048a4e8bce07c && (cd ../ci.common-dep && mvn -B -q install -DskipTests -Dmaven.javadoc.skip=true)",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
