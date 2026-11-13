@@ -96,19 +96,19 @@ jobs:
           jq -r 'keys[]' <<< "$KEEP" | while IFS= read -r p; do
             jq -r --arg p "$p" '.[$p][]' <<< "$KEEP" > "bytecode-lists/$p.txt"
           done
-      # the baseline ECJ once for the job, before the builds that run two at a time
+      # the baseline ECJ once for the job, before the builds that run two at a time: from the cache that the build-ecj
+      # job of ecj-matrix.yml fills (hundreds of jobs that ask Maven Central for it at the same time get 429 answers,
+      # which failed whole jobs), else from Maven Central
+      - uses: actions/cache/restore@v4
+        if: matrix.label == 'baseline' && !inputs.baseline_jar
+        with:
+          path: ~/.cache/ecj-baseline
+          key: ecj-${{ inputs.baseline }}
       - name: Download the baseline ECJ
         if: matrix.label == 'baseline' && !inputs.baseline_jar
         env:
           BASELINE: ${{ inputs.baseline }}
-        # straight from Maven Central into the local repository: mvn dependency:get took 8 seconds
-        run: |
-          D="$HOME/.m2/repository/org/eclipse/jdt/ecj/$BASELINE"
-          mkdir -p "$D"
-          for f in jar pom; do
-            curl -fsSL --retry 5 --retry-all-errors --retry-delay 10 -o "$D/ecj-$BASELINE.$f" \
-              "https://repo1.maven.org/maven2/org/eclipse/jdt/ecj/$BASELINE/ecj-$BASELINE.$f"
-          done
+        run: bash scripts/baseline-ecj.sh "$BASELINE" "$HOME/.cache/ecj-baseline" "$HOME/.m2/repository/org/eclipse/jdt/ecj/$BASELINE"
       - name: "Build ${{ join(matrix.projects, ', ') }} (${{ matrix.label }})"
         env:
           BASELINE: ${{ inputs.baseline }}

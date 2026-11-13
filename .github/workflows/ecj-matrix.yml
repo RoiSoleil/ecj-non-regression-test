@@ -126,6 +126,7 @@ jobs:
         with: { name: plan, path: plan.json }
 
   build-ecj:
+    needs: setup   # the version of the baseline ECJ, put in the cache for the build jobs
     runs-on: ubuntu-24.04
     outputs:
       sha: ${{ steps.build.outputs.sha }}
@@ -139,6 +140,17 @@ jobs:
         with: { version: "${{ steps.jdk.outputs.version }}" }
       # saves the Maven archive in the cache before the build jobs need it (see the action)
       - uses: ./.github/actions/setup-maven
+      # the baseline ECJ release, in the cache before the build jobs need it (ecj-build.yml)
+      - uses: actions/cache@v4
+        if: github.event.inputs.baseline_ref == ''
+        with:
+          path: ~/.cache/ecj-baseline
+          key: ecj-${{ needs.setup.outputs.baseline }}
+      - name: Download the baseline ECJ
+        if: github.event.inputs.baseline_ref == ''
+        env:
+          BASELINE: ${{ needs.setup.outputs.baseline }}
+        run: bash scripts/baseline-ecj.sh "$BASELINE" "$HOME/.cache/ecj-baseline"
       - id: build
         env:
           REF: ${{ github.event.inputs.ecj_ref || inputs.ecj_ref }}
