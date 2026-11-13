@@ -139,6 +139,11 @@ A run must only fail for the compiler. Besides the second build of the suspect p
   the compiler also changed it, and the summary shows a `javap -v -p -c` diff of the others (`scripts/bytecode.py`; at
   most 3 per project, among the 20 class files that the second builds keep). A build that failed is compared by
   `compare.py`, not here. Default: off.
+  The second builds of a project whose class files differ also run its tests, when `projects.json` gives a `test`
+  command (a few projects whose suites are fast and stable): a test that fails with the head ECJ and not with the
+  baseline one is a regression (`scripts/tests-compare.py`; a failing test is run once more, the tests that fail with
+  both compilers are left out), and with `fail` it fails the run. Only these projects run their tests: identical class
+  files need no test run.
 * `projects`: comma separated names, for example `Quarkus,Camel`. Default: all projects. To try new
   projects, add them to `projects.json` on a branch and run the workflow on that branch (`labels=javac` first, then
   all three), so that main only has projects that build.

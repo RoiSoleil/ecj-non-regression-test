@@ -31,6 +31,9 @@ on:
       failed_from:
         description: "Id of an earlier run on the dashboard: build only its projects whose build failed or is missing with one of the labels (default: every project)"
         required: false
+      tests:
+        description: "all: every build of a project with a test command in projects.json runs it, each project in a job of its own (to calibrate new test commands, with labels=baseline,head; default: only the second builds of the projects whose class files differ)"
+        required: false
   workflow_call:
     inputs:
       ecj_ref:
@@ -54,7 +57,9 @@ jobs:
           INPUT_BASELINE_REF: ${{ github.event.inputs.baseline_ref }}
           INPUT_BYTECODE: ${{ github.event.inputs.bytecode }}
           INPUT_LABELS: ${{ github.event.inputs.labels }}
+          INPUT_TESTS: ${{ github.event.inputs.tests }}
         run: |
+          case "$INPUT_TESTS" in ''|all) ;; *) echo "tests is all or empty: $INPUT_TESTS"; exit 1 ;; esac
           case "$INPUT_BYTECODE" in ''|report|fail) ;; *) echo "bytecode is report, fail or empty: $INPUT_BYTECODE"; exit 1 ;; esac
           # against a release, the class files differ for every change of ECJ since: only a report makes sense
           if [ "$INPUT_BYTECODE" = fail ] && [ -z "$INPUT_BASELINE_REF" ]; then echo "bytecode=fail needs baseline_ref"; exit 1; fi
@@ -107,8 +112,10 @@ jobs:
           IGNORE_UNKNOWN: ${{ github.event.inputs.failed_from && '--ignore-unknown' || '' }}
           INPUT_JDK: ${{ github.event.inputs.jdk || '27' }}
           INPUT_LABELS: ${{ github.event.inputs.labels || 'baseline,head,javac' }}
+          # the test runs of a calibration take up to 30 minutes each: one job per project
+          ALONE: ${{ github.event.inputs.tests == 'all' && '--alone' || '' }}
         run: |
-          SHARDS="$(python3 scripts/plan.py --jdk "$INPUT_JDK" --projects "$INPUT_PROJECTS" $IGNORE_UNKNOWN --labels "$INPUT_LABELS" --durations durations.json 2> plan.txt)" || { cat plan.txt; exit 1; }
+          SHARDS="$(python3 scripts/plan.py --jdk "$INPUT_JDK" --projects "$INPUT_PROJECTS" $IGNORE_UNKNOWN $ALONE --labels "$INPUT_LABELS" --durations durations.json 2> plan.txt)" || { cat plan.txt; exit 1; }
           cat plan.txt | tee -a "$GITHUB_STEP_SUMMARY"
           echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
           echo "jdk=$INPUT_JDK" >> "$GITHUB_OUTPUT"   # the same default JDK for the second builds of the suspects
@@ -175,6 +182,7 @@ jobs:
       baseline_jar: ${{ github.event.inputs.baseline_ref != '' }}
       bytecode: ${{ github.event.inputs.bytecode }}
       jfr: ${{ github.event.inputs.jfr }}
+      tests: ${{ github.event.inputs.tests }}
 
   # The projects that look like regressions are built a second time, alone in their job, with both compilers: a failure
   # of the shared runner (a lost runner, a download that fails, a slow disk) must not fail the run. More than 100
@@ -253,6 +261,7 @@ jobs:
       baseline_jar: ${{ github.event.inputs.baseline_ref != '' }}
       bytecode: ${{ github.event.inputs.bytecode }}
       jfr: "false"
+      tests: ${{ github.event.inputs.tests }}
       prefix: confirm
 
   compare:
@@ -335,6 +344,20 @@ jobs:
           [ -z "$INPUT_BASELINE_REF" ] || ARGS+=(--second-builds --planned "$BYTECODE_SUSPECTS")
           [ -d confirm/results ] && ARGS+=(--confirm confirm)
           python3 scripts/bytecode.py report artifacts/results baseline head "${ARGS[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+          exit "${PIPESTATUS[0]}"
+      # the tests that the second builds of the projects whose class files differ ran (scripts/tests-compare.py)
+      # with tests=all, those of every build (a calibration)
+      - name: Tests
+        if: always() && ((github.event.inputs.bytecode != '' && github.event.inputs.baseline_ref != '') || github.event.inputs.tests == 'all')
+        env:
+          INPUT_BYTECODE: ${{ github.event.inputs.bytecode }}
+          INPUT_TESTS: ${{ github.event.inputs.tests }}
+        run: |
+          DIR=confirm/results ARGS=()
+          [ "$INPUT_TESTS" != all ] || DIR=artifacts/results
+          [ -d "$DIR" ] || exit 0
+          [ "$INPUT_BYTECODE" = fail ] && ARGS=(--fail)
+          python3 scripts/tests-compare.py "$DIR" baseline head "${ARGS[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
           exit "${PIPESTATUS[0]}"
       - name: Performance, javac against ECJ
         if: always()

@@ -27,6 +27,11 @@ on:
         description: "'false' turns off the Java Flight Recording of the head builds"
         type: string
         required: false
+      tests:
+        description: "'all': every build runs the test command of its project (a calibration), not only the second builds of the projects whose class files differ"
+        type: string
+        required: false
+        default: ""
       prefix:
         description: "Prefix of the result artifacts: 'confirm' for the second build of the suspect projects"
         type: string
@@ -113,11 +118,13 @@ jobs:
           PARALLEL: ${{ matrix.parallel }}
           CLASS_DIGESTS: ${{ inputs.bytecode != '' && '1' || '' }}
           KEEP_CLASSES_LISTS: ${{ inputs.bytecode != '' && inputs.prefix == 'confirm' && format('{0}/bytecode-lists', github.workspace) || '' }}
+          # the second builds of the projects whose class files differ run their tests (test in projects.json)
+          RUN_TESTS: ${{ inputs.tests == 'all' && 'all' || (inputs.bytecode != '' && inputs.prefix == 'confirm' && '1' || '') }}
         run: |
           VERSION="$BASELINE"
           [ "$LABEL" != javac ] || VERSION=javac   # untouched project, built with the JDK's javac
           [ "$LABEL" != head ] || VERSION=HEAD-SNAPSHOT
-          export LABEL VERSION JFR CLASS_DIGESTS KEEP_CLASSES_LISTS
+          export LABEL VERSION JFR CLASS_DIGESTS KEEP_CLASSES_LISTS RUN_TESTS
           # builds that share the runner (the baseline, two at a time) are no performance measure; Maven locks its
           # local repository between processes
           [ "$PARALLEL" = 1 ] || export SHARED_RUNNER=1

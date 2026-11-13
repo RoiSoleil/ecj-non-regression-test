@@ -297,5 +297,26 @@ if [ -n "${CLASS_DIGESTS:-}" ] && [ "$ECJ_VERSION" != javac ]; then
     done < "$KEEP_CLASSES_LISTS/$NAME.txt"
   fi
 fi
+# The test suite (test in projects.json), in the second builds of a project whose class files differ (RUN_TESTS, the
+# confirm jobs of a run with the bytecode input): the class files of the two compilers are not the same, the tests tell
+# whether they still behave the same (scripts/tests-compare.py). Only there: the tests cost time, and they say nothing
+# new when the class files are identical. The command runs in the tree of the build; for Maven, its compiler plugin
+# finds the classes up to date, and what it compiles again is compiled with the same ECJ (the poms are still rewritten).
+# A test that fails is run once more (surefire and failsafe rerunFailingTestsCount): a flaky test is not a
+# difference of the compilers. "<project>-<label>.tests" holds the summary of scripts/test-results.py.
+TEST_CMD="$(field test)"
+# RUN_TESTS=all: every build runs its tests (the calibration of new test commands, tests input of the workflow).
+if [ -n "${RUN_TESTS:-}" ] && [ -n "$TEST_CMD" ] \
+    && { [ "$RUN_TESTS" = all ] || { [ -n "${KEEP_CLASSES_LISTS:-}" ] && [ -f "$KEEP_CLASSES_LISTS/$NAME.txt" ]; }; } \
+    && [ "$(cat "$ROOT/results/$NAME-$LABEL.status")" = success ]; then
+  echo "== tests: $TEST_CMD" | tee -a "$LOG"
+  TEST_START=$SECONDS
+  MAVEN_OPTS="$BASE_MAVEN_OPTS" MAVEN_ARGS="$BASE_MAVEN_ARGS -Dsurefire.rerunFailingTestsCount=1 -Dfailsafe.rerunFailingTestsCount=1" \
+    timeout -k 60 "${TEST_TIMEOUT:-1800}" bash -c "$TEST_CMD" >>"$LOG" 2>&1 9>&-
+  TEST_STATUS=$?
+  python3 "$ROOT/scripts/test-results.py" . "$TEST_STATUS" "$((SECONDS - TEST_START))" > "$ROOT/results/$NAME-$LABEL.tests" 2>>"$LOG" \
+    || rm -f "$ROOT/results/$NAME-$LABEL.tests"
+  echo "tests: $(head -1 "$ROOT/results/$NAME-$LABEL.tests" 2>/dev/null)" | tee -a "$LOG"
+fi
 rm -rf "$RUNS"
 echo "$(wc -l < "$ROOT/results/$NAME-$LABEL.errors") compile errors, status $(cat "$ROOT/results/$NAME-$LABEL.status")"
