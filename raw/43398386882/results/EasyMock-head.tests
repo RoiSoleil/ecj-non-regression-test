@@ -1,0 +1,10 @@
+failed 738 9 7 22
+org.easymock.itests.InterfaceOnlyTest#testCanMock
+org.easymock.itests.InterfaceOnlyTest#testCanUseInternal
+org.easymock.itests.InterfaceOnlyTest#testCanUseMatchers
+org.easymock.itests.InterfaceOnlyTest#testCannotMock
+org.easymock.itests.InterfaceOnlyTest#testOsgiPlatformStarts
+org.easymock.itests.OsgiTest#testCanMock
+org.easymock.itests.OsgiTest#testCanUseInternal
+org.easymock.itests.OsgiTest#testCanUseMatchers
+org.easymock.itests.OsgiTest#testOsgiPlatformStarts

@@ -1,0 +1,9 @@
+failed 112 8 1 31
+com.dianping.cat.consumer.cross.CrossAnalyzerTest#testProcess
+com.dianping.cat.consumer.event.EventAnalyzerTest#testProcess
+com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest#testProcess
+com.dianping.cat.consumer.matrix.MatrixAnalyzerTest#testProcess
+com.dianping.cat.consumer.problem.ProblemAnalyzerTest#testProcess
+com.dianping.cat.consumer.state.StateAnalyzerTest#testProcess
+com.dianping.cat.consumer.top.TopAnalyzerTest#testProcess
+com.dianping.cat.consumer.transaction.TransactionAnalyzerTest#testProcess

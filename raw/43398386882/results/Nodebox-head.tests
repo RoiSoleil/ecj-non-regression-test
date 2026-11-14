@@ -1,0 +1,150 @@
+failed 461 149 2 12
+nodebox.function.FunctionLibraryTest#testLoadPython
+nodebox.function.PythonLibraryTest#testAdd
+nodebox.function.PythonLibraryTest#testAddWithArguments
+nodebox.function.PythonLibraryTest#testMultiplyFloat
+nodebox.function.PythonLibraryTest#testMultiplyString
+nodebox.graphics.SVGPathParserTest#
+nodebox.handle.PyHandlesTest#scriptHandleWithoutViewTransformStillWorks
+nodebox.handle.PyHandlesTest#snapHandleCanBeGrabbedAnywhereOnTheGrid
+nodebox.handle.PyHandlesTest#snapHandleDrawsGridInScreenSpace
+nodebox.node.NodeLibraryTest#testCoreNodes
+nodebox.node.NodeLibraryTest#testDocumentProperties
+nodebox.node.NodeLibraryTest#testDocumentPropertiesSerialization
+nodebox.node.NodeLibraryTest#testLink
+nodebox.node.NodeLibraryTest#testLocale
+nodebox.node.NodeLibraryTest#testMenuPrototypeSerialization
+nodebox.node.NodeLibraryTest#testMenuSerialization
+nodebox.node.NodeLibraryTest#testMinMaxPersistence
+nodebox.node.NodeLibraryTest#testNestedReadWrite
+nodebox.node.NodeLibraryTest#testNodeForPath
+nodebox.node.NodeLibraryTest#testNonExistingCoreNode
+nodebox.node.NodeLibraryTest#testOutputTypeSerialization
+nodebox.node.NodeLibraryTest#testParseFormatVersion
+nodebox.node.NodeLibraryTest#testPortRangeOverride
+nodebox.node.NodeLibraryTest#testPortRangePersistence
+nodebox.node.NodeLibraryTest#testPortSerialization
+nodebox.node.NodeLibraryTest#testPrototypeInSameLibrary
+nodebox.node.NodeLibraryTest#testPrototypeOverridePersistence
+nodebox.node.NodeLibraryTest#testPublishedPortSerialization
+nodebox.node.NodeLibraryTest#testReadMenus
+nodebox.node.NodeLibraryTest#testRelativeImport
+nodebox.node.NodeLibraryTest#testRelativePath
+nodebox.node.NodeLibraryTest#testRelativePathsInWidgets
+nodebox.node.NodeLibraryTest#testRenderedNode
+nodebox.node.NodeLibraryTest#testSimpleReadWrite
+nodebox.node.NodeLibraryTest#testTooNewToUpgrade
+nodebox.node.NodeLibraryTest#testTooOldToUpgrade
+nodebox.node.NodeLibraryTest#testUpgrade10to11
+nodebox.node.NodeLibraryTest#testUpgrade11to12
+nodebox.node.NodeLibraryTest#testUpgrade12to13
+nodebox.node.NodeLibraryTest#testUpgrade13to14
+nodebox.node.NodeLibraryTest#testUpgrade14to15
+nodebox.node.NodeLibraryTest#testUpgrade15to16
+nodebox.node.NodeLibraryTest#testUpgrade16to17
+nodebox.node.NodeLibraryTest#testUpgrade18to19
+nodebox.node.NodeLibraryTest#testUpgrade19to20
+nodebox.node.NodeLibraryTest#testUpgrade1to2
+nodebox.node.NodeLibraryTest#testUpgrade20to21
+nodebox.node.NodeLibraryTest#testUpgrade2to3
+nodebox.node.NodeLibraryTest#testUpgrade3to4
+nodebox.node.NodeLibraryTest#testUpgrade4to5
+nodebox.node.NodeLibraryTest#testUpgrade5to6
+nodebox.node.NodeLibraryTest#testUpgrade6to7
+nodebox.node.NodeLibraryTest#testUpgrade7to8
+nodebox.node.NodeLibraryTest#testUpgrade8to9
+nodebox.node.NodeLibraryTest#testUpgrade9to10
+nodebox.node.NodeLibraryTest#testWidgetSerialization
+nodebox.node.NodeLibraryTest#testWritePrototypeFirst
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[01 Blink.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[01 Blink.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[01 Create Numbers.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[01 Create Numbers.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[01 Moiree.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[01 Moiree.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[01 Primitives.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[01 Primitives.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[01 Read Csv.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[01 Read Csv.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[02 Colorcycle.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[02 Colorcycle.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[02 Elastic.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[02 Elastic.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[02 Lines.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[02 Lines.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[02 List Matching B.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[02 List Matching B.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[02 Sample.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[02 Sample.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[02 Time Stamp.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[02 Time Stamp.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[03 Coriolise.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[03 Coriolise.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[03 Piechart.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[03 Piechart.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[03 Range.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[03 Range.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[04 Grid.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[04 Grid.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[04 Random.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[04 Random.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[04 Zipmap.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[04 Zipmap.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[05 Copy.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[05 Copy.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[05 Make Numbers.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[05 Make Numbers.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[06 Convert Range.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[06 Convert Range.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[06 Transformations.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[06 Transformations.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[07 Sine Text.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[07 Sine Text.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[07 Template.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[07 Template.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[08 SVG.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[08 SVG.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[09 Binary Operation.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[09 Binary Operation.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[10 Sorting.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[10 Sorting.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[11 Spirograph.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[11 Spirograph.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[12 TextFX.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[12 TextFX.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[13 Tilling.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[13 Tilling.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Animated Logo.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Animated Logo.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Compare.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Compare.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Earthquakes.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Earthquakes.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Invader.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Invader.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Mesh.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Mesh.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Name Generator.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Name Generator.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Spider Text.ndbx (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[Spider Text.ndbx]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 1 (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 1]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 2 (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 2]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 3 (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 3]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 4 (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 4]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 5 (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 5]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 6 (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 6]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 7 (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 7]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 8 (verify)]
+nodebox.node.RenderCacheDifferentialTest#cachedRenderMatchesUncachedRender[scenario 8]
+nodebox.node.RenderCacheTest#replacedLibraryInvalidatesCache
+nodebox.node.RenderCacheTest#timeDependentPythonFunctionRunsOnEveryRender
+nodebox.node.RenderCacheTest#userCodeIsCachedUntilReload
+nodebox.node.RenderCacheTest#verifyModeReportsCachedResultThatWasMutated

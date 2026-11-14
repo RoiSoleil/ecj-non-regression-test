@@ -1,0 +1,20 @@
+failed 68 19 1 60
+com.alibaba.nacos.spring.beans.factory.annotation.AnnotationNacosInjectedBeanPostProcessorTest#test
+com.alibaba.nacos.spring.config.NacosNamespaceHandlerTest#testGetConfig
+com.alibaba.nacos.spring.config.NacosNamespaceHandlerTest#testUser
+com.alibaba.nacos.spring.context.annotation.NacosBeanDefinitionRegistrarTest#testGetConfig
+com.alibaba.nacos.spring.context.annotation.config.NacosConfigListenerMethodProcessorTest#testPublishConfig
+com.alibaba.nacos.spring.context.annotation.config.NacosConfigListenerTest#testConfigListener
+com.alibaba.nacos.spring.context.annotation.config.NacosPropertySourceBeanTest#testValue
+com.alibaba.nacos.spring.context.annotation.config.NacosPropertySourceJsonTest#testValue
+com.alibaba.nacos.spring.context.annotation.config.NacosPropertySourcePostProcessorTest#testFirstOrder
+com.alibaba.nacos.spring.context.annotation.config.NacosPropertySourcePostProcessorTest#testRelativeOrder
+com.alibaba.nacos.spring.context.annotation.config.NacosPropertySourceTest#testValue
+com.alibaba.nacos.spring.context.annotation.config.NacosPropertySourceXmlTest#testValue
+com.alibaba.nacos.spring.context.annotation.config.NacosPropertySourceYamlTest#testValue
+com.alibaba.nacos.spring.context.config.xml.NacosAnnotationDrivenBeanDefinitionParserTest#test
+com.alibaba.nacos.spring.context.config.xml.NacosPropertySourceBeanDefinitionParserTest#testGetConfig
+com.alibaba.nacos.spring.context.properties.config.ChineseConfigTest#testValue
+com.alibaba.nacos.spring.context.properties.config.NacosConfigurationPropertiesBindingPostProcessorTest#test
+com.alibaba.nacos.spring.factory.DelegatingNamingMaintainServiceTest#testNamingMaintainService
+com.alibaba.nacos.spring.factory.DelegatingNamingServiceTest#testNamingService

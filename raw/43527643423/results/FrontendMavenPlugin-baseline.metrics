@@ -1,0 +1,1 @@
+{"wall_s": 11.04, "cpu_s": 20.2, "rss_mb": 950, "compile_s": 4.18, "gc_count": 9, "gc_full": 0, "gc_pause_total_ms": 126.9, "gc_pause_max_ms": 48.5, "gc_cpu_s": 0.24, "heap_before_gc_peak_mb": 240, "alloc_mb": 508, "classes": 99, "class_kb": 308, "warmup": false, "offline": false, "single_build": true, "runs": 1, "shared_runner": true, "wall_min_s": 11.04, "wall_max_s": 11.04}

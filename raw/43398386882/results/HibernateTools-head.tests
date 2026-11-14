@@ -1,0 +1,3 @@
+failed 914 2 90 61
+org.hibernate.tool.ant.JavaFormatter.TestCase#testConfig
+org.hibernate.tool.ant.JavaFormatter.TestCase#testJavaJdk5FormatFile

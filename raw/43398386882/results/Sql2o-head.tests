@@ -1,0 +1,2 @@
+failed 48 1 0 9
+org.sql2o.extensions.postgres.DataSourceTest#testQueryUsingHikariDataSource

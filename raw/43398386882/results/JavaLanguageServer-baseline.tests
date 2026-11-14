@@ -1,0 +1,7 @@
+failed 245 6 10 158
+org.javacs.CodeActionTest#testAddImport
+org.javacs.GotoTest#gsonSourceJar
+org.javacs.InferBazelKeepGoingTest#classPathFromBrokenProjectKeepsWorking
+org.javacs.InferConfigTest#dependencyList
+org.javacs.InferConfigTest#thisProjectClassPath
+org.javacs.InferConfigTest#thisProjectDocPath

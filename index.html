@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECJ Non-regression</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js"></script>
+</head>
+<body>
+<header class="top">
+	<a class="brand" href="#/">ECJ Non-regression</a>
+	<nav id="nav">
+		<a href="#/" data-view="overview">Overview</a>
+		<a href="#/errors" data-view="errors">Compile errors</a>
+		<a href="#/perf" data-view="perf">Performance</a>
+	</nav>
+	<div class="tools">
+		<input id="project-search" list="project-names" placeholder="Go to a project…" autocomplete="off">
+		<datalist id="project-names"></datalist>
+		<select id="run-select" title="Run"></select>
+		<button id="theme" title="Light or dark theme">◐</button>
+	</div>
+</header>
+<main id="app"><p class="muted">Loading…</p></main>
+<aside id="raw" hidden>
+	<div class="raw-head">
+		<strong id="raw-title"></strong>
+		<input id="raw-filter" placeholder="Filter lines…">
+		<a id="raw-open" target="_blank" rel="noopener">Open the file</a>
+		<button id="raw-close" title="Close">✕</button>
+	</div>
+	<div id="raw-info" class="muted"></div>
+	<pre id="raw-body"></pre>
+</aside>
+<footer class="foot muted">
+	Data of <a href="https://github.com/RoiSoleil/ecj-non-regression-test">RoiSoleil/ecj-non-regression-test</a>:
+	every number links to the raw file it comes from.
+</footer>
+<script src="app.js"></script>
+</body>
+</html>

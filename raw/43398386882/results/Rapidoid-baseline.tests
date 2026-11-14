@@ -1,0 +1,4 @@
+failed 140 3 0 54
+org.rapidoid.commons.JSTest#testCompileJS
+org.rapidoid.commons.JSTest#testEvalJS
+org.rapidoid.config.ConfigurationBeanTest#testBasicConfig

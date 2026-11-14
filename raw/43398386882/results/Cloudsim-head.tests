@@ -1,0 +1,3 @@
+failed 167 2 0 11
+org.cloudbus.cloudsim.VmTest#testGetCurrentRequestedMipsNotBeingInstantiated
+org.cloudbus.cloudsim.VmTest#testGetCurrentRequestedTotalMipsNotBeingInstantiated

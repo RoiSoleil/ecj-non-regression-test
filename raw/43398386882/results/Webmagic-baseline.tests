@@ -1,0 +1,4 @@
+failed 61 3 3 11
+us.codecraft.webmagic.proxy.SimpleProxyProviderTest#test_get_proxy
+us.codecraft.webmagic.scheduler.DuplicateRemovedSchedulerTest#test_duplicate_removed_for_get_request
+us.codecraft.webmagic.scheduler.DuplicateRemovedSchedulerTest#test_no_duplicate_removed_for_post_request

@@ -1,0 +1,10 @@
+failed 1715 9 0 85
+org.jgroups.tests.RelayTest#testCoordinatorShutdown[class org.jgroups.protocols.relay.RELAY2](2)
+org.jgroups.tests.RelayTestAsym#testTopology
+org.jgroups.tests.ServerTests#testConcurrentConnect[NioServer (127.0.0.1:43561, 0 conns), NioServer (127.0.0.1:40813, 0 conns)](2)
+org.jgroups.tests.ServerTests#testConcurrentConnect[TcpServer (127.0.0.1:39707, 0 conns), TcpServer (127.0.0.1:39485, 0 conns)](4)
+org.jgroups.tests.ServerTests#testSimpleConnection[TcpServer (127.0.0.1:42443, 0 conns), TcpServer (127.0.0.1:36175, 0 conns)](4)
+org.jgroups.tests.ServerTests#testSimpleSend[NioServer (127.0.0.1:42479, 0 conns), NioServer (127.0.0.1:41661, 0 conns)](2)
+org.jgroups.tests.ServerTests#testSimpleSend[TcpServer (127.0.0.1:43203, 0 conns), TcpServer (127.0.0.1:42325, 0 conns)](4)
+org.jgroups.tests.ServerTests#testStart[NioServer (127.0.0.1:40625, 0 conns), NioServer (127.0.0.1:35783, 0 conns)](2)
+org.jgroups.tests.ServerTests#testStart[TcpServer (127.0.0.1:42019, 0 conns), TcpServer (127.0.0.1:33535, 0 conns)](4)

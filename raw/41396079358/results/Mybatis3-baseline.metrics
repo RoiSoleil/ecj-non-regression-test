@@ -1,0 +1,1 @@
+{"wall_s": 124.29, "cpu_s": 192.44, "rss_mb": 3593, "compile_s": 9.36, "gc_count": 33, "gc_full": 0, "gc_pause_total_ms": 1032.6, "gc_pause_max_ms": 118.8, "gc_cpu_s": 3.92, "heap_before_gc_peak_mb": 2895, "alloc_mb": 15531, "classes": 1871, "class_kb": 4639, "warmup": false, "offline": false, "runs": 1, "wall_min_s": 124.29, "wall_max_s": 124.29}

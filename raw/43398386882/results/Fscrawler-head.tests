@@ -1,0 +1,4 @@
+failed 304 3 12 104
+fr.pilato.elasticsearch.crawler.fs.client.ElasticsearchClientRetryTest#executionError
+fr.pilato.elasticsearch.crawler.fs.kibana.KibanaClientTest#executionError
+org.apache.tika.parser.vlm.DeterministicOpenAIVLMParserWireMockTest#executionError

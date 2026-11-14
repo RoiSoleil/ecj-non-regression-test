@@ -1,0 +1,16 @@
+failed 47 15 0 6
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldAllowPublicDomainsByDefault
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldAllowPublicIPsByDefault
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldAllowPublicSIITIPv4in6HostReferencesInABCDFormat
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldBlockBasedOnResolvedIP
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldBlockDomainNamesThatResolveToPrivateIPs
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldBlockIPv4Localhost[https://127.0.0.1/, 127.0.0.1](2)
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldBlockIPv4Localhost[https://127.3, 127.0.0.3](4)
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldBlockIPv4Localhost[https://192.168.1.2/, 192.168.1.2](3)
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldBlockIPv4Localhost[https://localhost:3000/1, 127.0.0.1](1)
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldBlockIPv6Localhost[https://[fc00::1]/, fc00:0:0:0:0:0:0:1](1)
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldBlockIPv6Localhost[https://[fd00:ec2::254]/, fd00:ec2:0:0:0:0:0:254](2)
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldRejectDecimalIPsThatResolveToLocalIPs
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldRejectNAT64HostReferences
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldRejectPrivateSIITIPv4in6HostReferencesInABCDFormat
+io.swagger.v3.parser.urlresolver.PermittedUrlsCheckerTest#shouldRejectPrivateSIITIPv4in6HostReferencesInIPv6Format

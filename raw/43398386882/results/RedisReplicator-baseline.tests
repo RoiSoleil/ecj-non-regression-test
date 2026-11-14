@@ -1,0 +1,4 @@
+timeout 6 3 3 1800
+com.moilioncircle.redis.replicator.online.PsyncTest#psync
+com.moilioncircle.redis.replicator.online.RESP2ClientTest#test
+com.moilioncircle.redis.replicator.online.RESP2ClientTest#test1

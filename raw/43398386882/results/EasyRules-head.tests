@@ -1,0 +1,18 @@
+failed 220 17 0 10
+org.jeasy.rules.mvel.MVELActionTest#testMVELActionExecution
+org.jeasy.rules.mvel.MVELActionTest#testMVELActionExecutionWithFailure
+org.jeasy.rules.mvel.MVELActionTest#testMVELActionWithExpressionAndParserContext
+org.jeasy.rules.mvel.MVELActionTest#testMVELFunctionExecution
+org.jeasy.rules.mvel.MVELConditionTest#testMVELConditionWithExpressionAndParserContext
+org.jeasy.rules.mvel.MVELConditionTest#testMVELExpressionEvaluation
+org.jeasy.rules.mvel.MVELConditionTest#whenDeclaredFactIsNotPresent_thenShouldThrowRuntimeException
+org.jeasy.rules.mvel.MVELRuleFactoryTest#testRuleCreationFromFileReader[0]
+org.jeasy.rules.mvel.MVELRuleFactoryTest#testRuleCreationFromFileReader[1]
+org.jeasy.rules.mvel.MVELRuleFactoryTest#testRuleCreationFromFileReader_withCompositeRules[0]
+org.jeasy.rules.mvel.MVELRuleFactoryTest#testRuleCreationFromFileReader_withCompositeRules[1]
+org.jeasy.rules.mvel.MVELRuleFactoryTest#testRuleCreationFromStringReader[0]
+org.jeasy.rules.mvel.MVELRuleFactoryTest#testRuleCreationFromStringReader[1]
+org.jeasy.rules.mvel.MVELRuleFactoryTest#testRulesCreation[0]
+org.jeasy.rules.mvel.MVELRuleFactoryTest#testRulesCreation[1]
+org.jeasy.rules.mvel.MVELRuleTest#whenTheConditionIsTrue_thenActionsShouldBeExecuted
+org.jeasy.rules.mvel.MVELRuleTest#whenTheRuleIsTriggered_thenConditionShouldBeEvaluated

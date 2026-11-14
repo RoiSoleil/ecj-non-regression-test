@@ -1,0 +1,1115 @@
+failed 1650 1114 0 14
+EPUB 2 ▸ Navigation ▸ Full Publication Checks#Report a link to a resource that is not an OPS document
+EPUB 2 ▸ Navigation ▸ Full Publication Checks#Report an NCX `pageTarget` with a `type` attribute value that is not one of "front", "normal" or "special"
+EPUB 2 ▸ Navigation ▸ Full Publication Checks#Report an NCX `uid` attribute value that does not match the publication's unique identifier (issue 329)
+EPUB 2 ▸ Navigation ▸ Full Publication Checks#Report an NCX reference to a resource that is not in the publication
+EPUB 2 ▸ Navigation ▸ Full Publication Checks#Report duplicate IDs in the NCX document
+EPUB 2 ▸ Navigation ▸ Full Publication Checks#Report empty text labels as usage
+EPUB 2 ▸ Navigation ▸ Full Publication Checks#Report invalid IDs in the NCX document
+EPUB 2 ▸ Navigation ▸ Full Publication Checks#Verify that leading/trailing spaces in an NCX `uid` attribute are allowed
+EPUB 2 ▸ Open Container Format ▸ Full Publication Checks#Allow alternative rootfiles in the 'container.xml' file
+EPUB 2 ▸ Open Container Format ▸ Full Publication Checks#Ignore unknown files in the META-INF directory
+EPUB 2 ▸ Open Container Format ▸ Full Publication Checks#Report a file name with spaces
+EPUB 2 ▸ Open Container Format ▸ Full Publication Checks#Report a missing mimetype file
+EPUB 2 ▸ Open Container Format ▸ Full Publication Checks#Report an empty directory in the OCF structure
+EPUB 2 ▸ Open Container Format ▸ Full Publication Checks#Report multiple OPF rootfiles in the 'container.xml' file
+EPUB 2 ▸ Open Container Format ▸ Full Publication Checks#Report trailing spaces in the mimetype file
+EPUB 2 ▸ Open Container Format ▸ Full Publication Checks#Verify a minimal EPUB 2.0.1 publication
+EPUB 2 ▸ Open Container Format ▸ Full Publication Checks#Verify a minimal EPUB 2.0.1 publication even when a 3.0 profile is specified
+EPUB 2 ▸ Open Container Format ▸ Full Publication Checks#Verify a minimal packaged EPUB 2.0.1 publication
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report 'guide' references that are not in the manifest
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report 'guide' references to non-OPS resources
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report (usage) a resource that is not listed in the manifest
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report a 'page-map' attribute (invalid Adobe extension)
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report a 'page-map' attribute (invalid Adobe extension) pointing to nowhere
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report a bad CSS media type on legacy OEBPS 1.2 publications
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report a bad content document media type on legacy OEBPS 1.2 publications
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report a manifest fallback that does not resolve to a resource in the publication
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report a missing spine
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report a reference to a remote resource from an `object` element when the resource is not declared in package document
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report a reference to a resource that is not listed in the manifest
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report a resource declared in the manifest but missing from the container
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report a spine with no 'toc' attribute
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report a toc attribute pointing to something else than the NCX
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report an XHTML OPS document declard as 'text/html'
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report repeated spine items (issue 182)
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Report when checking an EPUB 2.0.1 explicitly against EPUB 3.x
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Verify that operating system files (`.DS_STORE`, `thumbs.db`) are ignored (issue 256)
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Verify that package IDs with leading/trailing spaces are allowed (issue 332)
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#Verify that the 'clr' MARC code is allowed in the `opf:role` attribute (issue 205)
+EPUB 2 ▸ Open Packaging Format ▸ Full Publication Checks#the unique identifier must not be empty
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#'guide' element must contain chidlren entries
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#'guide' should not contain two entries of the same type pointing to the same resource
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#Accet a 'dc:creator' metadata with an 'edc' role
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#Ignore legacy OEB 1.2 Package doctype
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#Report a 'dc:creator' metadata with an unknown role
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#Report a 'fallback-style' attribute pointing to a non-existing ID
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#Report a missing version attribute
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#Report a spine with no 'toc' attribute
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#Report a spine with only non-linear resources
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#Report an image used as a spine item
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#Report an invalid doctype in the OPF document
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#Verify conforming fallbacks
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#a valid 'guide' element is allowed
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#an identifier starting with "urn:uuid:" should be a valid UUID
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#an identifier with a "uuid" scheme should be a valid UUID
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#duplicate IDs are reported
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#item paths should not contain spaces #1
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#item paths should not contain spaces #2
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#item paths should not contain spaces (even when properly encoded)
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#report a 'dc:date' value not conforming to ISO-8601
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#report an empty 'dc:date' metadata
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#report an empty 'dc:title' metadata
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#the default namespace must be 'http://www.idpf.org/2007/opf'
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#the minimal OPF document is reported as valid
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#the unique identifier must not be empty #1
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#the unique identifier must not be empty #2
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#the unique identifier must not be empty #3
+EPUB 2 ▸ Open Packaging Format ▸ Package Document Checks#unknown elements are reported
+EPUB 2 ▸ Open Publication Structure ▸ Full Publication Checks#Report a broken internal link in XHTML
+EPUB 2 ▸ Open Publication Structure ▸ Full Publication Checks#Report a missing stylesheet referenced in a link element
+EPUB 2 ▸ Open Publication Structure ▸ Full Publication Checks#Verify a publication using a DTBook Content Document
+EPUB 2 ▸ Open Publication Structure ▸ Full Publication Checks#Verify an XHTML content document without an `.xhtml` extension
+EPUB 2 ▸ Open Publication Structure ▸ Full Publication Checks#Verify usage of Javascript in XHTML
+EPUB 2 ▸ Open Publication Structure ▸ SVG Document Checks#Verify `font-face-src` is allowed (issue 196)
+EPUB 2 ▸ Open Publication Structure ▸ SVG Document Checks#Verify that namespaced extensions are allowed
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Report HTML5 elements used in OPS XHTML Content Documents
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Report a DOCTYPE declaration with an invalid public identifier
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Report an HTML5 DOCTYPE declaration
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Report an unresolved entity reference in the doctype declaration
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Report duplicate ID values
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Report nested `a` tags (issue 287)
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Report the absence of a namespace declaration
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Report the use of a custom namespaced attribute
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Report unknown entity references
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Verify HTML elements are allowed inside of `foreignObject` (issue 166)
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Verify `foreignObject` allowed outside `switch` and `body` allowed inside `foreignObject` (issues 222, 223, 20)
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Verify `ins` and `del` elements can contain block content
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Verify `usemap` fragment reference is allowed (issue 696)
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Verify a minimal XHTML OPS Document
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Verify attributes allowed on `ins` and `del` are not restricted (issue 293)
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Verify empty `class` attributes are allowed (issue 733)
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Verify that `lang` attribute is allowed (issue 215)
+EPUB 2 ▸ Open Publication Structure ▸ XHTML Document Checks#Verify valid character references
+EPUB 3 — Accessibility#Allow using the 'a11y:contactEmail' property in package metadata
+EPUB 3 — Accessibility#Allow using the 'a11y:exemption' property in package metadata
+EPUB 3 — Accessibility#Report unknown 'a11y' metadata
+EPUB 3 — Accessibility#Verify an 'a11y' prefix used in metadata properties without being declared
+EPUB 3 — Accessibility#Verify an 'a11y:certifierCredential' property can be defined as a link
+EPUB 3 — Content Documents — CSS#Do not check invalid CSS `font-size` values
+EPUB 3 — Content Documents — CSS#Report CSS syntax errors
+EPUB 3 — Content Documents — CSS#Report a CSS document with a `@charset` declaration that is not utf-8 or utf-16
+EPUB 3 — Content Documents — CSS#Report a `@font-face` declaration with an empty URL reference
+EPUB 3 — Content Documents — CSS#Report an attempt to `@import` a CSS file that declared in the package document but not present in the container
+EPUB 3 — Content Documents — CSS#Report an attempt to `@import` a CSS file that is not declared in the manifest but is present in the container
+EPUB 3 — Content Documents — CSS#Report an empty `@font-face` declaration
+EPUB 3 — Content Documents — CSS#Report the use of the CSS 'direction' property
+EPUB 3 — Content Documents — CSS#Report the use of the CSS 'unicode-bidi' property
+EPUB 3 — Content Documents — CSS#Verify a CSS document encoded in UTF-8 (declared with `@charset`)
+EPUB 3 — Content Documents — CSS#Verify a fragment-only URL does not trigger a "fragment not defined" error
+EPUB 3 — Content Documents — CSS#Verify a minimal publication with a stylesheet
+EPUB 3 — Content Documents — CSS#Verify that namespace URIs in CSS are not recognized as remote resources (issue 237)
+EPUB 3 — Content Documents — CSS#Verify valid CSS Selectors syntax
+EPUB 3 — Content Documents — CSS#Verify valid CSS font-size declarations
+EPUB 3 — Content Documents — CSS#Warn about a CSS document encoded in UTF-16 (and no `@charset` declaration)
+EPUB 3 — Content Documents — CSS#Warn about a CSS document encoded in UTF-16 (declared with `@charset`)
+EPUB 3 — Content Documents — Fixed-layout documents#Do not check more than one viewport meta tag in a fixed-layout document (but report as usage)
+EPUB 3 — Content Documents — Fixed-layout documents#Do not check viewport metadata in reflowable content documents (but report as usage)
+EPUB 3 — Content Documents — Fixed-layout documents#Report a fixed-layout SVG without a `viewbox` declaration
+EPUB 3 — Content Documents — Fixed-layout documents#Report a fixed-layout SVG without a `viewbox` declaration (only `width`/`height` in percent)
+EPUB 3 — Content Documents — Fixed-layout documents#Report a fixed-layout SVG without a `viewbox` declaration (only `width`/`height` in units)
+EPUB 3 — Content Documents — Fixed-layout documents#Report a fixed-layout XHTML document with a syntactically invalid viewport
+EPUB 3 — Content Documents — Fixed-layout documents#Report a fixed-layout XHTML document with a viewport using units
+EPUB 3 — Content Documents — Fixed-layout documents#Report a fixed-layout XHTML document with a viewport with an empty height value
+EPUB 3 — Content Documents — Fixed-layout documents#Report a fixed-layout XHTML document with a viewport with no height
+EPUB 3 — Content Documents — Fixed-layout documents#Report a fixed-layout XHTML document with a viewport with no width
+EPUB 3 — Content Documents — Fixed-layout documents#Report a fixed-layout XHTML document with duplicate width/height in a single viewport meta tag
+EPUB 3 — Content Documents — Fixed-layout documents#Report a fixed-layout XHTML document with no viewport
+EPUB 3 — Content Documents — Fixed-layout documents#Verify a fixed-layout SVG
+EPUB 3 — Content Documents — Fixed-layout documents#Verify a fixed-layout XHTML document with a valid viewport
+EPUB 3 — Content Documents — Fixed-layout documents#Verify a fixed-layout XHTML document with a valid viewport using keywords value
+EPUB 3 — Content Documents — Fixed-layout documents#Verify a fixed-layout XHTML document with a valid viewport with whitespace
+EPUB 3 — Content Documents — Fixed-layout documents#Verify a fixed-layout XHTML document with non-integer viewport dimensions
+EPUB 3 — Content Documents — Fixed-layout documents#Verify that the initial containing block rules are not checked on embedded svg elements
+EPUB 3 — Content Documents — SVG#Allow `epub:type` on structural, shape, and text elements
+EPUB 3 — Content Documents — SVG#Report HTML validation errors within `foreignObject` content
+EPUB 3 — Content Documents — SVG#Report HTML validation errors within `title` content
+EPUB 3 — Content Documents — SVG#Report SVG `use` elements that don't point to a document fragment
+EPUB 3 — Content Documents — SVG#Report SVG link without a label as usage
+EPUB 3 — Content Documents — SVG#Report `foreignObject` with multiple HTML `body` elements
+EPUB 3 — Content Documents — SVG#Report `foreignObject` with non-HTML child content
+EPUB 3 — Content Documents — SVG#Report `foreignObject` with non-flow content
+EPUB 3 — Content Documents — SVG#Report `title` with non-HTML elements
+EPUB 3 — Content Documents — SVG#Report a "clip-path" attribute with a URL value that does not point to a paint server element
+EPUB 3 — Content Documents — SVG#Report a "fill" attribute with a URL value that does not point to a paint server element
+EPUB 3 — Content Documents — SVG#Report a "stroke" attribute with a URL value that does not point to a paint server element
+EPUB 3 — Content Documents — SVG#Report an `epub:type` attribute used on an element where it is not allowed
+EPUB 3 — Content Documents — SVG#Report an unknown `epub:*` attribute used in SVG
+EPUB 3 — Content Documents — SVG#Report duplicate `id` attribute values
+EPUB 3 — Content Documents — SVG#Report invalid `id` attribute values
+EPUB 3 — Content Documents — SVG#Verify ARIA attributes are allowed
+EPUB 3 — Content Documents — SVG#Verify RDF elements can be embedded in SVG
+EPUB 3 — Content Documents — SVG#Verify `data-*` attributes are allowed
+EPUB 3 — Content Documents — SVG#Verify `style` element without explicit `type` (issue 688)
+EPUB 3 — Content Documents — SVG#Verify `title` valid content model
+EPUB 3 — Content Documents — SVG#Verify elements from custom namespaces are allowed
+EPUB 3 — Content Documents — SVG#Verify links are allowed
+EPUB 3 — Content Documents — SVG#Verify that SVG Content Documents can be referenced in the spine
+EPUB 3 — Content Documents — SVG#Verify that SVG validation erors are reported as USAGE
+EPUB 3 — Content Documents — SVG#Verify that `foreignObject` conforming to the rules is allowed
+EPUB 3 — Content Documents — SVG#Verify that `image` elements can have an `xlink:href` URL pointing to a fragment
+EPUB 3 — Content Documents — SVG#Verify that an SVG Content Document can have any extension
+EPUB 3 — Content Documents — SVG#Verify that empty `font-face` declarations are allowed
+EPUB 3 — Content Documents — SVG#Verify that the `requiredExtensions` attribute can have any value
+EPUB 3 — Content Documents — SVG#Verify that the need for a `viewbox` declaration does not apply to non-fixed layout SVGs
+EPUB 3 — Content Documents — XHTML#'doc-pagefooter' elements cannot be named
+EPUB 3 — Content Documents — XHTML#'doc-pagefooter' role is allowed on elements allowing any role
+EPUB 3 — Content Documents — XHTML#'doc-pagefooter' role is reported when not allowed
+EPUB 3 — Content Documents — XHTML#'doc-pageheader' elements cannot be named
+EPUB 3 — Content Documents — XHTML#'doc-pageheader' role is allowed on elements allowing any role
+EPUB 3 — Content Documents — XHTML#'doc-pageheader' role is reported when not allowed
+EPUB 3 — Content Documents — XHTML#Allow MathML deprecated features
+EPUB 3 — Content Documents — XHTML#Allow a MathML formula with an alternative image
+EPUB 3 — Content Documents — XHTML#Allow an `img` element with no `alt` attribute when it has a `title` attribute
+EPUB 3 — Content Documents — XHTML#Allow an `img` element with no `alt` attribute when it is in a captioned figure
+EPUB 3 — Content Documents — XHTML#Allow fragment identifiers on PDFs
+EPUB 3 — Content Documents — XHTML#Allow valid hyperlink URLs
+EPUB 3 — Content Documents — XHTML#Do not report escaped hyperlinks to resources in the local file system
+EPUB 3 — Content Documents — XHTML#Minimal Content Document
+EPUB 3 — Content Documents — XHTML#Report Content MathML annotation without a `name` attribute
+EPUB 3 — Content Documents — XHTML#Report HTML validation errors within `foreignObject` content
+EPUB 3 — Content Documents — XHTML#Report HTML validation errors within `title` content
+EPUB 3 — Content Documents — XHTML#Report ID-referencing attributes that refer to non-existing IDs
+EPUB 3 — Content Documents — XHTML#Report MathML annotation with an invalid `encoding` attribute
+EPUB 3 — Content Documents — XHTML#Report MathML annotation with an invalid `name` attribute
+EPUB 3 — Content Documents — XHTML#Report MathML markup with only content MathML
+EPUB 3 — Content Documents — XHTML#Report RelaxNG schema errors when checking a Content Document in a full publication
+EPUB 3 — Content Documents — XHTML#Report SSML `ph` attribute without a value
+EPUB 3 — Content Documents — XHTML#Report Schematron schema errors when checking a Content Document in a full publication
+EPUB 3 — Content Documents — XHTML#Report `base` as a discouraged construct
+EPUB 3 — Content Documents — XHTML#Report `doctype` with obsolete public identifier
+EPUB 3 — Content Documents — XHTML#Report `embed` as a discouraged construct
+EPUB 3 — Content Documents — XHTML#Report `epub:type` attribute on 'head' or metadata content
+EPUB 3 — Content Documents — XHTML#Report `foreignObject` with a body element
+EPUB 3 — Content Documents — XHTML#Report `foreignObject` without flow content
+EPUB 3 — Content Documents — XHTML#Report `http-equiv` declaration of non-utf8 charset
+EPUB 3 — Content Documents — XHTML#Report `link` element defining an alternative stylesheet with no title
+EPUB 3 — Content Documents — XHTML#Report `rp` as a discouraged construct
+EPUB 3 — Content Documents — XHTML#Report `style` element in the body
+EPUB 3 — Content Documents — XHTML#Report `style` element without a `type` declaration
+EPUB 3 — Content Documents — XHTML#Report `table` with invalid `border` attribute value
+EPUB 3 — Content Documents — XHTML#Report `title` with non-HTML elements
+EPUB 3 — Content Documents — XHTML#Report a MathML annotation with the XHTML encoding reversed (application/xml+xhtml)
+EPUB 3 — Content Documents — XHTML#Report a URL host that cannot be parsed
+EPUB 3 — Content Documents — XHTML#Report a `link` element with an unknown alt style tag #1
+EPUB 3 — Content Documents — XHTML#Report a `link` element with an unknown alt style tag #2
+EPUB 3 — Content Documents — XHTML#Report a `time` element nested inside another
+EPUB 3 — Content Documents — XHTML#Report a hyperlink to SVG symbol ("incompatible resource type")
+EPUB 3 — Content Documents — XHTML#Report a hyperlink to a mising identifier in another document
+EPUB 3 — Content Documents — XHTML#Report a hyperlink to a missing identifier
+EPUB 3 — Content Documents — XHTML#Report a hyperlink to a missing identifier in the Nav Doc
+EPUB 3 — Content Documents — XHTML#Report a mismatch in `lang` and `xml:lang` attributes
+EPUB 3 — Content Documents — XHTML#Report an "importmap" script with an "src" attribute
+EPUB 3 — Content Documents — XHTML#Report an XHMTL document not encoded as UTF-8
+EPUB 3 — Content Documents — XHTML#Report an XML 1.1 version declaration
+EPUB 3 — Content Documents — XHTML#Report an `img` element with an empty `src` attribute
+EPUB 3 — Content Documents — XHTML#Report an `img` element with no `alt` attribute
+EPUB 3 — Content Documents — XHTML#Report an unrecognized `epub` namespace (informative)
+EPUB 3 — Content Documents — XHTML#Report both `http-equiv` and `charset` are declared
+EPUB 3 — Content Documents — XHTML#Report custom attributes using reserved strings in their namespace
+EPUB 3 — Content Documents — XHTML#Report deprecated DPUB-ARIA roles on `li`
+EPUB 3 — Content Documents — XHTML#Report deprecated `xlink:href` when no `href` is also present #1
+EPUB 3 — Content Documents — XHTML#Report deprecated `xlink:href` when no `href` is also present #2
+EPUB 3 — Content Documents — XHTML#Report duplicate `id` attribute values
+EPUB 3 — Content Documents — XHTML#Report empty `title` element
+EPUB 3 — Content Documents — XHTML#Report entity references not ending with a semicolon
+EPUB 3 — Content Documents — XHTML#Report external entities
+EPUB 3 — Content Documents — XHTML#Report failing schematron assertions
+EPUB 3 — Content Documents — XHTML#Report fragment identifiers used in stylesheet URLs
+EPUB 3 — Content Documents — XHTML#Report invalid `data-*` attributes
+EPUB 3 — Content Documents — XHTML#Report invalid elements after a `data-*` attribute
+EPUB 3 — Content Documents — XHTML#Report invalid image map
+EPUB 3 — Content Documents — XHTML#Report missing `title` element
+EPUB 3 — Content Documents — XHTML#Report non-SVG images referenced as fragments
+EPUB 3 — Content Documents — XHTML#Report non-conforming URLs
+EPUB 3 — Content Documents — XHTML#Report non-existent ARIA `describedat` attribute
+EPUB 3 — Content Documents — XHTML#Report obsolete `param` element
+EPUB 3 — Content Documents — XHTML#Report obsolete `pubdate` attribute
+EPUB 3 — Content Documents — XHTML#Report obsolete `seamless` attribute
+EPUB 3 — Content Documents — XHTML#Report obsolete features of the `menu` element
+EPUB 3 — Content Documents — XHTML#Report references to undeclared resources in `img srcset`
+EPUB 3 — Content Documents — XHTML#Report relative paths as remote resources when HTML `base` is set to an extenal URL (issue 155)
+EPUB 3 — Content Documents — XHTML#Report relative paths as remote resources when `xml:base` is set to an extenal URL (issue 155)
+EPUB 3 — Content Documents — XHTML#Report the obsolete `contextmenu` attribute
+EPUB 3 — Content Documents — XHTML#Report the obsolete `dropzone` attribute
+EPUB 3 — Content Documents — XHTML#Report the obsolete `keygen` element
+EPUB 3 — Content Documents — XHTML#Report the obsolete `typemustmatch` attribute
+EPUB 3 — Content Documents — XHTML#Report unknown entity references
+EPUB 3 — Content Documents — XHTML#Report unregistered URL scheme
+EPUB 3 — Content Documents — XHTML#Report use of `style` attribute with invalid css syntax
+EPUB 3 — Content Documents — XHTML#Report use of microdata attributes on elements where they are not allowed
+EPUB 3 — Content Documents — XHTML#Report various invalid `datetime` formats
+EPUB 3 — Content Documents — XHTML#Verify ARIA attributes allowed on SVG elements
+EPUB 3 — Content Documents — XHTML#Verify ARIA role allowed on an `a` element with no `href` attribute
+EPUB 3 — Content Documents — XHTML#Verify ITS attributes are allowed
+EPUB 3 — Content Documents — XHTML#Verify ITS attributes are checked for conformance
+EPUB 3 — Content Documents — XHTML#Verify MathML markup with XHTML annotation missing name attribute
+EPUB 3 — Content Documents — XHTML#Verify MathML markup with `annotation-xml` `name` attribute set to `contentequiv`
+EPUB 3 — Content Documents — XHTML#Verify MathML markup with an HTML encoded annotation
+EPUB 3 — Content Documents — XHTML#Verify MathML markup with an SVG annotation
+EPUB 3 — Content Documents — XHTML#Verify MathML markup with an XHTML annotation
+EPUB 3 — Content Documents — XHTML#Verify MathML markup with prefixed elements
+EPUB 3 — Content Documents — XHTML#Verify MathML markup with unprefixed elements
+EPUB 3 — Content Documents — XHTML#Verify MathML markup without alternative text
+EPUB 3 — Content Documents — XHTML#Verify MathML with content MathML annotation
+EPUB 3 — Content Documents — XHTML#Verify MathML with descendant MathML markup in an XHTML annotation
+EPUB 3 — Content Documents — XHTML#Verify MathML with presentation MathML annotation
+EPUB 3 — Content Documents — XHTML#Verify MathML with tex annotation
+EPUB 3 — Content Documents — XHTML#Verify RDF elements can be embedded in SVG
+EPUB 3 — Content Documents — XHTML#Verify RDFa attributes are allowed on HTML elements
+EPUB 3 — Content Documents — XHTML#Verify SSML attributes are allowed
+EPUB 3 — Content Documents — XHTML#Verify `border` attribute allowed on tables
+EPUB 3 — Content Documents — XHTML#Verify `data-*` attributes are allowed
+EPUB 3 — Content Documents — XHTML#Verify `doctype` with legacy string
+EPUB 3 — Content Documents — XHTML#Verify `epub:type` attribute on allowed content
+EPUB 3 — Content Documents — XHTML#Verify `epub:type` attribute that does not follow usage suggestions
+EPUB 3 — Content Documents — XHTML#Verify `epub:type` attribute with author-declared vocabulary
+EPUB 3 — Content Documents — XHTML#Verify `epub:type` attribute with deprecated semantic
+EPUB 3 — Content Documents — XHTML#Verify `epub:type` attribute with unknown semantic
+EPUB 3 — Content Documents — XHTML#Verify `http-equiv` declaration
+EPUB 3 — Content Documents — XHTML#Verify `id` attribute with non-alphanumeric in its value
+EPUB 3 — Content Documents — XHTML#Verify `link` elements used to declare alternative stylesheets
+EPUB 3 — Content Documents — XHTML#Verify `main` element is allowed
+EPUB 3 — Content Documents — XHTML#Verify `title` valid content model
+EPUB 3 — Content Documents — XHTML#Verify a `link` element with a known alt style tag
+EPUB 3 — Content Documents — XHTML#Verify an `li` with a `value` attribute (issue 248)
+EPUB 3 — Content Documents — XHTML#Verify attributes in custom namespaces are ignored
+EPUB 3 — Content Documents — XHTML#Verify canvas element with a fallback
+EPUB 3 — Content Documents — XHTML#Verify case-insensitive `http-equiv` declaration
+EPUB 3 — Content Documents — XHTML#Verify conforming SVG markup does not create false-positives
+EPUB 3 — Content Documents — XHTML#Verify custom elements are not rejected
+EPUB 3 — Content Documents — XHTML#Verify empty language tag allowed (issue 777)
+EPUB 3 — Content Documents — XHTML#Verify fragment identifiers are allowed in attributes after a `data-*` declaration
+EPUB 3 — Content Documents — XHTML#Verify image map
+EPUB 3 — Content Documents — XHTML#Verify inclusion of SVG markup
+EPUB 3 — Content Documents — XHTML#Verify non-HTML `source` elements are skipped
+EPUB 3 — Content Documents — XHTML#Verify passing schematron assertions
+EPUB 3 — Content Documents — XHTML#Verify that ID-referencing attributes can refer to non-NCName IDs
+EPUB 3 — Content Documents — XHTML#Verify that SVG validation erors are reported as USAGE
+EPUB 3 — Content Documents — XHTML#Verify that `epub:type` attribute can be used on SVG
+EPUB 3 — Content Documents — XHTML#Verify that `img` element can reference SVG fragments
+EPUB 3 — Content Documents — XHTML#Verify that `svg:switch` doesn't trigger the package document `switch` property check
+EPUB 3 — Content Documents — XHTML#Verify that `svgView` fragments are allowed when associated to SVG documents
+EPUB 3 — Content Documents — XHTML#Verify that `viewport meta` declaration is not checked for non-fixed layout documents (issue 419)
+EPUB 3 — Content Documents — XHTML#Verify that a base url can be set
+EPUB 3 — Content Documents — XHTML#Verify that an SVG image can be referenced from `img`, `object` and `iframe` elements
+EPUB 3 — Content Documents — XHTML#Verify that an XHTML Content Document can have any extension
+EPUB 3 — Content Documents — XHTML#Verify that an `iframe` can reference another XHTML document
+EPUB 3 — Content Documents — XHTML#Verify that character entity references in comments or CDATA sections are ignored
+EPUB 3 — Content Documents — XHTML#Verify that character references are allowed
+EPUB 3 — Content Documents — XHTML#Verify that href values that only contain whitepace are allowed
+EPUB 3 — Content Documents — XHTML#Verify that internal entity declarations are allowed
+EPUB 3 — Content Documents — XHTML#Verify that microdata attributes are allowed on elements
+EPUB 3 — Content Documents — XHTML#Verify that relative paths starting with a single dot are resolved properly
+EPUB 3 — Content Documents — XHTML#Verify that the `requiredExtensions` attribute can have any value
+EPUB 3 — Content Documents — XHTML#Verify that three-character language codes are allowed (issue 615)
+EPUB 3 — Content Documents — XHTML#Verify the DPUB-ARIA roles allowed on `footer`
+EPUB 3 — Content Documents — XHTML#Verify the DPUB-ARIA roles allowed on `h1`-'h6`
+EPUB 3 — Content Documents — XHTML#Verify the DPUB-ARIA roles allowed on `header`
+EPUB 3 — Content Documents — XHTML#Verify the DPUB-ARIA roles allowed on `img`
+EPUB 3 — Content Documents — XHTML#Verify the DPUB-ARIA roles allowed on `nav`
+EPUB 3 — Content Documents — XHTML#Verify the DPUB-ARIA roles allowed on `section`
+EPUB 3 — Content Documents — XHTML#Verify the SVG IDs can be any valid HTML ID
+EPUB 3 — Content Documents — XHTML#Verify the `style` attribute is allowed with valid syntax
+EPUB 3 — Content Documents — XHTML#Verify the value of HTML boolean attributes and enumerated attributes are parsed in a case-insensitive manner
+EPUB 3 — Content Documents — XHTML#Verify unprefixed HTML elements allowed inside prefixed `foreignObject`
+EPUB 3 — Content Documents — XHTML#Verify use of `style` element in the header
+EPUB 3 — Content Documents — XHTML#Verify valid URLs
+EPUB 3 — Content Documents — XHTML#Verify various `datetime` values (incl. issue 341)
+EPUB 3 — Content Documents — XHTML#Verify versionless HTML `doctype`
+EPUB 3 — Content Documents — XHTML#the `border="0"` attribute on `img` elements is obsolete but conforming
+EPUB 3 — Content Documents — XHTML#the `charset="utf-8"` attribute on `script` elements is obsolete but conforming
+EPUB 3 — Content Documents — XHTML#the `name` attribute on `a` elements is obsolete but conforming
+EPUB 3 — Content Documents — XHTML#the `type="text/css"` attribute on `style` elements is obsolete but conforming
+EPUB 3 — Deprecated Features#'*-record' links are deprecated
+EPUB 3 — Deprecated Features#'meta-auth' metadata is deprecated
+EPUB 3 — Deprecated Features#'msv' reserved prefix for structural semantics is deprecated
+EPUB 3 — Deprecated Features#'prism' reserved prefix for structural semantics is deprecated
+EPUB 3 — Deprecated Features#'xml-signature' links are deprecated
+EPUB 3 — Deprecated Features#'xsd' reserved prefix for package metadata is deprecated
+EPUB 3 — Deprecated Features#Report `epub:case` without a `required-namespace` attribute
+EPUB 3 — Deprecated Features#Report `epub:switch` element without a `default`
+EPUB 3 — Deprecated Features#Report `epub:switch` is deprecated
+EPUB 3 — Deprecated Features#Report `epub:switch` with invalid mathml
+EPUB 3 — Deprecated Features#Report `epub:switch` without any `case` elements
+EPUB 3 — Deprecated Features#Report `epub:trigger` is deprecated
+EPUB 3 — Deprecated Features#Report `epub:trigger` that references non-existent IDs
+EPUB 3 — Deprecated Features#Report an `epub:switch` with a `default` before any `case` elements
+EPUB 3 — Deprecated Features#Report an `epub:switch` with multiple `default` elements
+EPUB 3 — Deprecated Features#Report usage of the 'bindings' element as deprecated
+EPUB 3 — Deprecated Features#an 'acquire' link can identify the full version of the publication
+EPUB 3 — Deprecated Features#report a deprecated reserved prefix both in declaration and properties
+EPUB 3 — Deprecated Features#report a deprecated reserved prefix declaration even if unused
+EPUB 3 — Deprecated Features#report a deprecated reserved prefix even if it is overridden
+EPUB 3 — Deprecated Features#the 'rendition:align-x-center' property is deprecated
+EPUB 3 — Deprecated Features#the 'rendition:spread' 'portrait' property value is deprecated
+EPUB 3 — Deprecated Features#the 'rendition:spread-portrait' spine override is deprecated
+EPUB 3 — Deprecated Features#the 'rendition:viewport' property cannot be declared more than once
+EPUB 3 — Deprecated Features#the 'rendition:viewport' property is deprecated
+EPUB 3 — Deprecated Features#the 'rendition:viewport' property syntax errors are reported
+EPUB 3 — EPUB publication conformance#Verify a minimal packaged EPUB
+EPUB 3 — EPUB publication conformance#the minimal Package Document is reported as valid
+EPUB 3 — External Identifiers#Report a DOCTYPE declaration with an allowed external identifier but not on the expected media type
+EPUB 3 — External Identifiers#Report a DOCTYPE declaration with an external identifier that is not allowed
+EPUB 3 — External Identifiers#Verify DOCTYPE declarations with allowed external identifiers
+EPUB 3 — Layouts#'page-spread-*' properties can be used on content of a pre-paginated publication
+EPUB 3 — Layouts#'page-spread-*' properties can be used on pre-paginated content of a reflowable publication
+EPUB 3 — Layouts#'page-spread-*' properties used on content of reflowable publications are reported #1
+EPUB 3 — Layouts#'page-spread-*' properties used on content of reflowable publications are reported #2
+EPUB 3 — Layouts#'page-spread-*' properties used on reflowable content of a pre-paginated publications is reported
+EPUB 3 — Layouts#Report a pre-paginated item that has no fixed layout document in its fallback chain
+EPUB 3 — Layouts#Report a pre-paginated overridden item that is not a fixed layout document
+EPUB 3 — Layouts#Report a pre-paginated publication item that is not a fixed layout document
+EPUB 3 — Layouts#Report a roll item that has no fixed layout document in its fallback chain
+EPUB 3 — Layouts#Report a roll publication item that is not a fixed layout document
+EPUB 3 — Layouts#Verify a minimal pre-paginated publication
+EPUB 3 — Layouts#Verify a minimal reflowable publication
+EPUB 3 — Layouts#Verify a minimal roll publication
+EPUB 3 — Layouts#Verify a pre-paginated overridden item with a fixed layout document in its fallback chain
+EPUB 3 — Layouts#Verify a pre-paginated overriden item in a reflowable publication
+EPUB 3 — Layouts#Verify a pre-paginated publication item with a fixed layout document in its fallback chain
+EPUB 3 — Layouts#Verify a reflowable overriden item in a pre-paginated publication
+EPUB 3 — Layouts#Verify a roll publication item with a fixed layout document in its fallback chain
+EPUB 3 — Layouts#Verify that fixed layout constraints apply to pre-paginated overridden content
+EPUB 3 — Layouts#Verify that fixed layout constraints apply to pre-paginated publication content
+EPUB 3 — Media Overlays#Allow SVG fragment identifiers
+EPUB 3 — Media Overlays#Allow a `metadata` element with custom metadata properties
+EPUB 3 — Media Overlays#Allow clock values with the full clock syntax (`hh:mm:ss.milli`)
+EPUB 3 — Media Overlays#Allow clock values with the partial clock syntax (`mm:ss.milli`)
+EPUB 3 — Media Overlays#Allow clock values with the timecount syntax (`XXmin`)
+EPUB 3 — Media Overlays#Allow custom epub:type properties with a declared prefix
+EPUB 3 — Media Overlays#Allow empty fragment identifiers
+EPUB 3 — Media Overlays#Allow epub:type properties in the default vocabulary
+EPUB 3 — Media Overlays#Allow unknown epub:type properties in the default vocabulary
+EPUB 3 — Media Overlays#Report  a 'media:active-class' property that defines more than one class
+EPUB 3 — Media Overlays#Report  a 'media:playback-active-class' property that defines more than one class
+EPUB 3 — Media Overlays#Report a 'media:active-class' property with a refines attribute
+EPUB 3 — Media Overlays#Report a 'media:playback-active-class' property with a refines attribute
+EPUB 3 — Media Overlays#Report a `meta` element used in the `head` container
+EPUB 3 — Media Overlays#Report a `par` element with a `seq` child
+EPUB 3 — Media Overlays#Report a `par` element with more than one `text` child
+EPUB 3 — Media Overlays#Report a fragment identifier that does not resolve to an element
+EPUB 3 — Media Overlays#Report an EPUB content document referenced from an overlay that is missing its media-overlay attribute
+EPUB 3 — Media Overlays#Report an EPUB content document that declares a media-overlay attribute but is not referenced from the overlay
+EPUB 3 — Media Overlays#Report an EPUB content document that is declared in more than one overlay
+EPUB 3 — Media Overlays#Report an EPUB content document that references the wrong overlay
+EPUB 3 — Media Overlays#Report an audio clip that is not a Core Media Type
+EPUB 3 — Media Overlays#Report an audio file URL with a fragment
+EPUB 3 — Media Overlays#Report an overlay document whose text elements do not match the dom order of the corresponding content document
+EPUB 3 — Media Overlays#Report if the `clipBegin` value is after the `clipEnd` value
+EPUB 3 — Media Overlays#Report if the `clipEnd` value equals the `clipBegin` value
+EPUB 3 — Media Overlays#Report invalid clock values
+EPUB 3 — Media Overlays#Report media clips used as direct children of a `seq` element
+EPUB 3 — Media Overlays#Report use of the media-overlay attribute on non-EPUB Content Documents
+EPUB 3 — Media Overlays#Report when 'media:active-class' is defined but no CSS was found in the SVG content document
+EPUB 3 — Media Overlays#Report when 'media:active-class' is defined but no CSS was found in the XHTML content document
+EPUB 3 — Media Overlays#Report when 'media:playback-active-class' is defined but no CSS was found in the XHTML content document
+EPUB 3 — Media Overlays#Report when well-known class names are found in CSS but not declared in the package document
+EPUB 3 — Media Overlays#Verify 'media:active-class' and 'media:playback-active-class' properties referring to classes defined in a stylesheet
+EPUB 3 — Media Overlays#Verify 'media:active-class' and 'media:playback-active-class' properties referring to classes defined in stylesheet imported from SVG
+EPUB 3 — Media Overlays#Verify 'media:active-class' and 'media:playback-active-class' properties referring to classes defined in stylesheet linked as processing instruction from SVG
+EPUB 3 — Media Overlays#Verify 'media:active-class' and 'media:playback-active-class' properties referring to classes defined in stylesheet linked from SVG
+EPUB 3 — Media Overlays#Verify 'media:active-class' and 'media:playback-active-class' properties referring to classes defined inline
+EPUB 3 — Media Overlays#Verify 'media:active-class' and 'media:playback-active-class' properties referring to classes defined inline in SVG
+EPUB 3 — Media Overlays#Verify a minimal EPUB 3 publication with Media Overlays
+EPUB 3 — Media Overlays#Verify a minimal EPUB 3 publication with Media Overlays for SVG content
+EPUB 3 — Media Overlays#Verify a minimal Media Overlay document
+EPUB 3 — Media Overlays#Verify that a Media Overlays Document can have any extension
+EPUB 3 — Media Overlays#Warn about XHTML scheme-based fragments
+EPUB 3 — Media Overlays#Warn about invalid SVG fragment identifiers
+EPUB 3 — Media Overlays#a Media Overlay must have the media type 'application/smil+xml'
+EPUB 3 — Media Overlays#the duration of each Media Overlay must be defined
+EPUB 3 — Media Overlays#the entire publication duration must be defined
+EPUB 3 — Media Overlays#the total duration has a 1s tolerance
+EPUB 3 — Media Overlays#the total duration should be the sum of all Media Overlay durations
+EPUB 3 — Media Types Registrations#Report when the '.epub' extension is not lower case
+EPUB 3 — Minimal Publications#Verify a minimal SVG content document
+EPUB 3 — Minimal Publications#Verify a minimal XHTML content document
+EPUB 3 — Minimal Publications#Verify a minimal expanded EPUB
+EPUB 3 — Minimal Publications#Verify a minimal package document
+EPUB 3 — Minimal Publications#Verify a minimal packaged EPUB
+EPUB 3 — Navigation Document#A `nav` element can have an `aria-label` attribute #1
+EPUB 3 — Navigation Document#A `nav` element can have an `aria-label` attribute #2
+EPUB 3 — Navigation Document#Allow a `landmarks` nav
+EPUB 3 — Navigation Document#Allow a `lot` nav
+EPUB 3 — Navigation Document#Allow a `page-list` nav
+EPUB 3 — Navigation Document#Allow a hidden nav (set on a `page-list` nav)
+EPUB 3 — Navigation Document#Allow a nested `toc` nav
+EPUB 3 — Navigation Document#Allow multiple entries with the same epub:type in a `landmarks` nav when pointing to different resources
+EPUB 3 — Navigation Document#Allow multiple images in a list item label
+EPUB 3 — Navigation Document#Allow multiple images in a nav hyperlink
+EPUB 3 — Navigation Document#Allow nav hyperlinks to have leading and trailig spaces
+EPUB 3 — Navigation Document#Report a `p` element used as a nav heading
+EPUB 3 — Navigation Document#Report a `toc nav` that links to documents not in the spine
+EPUB 3 — Navigation Document#Report a `toc nav` that links to resource that is not a Content Document
+EPUB 3 — Navigation Document#Report a `toc nav` whose link fragments do match the document order
+EPUB 3 — Navigation Document#Report a `toc nav` whose links do not match the spine order
+EPUB 3 — Navigation Document#Report a hidden attribute with a wrong value
+EPUB 3 — Navigation Document#Report a leaf list item with no link (just a span label)
+EPUB 3 — Navigation Document#Report a link without an epub:type in a `landmarks` nav
+EPUB 3 — Navigation Document#Report a missing `toc` nav
+EPUB 3 — Navigation Document#Report a missing list item label
+EPUB 3 — Navigation Document#Report a nav hyperlink without content
+EPUB 3 — Navigation Document#Report a nav hyperlink without content (but an empty nested span)
+EPUB 3 — Navigation Document#Report a nav list without content
+EPUB 3 — Navigation Document#Report a nav other than 'toc'/'page-list'/'landmarks' without a heading
+EPUB 3 — Navigation Document#Report an empty list item label
+EPUB 3 — Navigation Document#Report an empty nav heading
+EPUB 3 — Navigation Document#Report external links in the `toc`, `page-list` and `landmarks` `nav` elements
+EPUB 3 — Navigation Document#Report multiple entries with the same epub:type in a `landmarks` nav
+EPUB 3 — Navigation Document#Report multiple occurences of `landmarks` nav
+EPUB 3 — Navigation Document#Report multiple occurences of `page-list` nav
+EPUB 3 — Navigation Document#Report nested `ol` in `landmarks` nav
+EPUB 3 — Navigation Document#Report nested `ol` in `page-list` nav
+EPUB 3 — Navigation Document#Report schema errors when checking a Navigation Document in a full publication
+EPUB 3 — Navigation Document#Verify a Navigation Document using EPUB CFI
+EPUB 3 — Navigation Document#Verify a `page-list nav` whose links do match the document order
+EPUB 3 — Navigation Document#Verify a `page-list nav` whose links do not match the spine order
+EPUB 3 — Navigation Document#Verify a `toc nav` which does not link to all spine items
+EPUB 3 — Navigation Document#Verify a `toc nav` with links that match the reading order
+EPUB 3 — Navigation Document#Verify a minimal Navigation Document
+EPUB 3 — Navigation Document#Verify a nav without a declared epub:type is not restricted
+EPUB 3 — Navigation Document#Verify that a `page-list nav` with links that match the reading order
+EPUB 3 — Open Container Format#Allow Unicode emoji tag set in file name
+EPUB 3 — Open Container Format#Allow a duplicate filename after Unicode compatibility normalization (NFKC)
+EPUB 3 — Open Container Format#Allow forbidden characters in remote resource URLs
+EPUB 3 — Open Container Format#Allow percent-encoded URLs
+EPUB 3 — Open Container Format#Allow valid container URLs in XHTML
+EPUB 3 — Open Container Format#Inform about non-ASCII characters in file names (full-publication check)
+EPUB 3 — Open Container Format#Inform about non-ASCII characters in file names (single package doc check)
+EPUB 3 — Open Container Format#Report a CSS `url` error even when preceded by a syntax error
+EPUB 3 — Open Container Format#Report a CSS `url` that is not declared in the package document or present in the container
+EPUB 3 — Open Container Format#Report a MathML formula with an alternative image that cannot be found
+EPUB 3 — Open Container Format#Report a URL query string found in a manifest item #1
+EPUB 3 — Open Container Format#Report a URL query string found in a manifest item #2
+EPUB 3 — Open Container Format#Report a URL query string found in a package link
+EPUB 3 — Open Container Format#Report a `signature.xml` file with invald markup
+EPUB 3 — Open Container Format#Report a duplicate ZIP entry for the same file
+EPUB 3 — Open Container Format#Report a duplicate filename after Unicode canonical normalization (NFC)
+EPUB 3 — Open Container Format#Report a duplicate filename after common case folding
+EPUB 3 — Open Container Format#Report a duplicate filename after full case folding
+EPUB 3 — Open Container Format#Report a hyperlink to a resource missing from the publication
+EPUB 3 — Open Container Format#Report a mimetype file with a trailing newline
+EPUB 3 — Open Container Format#Report a mimetype file with an incorrect value
+EPUB 3 — Open Container Format#Report a mimetype file with leading spaces
+EPUB 3 — Open Container Format#Report a mimetype file with trailing spaces
+EPUB 3 — Open Container Format#Report a missing mimetype file #1
+EPUB 3 — Open Container Format#Report a missing mimetype file #2
+EPUB 3 — Open Container Format#Report a package metadata link to a missing resource
+EPUB 3 — Open Container Format#Report a reference from an XHTML `iframe` not declared in the manifest
+EPUB 3 — Open Container Format#Report a reference from an XHTML `track` not declared in the manifest
+EPUB 3 — Open Container Format#Report a reference from an XHTML doc to a resource not declared in the manifest
+EPUB 3 — Open Container Format#Report a relative `cite` URL when the resource is not found in the manifest
+EPUB 3 — Open Container Format#Report an `encryption.xml` file with duplicate IDs
+EPUB 3 — Open Container Format#Report an `encryption.xml` file with invalid compression metadata
+EPUB 3 — Open Container Format#Report an `encryption.xml` file with invalid markup
+EPUB 3 — Open Container Format#Report an unknown element in the `container.xml` file
+EPUB 3 — Open Container Format#Report forbidden characters in file names
+EPUB 3 — Open Container Format#Report forbidden characters in file names (single package doc check)
+EPUB 3 — Open Container Format#Report forbidden characters in file names even for non-publication resources
+EPUB 3 — Open Container Format#Report leaking URLs in the package document
+EPUB 3 — Open Container Format#Report path-absolute URLs in the package document
+EPUB 3 — Open Container Format#Report publication resources found in META-INF
+EPUB 3 — Open Container Format#Report when the 'mimetype' entry has an extra field in its ZIP header
+EPUB 3 — Open Container Format#Verify a file name containing a `+` character is allowed (issue 188)
+EPUB 3 — Open Container Format#Verify a file name containing a diacritic (ü) can be referred with precomposed or composed characters
+EPUB 3 — Open Container Format#Verify a minimal packaged EPUB
+EPUB 3 — Open Container Format#Verify encryption can be used
+EPUB 3 — Open Container Format#Verify file names with non-ASCII UTF-8-encoded character are allowed
+EPUB 3 — Open Container Format#Verify path names with non-ASCII UTF-8-encoded character are allowed
+EPUB 3 — Open Container Format#Warn about spaces in file names (full-publication check)
+EPUB 3 — Open Container Format#Warn about spaces in file names (single package doc check)
+EPUB 3 — Open Container Format#an SVG hyperlink 'href' referencing a missing resource is reported
+EPUB 3 — Open Container Format#an SVG hyperlink 'xlink:href' referencing a missing resource but 'href' referencing and existing resource is reported
+EPUB 3 — Open Container Format#an SVG hyperlink 'xlink:href' referencing a missing resource is reported
+EPUB 3 — Open Container Format#an SVG hyperlink with 'xlink:href' and 'href' referencing the same missing resource is reported once
+EPUB 3 — Open Container Format#an SVG image 'href' referencing a missing resource is reported
+EPUB 3 — Open Container Format#an SVG image 'xlink:href' referencing a missing resource but 'href' referencing and existing resource is reported
+EPUB 3 — Open Container Format#an SVG image 'xlink:href' referencing a missing resource is reported
+EPUB 3 — Open Container Format#an SVG image with 'xlink:href' and 'href' referencing the same missing resource is reported once
+EPUB 3 — Outdated Features#'guide' should not contain two entries of the same type pointing to the same resource
+EPUB 3 — Outdated Features#Allow a foreign resource in HTML `embed` with a manifest fallback
+EPUB 3 — Outdated Features#Allow a foreign resource in HTML video `poster` with a manifest fallback
+EPUB 3 — Outdated Features#Report CSS '-epub' prefixed properties as outdated (USAGE)
+EPUB 3 — Outdated Features#Report NCX navigation as outdated (USAGE)
+EPUB 3 — Outdated Features#Report a collection element as outdated (USAGE)
+EPUB 3 — Outdated Features#Report an obfuscated font that is not a Core Media Type
+EPUB 3 — Outdated Features#Report an obfuscated font that is not a font
+EPUB 3 — Outdated Features#Report content fallback in HTML `audio` as outdated (USAGE)
+EPUB 3 — Outdated Features#Report content fallback in HTML `img` as outdated (USAGE)
+EPUB 3 — Outdated Features#Report font obfuscation as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:flow' property  as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:flow-auto' spine override as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:flow-paginated' spine override as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:flow-scrolled-continuous' spine override as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:flow-scrolled-doc' spine override as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:orientation' property as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:orientation-auto' spine override as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:orientation-landscape' spine override as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:orientation-portrait' spine override as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:spread' property as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:spread-auto' spine override as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:spread-both' spine override as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:spread-landscape' spine override as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the 'rendition:spread-none' spine override as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the OPF 2 guide element as outdated (USAGE)
+EPUB 3 — Outdated Features#Report the OPF 2 meta element as outdated (USAGE)
+EPUB 3 — Outdated Features#Report validation errors in legacy NCX documents
+EPUB 3 — Outdated Features#The 'toc' attribute of the spine must point to an NCX document
+EPUB 3 — Outdated Features#Verify an NCX which does not link to all spine items
+EPUB 3 — Outdated Features#Verify duplicating encryption declaration is allowed
+EPUB 3 — Outdated Features#When an NCX document is present, it must be identified in the 'toc' attribute of the spine
+EPUB 3 — Outdated Features#a 'manifest' collection must be the child of another collection
+EPUB 3 — Outdated Features#a 'rendition:flow' property with an unknown value is reported
+EPUB 3 — Outdated Features#a 'rendition:orientation' property with an unknown value is reported
+EPUB 3 — Outdated Features#a 'rendition:spread' property with an unknown value is reported
+EPUB 3 — Outdated Features#a collection role must not be an invalid URL
+EPUB 3 — Outdated Features#the 'rendition:flow' property cannot be declared more than once
+EPUB 3 — Outdated Features#the 'rendition:flow' property cannot be used in a 'meta' element to refine a publication resource
+EPUB 3 — Outdated Features#the 'rendition:flow' spine overrides values are mutually exclusive
+EPUB 3 — Outdated Features#the 'rendition:orientation' property cannot be declared more than once
+EPUB 3 — Outdated Features#the 'rendition:orientation' property cannot be used in a 'meta' element to refine a publication resource
+EPUB 3 — Outdated Features#the 'rendition:orientation' spine overrides values are mutually exclusive
+EPUB 3 — Outdated Features#the 'rendition:spread' property cannot be declared more than once
+EPUB 3 — Outdated Features#the 'rendition:spread' property cannot be used in a 'meta' element to refine a publication resource
+EPUB 3 — Outdated Features#the 'rendition:spread' spine overrides values are mutually exclusive
+EPUB 3 — Package document#'dc:date' can be specified as a single year
+EPUB 3 — Package document#'dc:date' can be specified as an ISO 8601:2004 value
+EPUB 3 — Package document#'dc:date' value can have leading/trailng whitespace
+EPUB 3 — Package document#'dc:date' with a trailing dot is reported
+EPUB 3 — Package document#'dc:date' with an invalid ISO 8601:2004 syntax is reported
+EPUB 3 — Package document#'dc:date' with an unknown format is reported
+EPUB 3 — Package document#'dc:identifier' must not be empty
+EPUB 3 — Package document#'dc:identifier' starting with "urn:uuid:" should be a valid UUID
+EPUB 3 — Package document#'dc:language' must be well-formed
+EPUB 3 — Package document#'dc:language' must not be empty
+EPUB 3 — Package document#'dc:modified' must be defined
+EPUB 3 — Package document#'dc:modified' must be of the form 'CCYY-MM-DDThh:mm:ssZ'
+EPUB 3 — Package document#'dc:source' valid values are allowed
+EPUB 3 — Package document#'dc:title' must be specified
+EPUB 3 — Package document#'dc:title' must not be empty
+EPUB 3 — Package document#'dc:type' valid values are allowed
+EPUB 3 — Package document#'id' attributes can have leading or trailing space
+EPUB 3 — Package document#'id' attributes must be unique
+EPUB 3 — Package document#'id' attributes must be unique after whitespace normalization
+EPUB 3 — Package document#'link' target must not reference a manifest ID
+EPUB 3 — Package document#'refines' attribute MUST be a relative URL
+EPUB 3 — Package document#'refines' attribute should use a fragment ID if refering to a Publication Resource
+EPUB 3 — Package document#'refines' attribute, when using fragment ID, must target an existing ID
+EPUB 3 — Package document#'refines' references cycles are not allowed
+EPUB 3 — Package document#'scheme' can be used to identify the value system
+EPUB 3 — Package document#'scheme' must not be an unknown value with no prefix
+EPUB 3 — Package document#'scheme' must not be list of values
+EPUB 3 — Package document#Allow a link to a resource embedded in a content document
+EPUB 3 — Package document#Allow a link to a resource referenced from the spine
+EPUB 3 — Package document#Allow a missing 'media-type' attribute on links to remote resources
+EPUB 3 — Package document#An SVG Content Document is allowed in the spine
+EPUB 3 — Package document#An unknown 'itemref' ID is reported
+EPUB 3 — Package document#An unknown item property in the default vocab is reported
+EPUB 3 — Package document#Multiple 'dc:date' elements specified
+EPUB 3 — Package document#Report (usage) a container resource that is not listed in the manifest
+EPUB 3 — Package document#Report a content document without the `switch` property declared in the manifest
+EPUB 3 — Package document#Report a manifest item path with unencoded spaces
+EPUB 3 — Package document#Report a media overlay document with remote resources but missing the `remote-resources` property
+EPUB 3 — Package document#Report a missing 'media-type' attribute on links to container resources
+EPUB 3 — Package document#Report a missing `remote-resources` property when inline CSS has remote references
+EPUB 3 — Package document#Report a missing spine
+EPUB 3 — Package document#Report a reference a remote resource when the `remote-resources` property is not set in the manifest
+EPUB 3 — Package document#Report a remote font not declared in the package document
+EPUB 3 — Package document#Report a remote image declared in the package document when it is referenced from an HTML `a` element
+EPUB 3 — Package document#Report a resource declared in the package document but missing from the container
+EPUB 3 — Package document#Report a scripted document (form) without the `scripted` property declared in the package document
+EPUB 3 — Package document#Report a scripted document (javascript) without the `scripted` property declared in the package document
+EPUB 3 — Package document#Report a self-referencing manifest (full publication check)
+EPUB 3 — Package document#Report a self-referencing manifest (single file check)
+EPUB 3 — Package document#Report a spine that does not contain at least one linear itemref
+EPUB 3 — Package document#Report an EPUB where non-linear content is unreachable #1
+EPUB 3 — Package document#Report an EPUB where non-linear content is unreachable #2
+EPUB 3 — Package document#Report an SVG using remote fonts without the `remote-resource` property set in the package document
+EPUB 3 — Package document#Report an XHTML document using remote fonts in `style` without the `remote-resource` property set in the package document
+EPUB 3 — Package document#Report an XHTML document with remote audio but without the `remote-resources` property set in the package document
+EPUB 3 — Package document#Report an empty spine
+EPUB 3 — Package document#Report an unknown manifest item property
+EPUB 3 — Package document#Report duplicate declarations of a resource in the package document manifest
+EPUB 3 — Package document#Report fonts declared in the package document but missing from the container
+EPUB 3 — Package document#Report reference to an embedded SVG when the `svg` property is not set in the manifest (one reference is set properly)
+EPUB 3 — Package document#Report references to embedded SVG when the `svg` property is not set in the manifest
+EPUB 3 — Package document#Report remote audio resources defined in `sources` elements but not declared in the package document
+EPUB 3 — Package document#Report remote audio resources not declared in the package document
+EPUB 3 — Package document#Report remote fonts in CSS without the `remote-resource` property set in the package document
+EPUB 3 — Package document#Report the declaration of the `remote-resources` property when the content has no script
+EPUB 3 — Package document#Report the declaration of the `scripted` property when the content has no script
+EPUB 3 — Package document#Report the declaration of the `svg` property when the content has no embedded SVG
+EPUB 3 — Package document#Report usage of the EPUB 2 'fallback-style' attribute
+EPUB 3 — Package document#Report when a document hyperlinked from a content document is not in the spine
+EPUB 3 — Package document#Report when a document hyperlinked from the navigation document is not in the spine
+EPUB 3 — Package document#The 'cover-image' item property is allowed on WebP images
+EPUB 3 — Package document#The 'cover-image' item property must occur at most once
+EPUB 3 — Package document#The 'cover-image' item property must only be used on images
+EPUB 3 — Package document#Two spine 'itemref' elements cannot reference the same manifest item
+EPUB 3 — Package document#Verify an EPUB where non-linear content is reachable via a hyperlink
+EPUB 3 — Package document#Verify an EPUB where non-linear content is reachable via the navigation document
+EPUB 3 — Package document#Verify content documents are identified as containing mathml
+EPUB 3 — Package document#Verify that inline CSS does not trigger an unrequired `remote-resources` property error
+EPUB 3 — Package document#Verify that script data blocks do not require the `scripted` property to be defined in the manifest
+EPUB 3 — Package document#Verify that the Package Document can have any extension
+EPUB 3 — Package document#Verify that three-character language codes are allowed (issue 615)
+EPUB 3 — Package document#a link with an unknown 'properties' value is reported
+EPUB 3 — Package document#a manifest item must declare a media type
+EPUB 3 — Package document#a metadata's property name must be defined
+EPUB 3 — Package document#a metadata's property name must be well-formed
+EPUB 3 — Package document#a metadata's property name must not be a list of values
+EPUB 3 — Package document#a metadata's value must be defined
+EPUB 3 — Package document#at most one item must have the 'nav' property
+EPUB 3 — Package document#attributes 'id', 'dir', and 'xml:lang' are not allowed on the 'metadata' element
+EPUB 3 — Package document#fallback attribute must not reference its item ID
+EPUB 3 — Package document#fallback attribute must point to an existing item ID
+EPUB 3 — Package document#item URLs must be properly encoded
+EPUB 3 — Package document#item URLs must not have a fragment identifier
+EPUB 3 — Package document#one item must have the 'nav' property
+EPUB 3 — Package document#the 'dir' attribute value can be 'auto'
+EPUB 3 — Package document#the 'link' 'hreflang' attribute can be empty
+EPUB 3 — Package document#the 'link' 'hreflang' language tag must be well-formed
+EPUB 3 — Package document#the 'link' 'hreflang' language tag must not have leading/trailing whitespace
+EPUB 3 — Package document#the 'link' element can have an 'hreflang' attribute
+EPUB 3 — Package document#the 'nav' property must be on an XHTML Content Document
+EPUB 3 — Package document#the 'package' 'unique-identifier' attribute must be a known ID
+EPUB 3 — Package document#the 'package' 'unique-identifier' attribute must point to a 'dc:identifier' element
+EPUB 3 — Package document#the 'package' element must have a 'metadata' child element
+EPUB 3 — Package document#the 'package' element's 'metadata' child must be before the 'manifest' child
+EPUB 3 — Package document#the 'xml:lang' attribute can be empty
+EPUB 3 — Package document#the 'xml:lang' language tag must be well-formed
+EPUB 3 — Package document#the 'xml:lang' language tag must not have leading/trailing whitespace
+EPUB 3 — Package document#the link 'properties' attribute must not be empty
+EPUB 3 — Package document#the link 'rel' attribute can have multiple properties
+EPUB 3 — Package document#the unique identifier must not be empty
+EPUB 3 — Package document#two manifest items cannot represent the same resource
+EPUB 3 — Publication Resources#Allow XPGT style sheets without fallbacks
+EPUB 3 — Publication Resources#Allow a data URL defining a CMT resource (in an HTML `img` element)
+EPUB 3 — Publication Resources#Allow a data URL defining a foreign resource with intrinsic fallback (in an HTML `img` element)
+EPUB 3 — Publication Resources#Allow a data URL defining an exmpt resource (in an HTML `link` element)
+EPUB 3 — Publication Resources#Allow an SVG Content Document to be used as a fallback
+EPUB 3 — Publication Resources#Allow an xpgt style sheet to have an explicit manifest fallback
+EPUB 3 — Publication Resources#Allow audio resources to be remote
+EPUB 3 — Publication Resources#Allow foreign HTML `audio` with a `source` fallback
+EPUB 3 — Publication Resources#Allow foreign font media types without fallbacks
+EPUB 3 — Publication Resources#Allow foreign linked resources without fallbacks
+EPUB 3 — Publication Resources#Allow foreign text tracks without fallbacks
+EPUB 3 — Publication Resources#Allow non-CMT file to be in the spine if they have an XHTML Content Document fallback
+EPUB 3 — Publication Resources#Allow remote foreign HTML `audio` with a remote `source` fallback
+EPUB 3 — Publication Resources#Allow unreferenced foreign resources without fallbacks
+EPUB 3 — Publication Resources#Allow valid manifest fallback chain (n-to-1)
+EPUB 3 — Publication Resources#Allow valid manifest fallback chain (single doc)
+EPUB 3 — Publication Resources#Allow valid manifest fallback chain (waterfall)
+EPUB 3 — Publication Resources#Report AAC/MP4 audio with a non-supported declared codec
+EPUB 3 — Publication Resources#Report OPUS audio with the media type 'audio/opus'
+EPUB 3 — Publication Resources#Report a JPEG image declared as 'image/gif'
+EPUB 3 — Publication Resources#Report a JPEG image with a '.gif' extension
+EPUB 3 — Publication Resources#Report a `picture source` element that does not include a `type` attribute for a foreign resource
+EPUB 3 — Publication Resources#Report a `picture` element with a foreign resource in its `img src` fallback
+EPUB 3 — Publication Resources#Report a `picture` element with a foreign resource in its `img srcset` fallback
+EPUB 3 — Publication Resources#Report a circular manifest fallback chain (full publication)
+EPUB 3 — Publication Resources#Report a circular manifest fallback chain (single doc)
+EPUB 3 — Publication Resources#Report a corrupt image
+EPUB 3 — Publication Resources#Report a data URL defining a foreign resource with no fallback (in an HTML `img` element)
+EPUB 3 — Publication Resources#Report a data URL in a manifest item href (not in the spine)
+EPUB 3 — Publication Resources#Report a data URL in a manifest item href (referenced in the spine)
+EPUB 3 — Publication Resources#Report a data URL in a package link href
+EPUB 3 — Publication Resources#Report a data URL in the `href` attribute of an HTML `a` element
+EPUB 3 — Publication Resources#Report a data URL in the `href` attribute of an HTML `area` element
+EPUB 3 — Publication Resources#Report a data URL in the `href` attribute of an SVG `a` element
+EPUB 3 — Publication Resources#Report a file URL used in a CSS document
+EPUB 3 — Publication Resources#Report a file URL used in an SVG content document
+EPUB 3 — Publication Resources#Report a file URL used in an XHTML content document
+EPUB 3 — Publication Resources#Report a file URL used in the package document
+EPUB 3 — Publication Resources#Report a foreign resource in HTML `audio` `source` with no fallback
+EPUB 3 — Publication Resources#Report a foreign resource in HTML `audio` with no fallbacks
+EPUB 3 — Publication Resources#Report a foreign resource in HTML `embed` with no fallback
+EPUB 3 — Publication Resources#Report a foreign resource in HTML video `input` with no fallack
+EPUB 3 — Publication Resources#Report a foreign resource in HTML video `poster` with no fallack
+EPUB 3 — Publication Resources#Report a foreign resource in MathML `altimg` attribute with no fallack
+EPUB 3 — Publication Resources#Report a picture `source` element `type` attribute not matching the publication resource type
+EPUB 3 — Publication Resources#Report a reference to a remote resource from an `iframe` element when the resource is declared in the package document (issue 852)
+EPUB 3 — Publication Resources#Report a reference to a remote resource from an `iframe` element when the resource is not declared in package document
+EPUB 3 — Publication Resources#Report a reference to a remote resource from an `object` element when the resource is not declared in package document
+EPUB 3 — Publication Resources#Report a remote SVG Content Document
+EPUB 3 — Publication Resources#Report a remote SVG font when it is referenced from an HTML `img` element
+EPUB 3 — Publication Resources#Report a remote image declared in the package document when it is referenced from an `img` tag and also retrieved by a script
+EPUB 3 — Publication Resources#Report a remote image that is declared in the packaged document
+EPUB 3 — Publication Resources#Report a remote image that is not declared in the package document
+EPUB 3 — Publication Resources#Report a remote script
+EPUB 3 — Publication Resources#Report a remote stylesheet
+EPUB 3 — Publication Resources#Report a remote stylesheet declared in SVG XML processing instruction
+EPUB 3 — Publication Resources#Report a remote stylesheet declared in SVG inline style import
+EPUB 3 — Publication Resources#Report a remote top-level Content Documents
+EPUB 3 — Publication Resources#Report an XML document declared with an unknown encoding name
+EPUB 3 — Publication Resources#Report an XML document encoded as ISO-8859-1 (detected in the encoding declaration)
+EPUB 3 — Publication Resources#Report an XML document encoded as UCS-4 (detected with a BOM)
+EPUB 3 — Publication Resources#Report an `embed` element with a `type` attribute not matching the publication resource type
+EPUB 3 — Publication Resources#Report an `img src` with a foreign resource and no manifest fallback (when the `img` is not in a `picture` element)
+EPUB 3 — Publication Resources#Report an `img` element with a video resource
+EPUB 3 — Publication Resources#Report an `object` element with a `type` attribute not matching the publication resource type
+EPUB 3 — Publication Resources#Report an audio `source` element `type` attribute not matching the publication resource type
+EPUB 3 — Publication Resources#Report files that aren't Content Documents (like audio) in spine when they don't have a fallback
+EPUB 3 — Publication Resources#Report foreign HTML `audio` without fallbacks even with inner flow content
+EPUB 3 — Publication Resources#Report foreign audio in HTML `video` element without fallback
+EPUB 3 — Publication Resources#Verify AAC/MP4 audio is allowed
+EPUB 3 — Publication Resources#Verify AAC/MP4 audio with explicit AAC codec is allowed
+EPUB 3 — Publication Resources#Verify AAC/MP4 audio with explicit OPUS codec  is allowed
+EPUB 3 — Publication Resources#Verify AVIF images are allowed
+EPUB 3 — Publication Resources#Verify GIF images are allowed
+EPUB 3 — Publication Resources#Verify JPEG XL images are allowed
+EPUB 3 — Publication Resources#Verify JPEG images are allowed
+EPUB 3 — Publication Resources#Verify MP3 audio is allowed
+EPUB 3 — Publication Resources#Verify MP3 audio source type may have a `codecs` parameter
+EPUB 3 — Publication Resources#Verify OPUS audio in OGG container is allowed
+EPUB 3 — Publication Resources#Verify Open Type fonts are allowed
+EPUB 3 — Publication Resources#Verify PNG images are allowed
+EPUB 3 — Publication Resources#Verify SVG fonts are allowed
+EPUB 3 — Publication Resources#Verify TrueType fonts core media types
+EPUB 3 — Publication Resources#Verify WebP images are allowed
+EPUB 3 — Publication Resources#Verify a data URL having unesapced query-like component
+EPUB 3 — Publication Resources#Verify a script data block does not require a fallback
+EPUB 3 — Publication Resources#Verify an "importmap" JSON script content
+EPUB 3 — Publication Resources#Verify an attribute value with leading/trailing whitespace is allowed (issue 332)
+EPUB 3 — Publication Resources#Verify that JPEG file is not corrupt (issue 567)
+EPUB 3 — Publication Resources#Verify that a remote core media type resource is allowed when used by a script
+EPUB 3 — Publication Resources#Verify that a remote foreign resource is allowed when used by a script
+EPUB 3 — Publication Resources#Verify that an `img srcset` can reference foreign resources when they have manifest fallbacks
+EPUB 3 — Publication Resources#Verify that an `img` element can reference a foreign resource so long as it has a manifest fallback (and is not in a `picture` element)
+EPUB 3 — Publication Resources#Verify that remote SVG fonts are allowed
+EPUB 3 — Publication Resources#Verify that remote audio resources are allowed
+EPUB 3 — Publication Resources#Verify that remote audio resources are allowed anywhere
+EPUB 3 — Publication Resources#Verify that remote audio resources defined in the `sources` element are allowed
+EPUB 3 — Publication Resources#Verify that remote fonts are allowed
+EPUB 3 — Publication Resources#Verify that remote fonts of unknown type declared in CSS `@font-face` are allowed
+EPUB 3 — Publication Resources#Verify that remote fonts of unknown type declared in SVG `font-face-uri` are allowed
+EPUB 3 — Publication Resources#Verify that remote video resources are allowed
+EPUB 3 — Publication Resources#Verify that remote video resources are allowed anywhere
+EPUB 3 — Publication Resources#Verify the `picture source` element can reference foreign resources so long as the `type` attribute is declared
+EPUB 3 — Publication Resources#Warn about a remote resource with a non `https` URL
+EPUB 3 — Publication Resources#Warn about an XML document encoded as UTF-16 (even with an UTF-8 declaration)
+EPUB 3 — Publication Resources#Warn about an XML document encoded as UTF-16 (not declared but with a BOM)
+EPUB 3 — Publication Resources#Warn about an XML document encoded as UTF-16 (with an encoding declaration)
+EPUB 3 — Publication Resources#a Wasm module fetched in a script is exempt
+EPUB 3 — Publication Resources#a classic script resource with a type attribute and a foreign JavaScript MIME type is exempt
+EPUB 3 — Publication Resources#a classic script resource with a type attribute and that is not JavaScript is reported
+EPUB 3 — Publication Resources#a classic script resource with no type attribute and a foreign JavaScript MIME type is exempt
+EPUB 3 — Publication Resources#a classic script resource with no type attribute and that is not JavaScript is reported
+EPUB 3 — Publication Resources#a module script resource that is not JavaScript is reported
+EPUB 3 — Publication Resources#a module script resource with a foreign JavaScript MIME type is exempt
+EPUB 3 — Publication Resources#a not well-formed Package Document is reported
+EPUB 3 — Publication Resources#an XML document encoded as UTF-8 with a BOM is valid
+EPUB 3 — Publication Resources#an XML document encoded as UTF-8 with an encoding declaration is valid
+EPUB 3 — Publication Resources#an XML document encoded as UTF-8 with no encoding declaration is valid
+EPUB 3 — Publication Resources#do not process a `mailto` URL as a resource
+EPUB 3 — Publication Resources#do not process an absolute `cite` URL as a resource
+EPUB 3 — Publication Resources#foreign video in an HTML `source` child of a `video` element is exempt
+EPUB 3 — Publication Resources#foreign video in an HTML`video` element is exempt
+EPUB 3 — Publication Resources#foreign video referenced from an HTML `img` element is not exempt
+EPUB 3 — Publication Resources#foreign video with a media type not starting with 'video/' is exempt
+EPUB 3 — Publication Resources#items with Core Media Types do not require fallbacks
+EPUB 3 — Publication Resources#items with Core Media Types that are not preferred types are reported as usage
+EPUB 3 — Publication Resources#remote SVG document is not detected in single-document mode
+EPUB 3 — Publication Resources#remote XHTML document is not detected in single-document mode
+EPUB 3 — Publication Resources#using a not-declared namespace is not allowed
+EPUB 3 — Vocabularies — Media overlays vocabulary#Report 'media:duration' properties with non-clock values
+EPUB 3 — Vocabularies — Media overlays vocabulary#Report a 'media:active-class' property defined more than once
+EPUB 3 — Vocabularies — Media overlays vocabulary#Report a 'media:playback-active-class' property defined more than once
+EPUB 3 — Vocabularies — Media overlays vocabulary#the 'media:duration' property can be expressed as a full clock value
+EPUB 3 — Vocabularies — Media overlays vocabulary#the 'media:duration' property can be expressed as a timecount value
+EPUB 3 — Vocabularies — Meta properties vocabulary#'authority' metadata can only refine a subject expression
+EPUB 3 — Vocabularies — Meta properties vocabulary#'authority' metadata can refine a subject expression
+EPUB 3 — Vocabularies — Meta properties vocabulary#'authority' metadata must be associated to a term
+EPUB 3 — Vocabularies — Meta properties vocabulary#'authority' metadata must not be defined more than once
+EPUB 3 — Vocabularies — Meta properties vocabulary#'belongs-to-collection' metadata can identify the publication's collection
+EPUB 3 — Vocabularies — Meta properties vocabulary#'belongs-to-collection' metadata can only refine other 'belongs-to-collection' metadata
+EPUB 3 — Vocabularies — Meta properties vocabulary#'collection-type' cannot be used as a primary metadata
+EPUB 3 — Vocabularies — Meta properties vocabulary#'collection-type' metadata can only refine a 'belongs-to-collection' property
+EPUB 3 — Vocabularies — Meta properties vocabulary#'collection-type' metadata cannot be defined more than once to refine the same expression
+EPUB 3 — Vocabularies — Meta properties vocabulary#'display-seq' metadata cannot be defined more than once to refine the same expression
+EPUB 3 — Vocabularies — Meta properties vocabulary#'display-seq' metadata is allowed
+EPUB 3 — Vocabularies — Meta properties vocabulary#'file-as' metadata cannot be defined more than once to refine the same expression
+EPUB 3 — Vocabularies — Meta properties vocabulary#'file-as' metadata is allowed
+EPUB 3 — Vocabularies — Meta properties vocabulary#'group-position' metadata cannot be defined more than once to refine the same expression
+EPUB 3 — Vocabularies — Meta properties vocabulary#'group-position' metadata is allowed
+EPUB 3 — Vocabularies — Meta properties vocabulary#'identifier-type' metadata can only refine a 'source' or 'identifier' property
+EPUB 3 — Vocabularies — Meta properties vocabulary#'identifier-type' metadata cannot be defined more than once to refine the same expression
+EPUB 3 — Vocabularies — Meta properties vocabulary#'pageBreakSource' metadata is allowed
+EPUB 3 — Vocabularies — Meta properties vocabulary#'role' metadata can be used once or more to refine a creator, contributor, or publisher
+EPUB 3 — Vocabularies — Meta properties vocabulary#'role' metadata cannot be used to refine properties other than creator, contributor, or publisher
+EPUB 3 — Vocabularies — Meta properties vocabulary#'source-of' metadata can be used to refine the pagination source
+EPUB 3 — Vocabularies — Meta properties vocabulary#'source-of' metadata cannot be defined more than once to refine the same expression
+EPUB 3 — Vocabularies — Meta properties vocabulary#'source-of' metadata cannot be used as a primary metadata
+EPUB 3 — Vocabularies — Meta properties vocabulary#'source-of' metadata must refine a 'dc:source' metadata entry
+EPUB 3 — Vocabularies — Meta properties vocabulary#'source-of' metadata value must be "pagination"
+EPUB 3 — Vocabularies — Meta properties vocabulary#'term' metadata can only refine a subject expression
+EPUB 3 — Vocabularies — Meta properties vocabulary#'term' metadata can refine a subject expression
+EPUB 3 — Vocabularies — Meta properties vocabulary#'term' metadata must be associated to an authority
+EPUB 3 — Vocabularies — Meta properties vocabulary#'term' metadata must not be defined more than once
+EPUB 3 — Vocabularies — Meta properties vocabulary#'title-type' metadata can be used to refine a title expression
+EPUB 3 — Vocabularies — Meta properties vocabulary#'title-type' metadata can only refine a 'title' expression
+EPUB 3 — Vocabularies — Meta properties vocabulary#'title-type' metadata cannot be defined more than once to refine the same expression
+EPUB 3 — Vocabularies — Metadata link vocabulary#'record' link can be paired with other keywords
+EPUB 3 — Vocabularies — Metadata link vocabulary#a 'record' link can point to a local record
+EPUB 3 — Vocabularies — Metadata link vocabulary#a 'record' link can point to a remote record
+EPUB 3 — Vocabularies — Metadata link vocabulary#a 'record' link cannot refine another property or resource
+EPUB 3 — Vocabularies — Metadata link vocabulary#a 'record' link must have a 'media-type' attribute even when remote
+EPUB 3 — Vocabularies — Metadata link vocabulary#a 'record' link type can be further identified with a 'properties' attribute
+EPUB 3 — Vocabularies — Metadata link vocabulary#a 'voicing' link can identify the aural representation of metadata
+EPUB 3 — Vocabularies — Metadata link vocabulary#a 'voicing' link must have a 'media-type' attribute even when remote
+EPUB 3 — Vocabularies — Metadata link vocabulary#a 'voicing' link must refine another property or resource
+EPUB 3 — Vocabularies — Metadata link vocabulary#a 'voicing' link resource must have an audio media type
+EPUB 3 — Vocabularies — Metadata link vocabulary#an 'alternate' link can identify an alternate version of the Package Document
+EPUB 3 — Vocabularies — Metadata link vocabulary#an 'alternate' link must not be paired with other keywords
+EPUB 3 — Vocabularies — Package rendering vocabulary#'page-spread-right' property paired with 'page-spread-left' is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#'rendition:layout' 'pre-paginated' can be used to declare a pre-paginated publication
+EPUB 3 — Vocabularies — Package rendering vocabulary#'rendition:layout' 'reflowable' can be used to declare a reflowable publication
+EPUB 3 — Vocabularies — Package rendering vocabulary#'rendition:layout' 'roll' can be used to declare a roll publication
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:layout' property declared more than once is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:layout' property on a refining 'meta' element is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:layout' property with an unknown value is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:layout' property with no value is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:layout-pre-paginated' override in a roll publication is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:layout-pre-paginated' property can be used as a spine override
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:layout-reflowable' override in a roll publication is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:layout-reflowable' property can be used as a spine override
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:page-spread-center' property paired with (prefixed)'rendition:page-spread-right' is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:page-spread-center' property paired with (unprefixed) 'page-spread-left' is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:page-spread-left' property paired with (prefixed)'rendition:page-spread-center' is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:page-spread-left' property paired with (unprefixed) 'page-spread-left' is allowed
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:page-spread-left' property paired with (unprefixed) 'page-spread-right' is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:page-spread-right' property paired with (unprefixed) 'page-spread-left' is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#A 'rendition:page-spread-right' property paired with (unprefixed)'page-spread-right' is allowed
+EPUB 3 — Vocabularies — Package rendering vocabulary#A custom rendition property using the 'rendition' prefix is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#The 'rendition:page-spread-center' property as publication metadata is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#The 'rendition:page-spread-center' property is allowed on a spine item
+EPUB 3 — Vocabularies — Package rendering vocabulary#The 'rendition:page-spread-left' property as publication metadata is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#The 'rendition:page-spread-left' property is allowed on a spine item
+EPUB 3 — Vocabularies — Package rendering vocabulary#The 'rendition:page-spread-right' property as publication metadata is reported
+EPUB 3 — Vocabularies — Package rendering vocabulary#The 'rendition:page-spread-right' property is allowed on a spine item
+EPUB 3 — Vocabularies — Package rendering vocabulary#the 'page-spread-left' unprefixed property is allowed on spine items
+EPUB 3 — Vocabularies — Package rendering vocabulary#the 'page-spread-right' unprefixed property is allowed on spine items
+EPUB 3 — Vocabularies — Package rendering vocabulary#two 'rendition:layout' overrides in the same 'itemref' element are reported
+EPUB 3 — Vocabulary association mechanisms#Allow declared prefixes used in the XHTML `epub:type` attribute
+EPUB 3 — Vocabulary association mechanisms#Allow explicit declarations of reserved prefixes in package documents
+EPUB 3 — Vocabulary association mechanisms#Allow the reserved 'schema' prefix in package metadata properties
+EPUB 3 — Vocabulary association mechanisms#Allow valid `prefix` attribute mappings in SVG content documents
+EPUB 3 — Vocabulary association mechanisms#Allow valid `prefix` attribute mappings in XHTML content documents
+EPUB 3 — Vocabulary association mechanisms#Allow valid `prefix` attribute mappings in media overlays
+EPUB 3 — Vocabulary association mechanisms#Allow valid `prefix` attribute mappings in package documents
+EPUB 3 — Vocabulary association mechanisms#Report `prefix` re-mapping default vocabularies in XHTML
+EPUB 3 — Vocabulary association mechanisms#Report `prefix` re-mapping default vocabularies in a package document
+EPUB 3 — Vocabulary association mechanisms#Report a `epub:type` using a prefix declared in a `prefix` attribute with no namespace, in an XHTML content document.
+EPUB 3 — Vocabulary association mechanisms#Report a `prefix` attribute on an XHTML `head` element
+EPUB 3 — Vocabulary association mechanisms#Report a `prefix` attribute on an XHTML embedded `svg` element
+EPUB 3 — Vocabulary association mechanisms#Report a declaration of the prefix '_' in XHTML content documents
+EPUB 3 — Vocabulary association mechanisms#Report a prefix mapping to the Dublic Core elements namespace
+EPUB 3 — Vocabulary association mechanisms#Report an `epub:type` using a prefix declared in a `prefix` attribute with no namespace, in a media overlay.
+EPUB 3 — Vocabulary association mechanisms#Report overriding of reserved prefixes in package documents
+EPUB 3 — Vocabulary association mechanisms#Report syntax errors in the `prefix` attribute value
+EPUB 3 — Vocabulary association mechanisms#Report undeclared prefixes used in a Media Overlays `epub:type` attribute
+EPUB 3 — Vocabulary association mechanisms#Report undeclared prefixes used in package metadata properties
+EPUB 3 — Vocabulary association mechanisms#Report undeclared prefixes used in the XHTML `epub:type` attribute
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Report a dictionary search key map with an invalid content model
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Report a dictionary that does not identify itself in a `dc:type` element
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Report a dictionary that does not meet the content model requirements
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Report a dictionary that is not processed using the 'dict' profile but is detected as a dictionary from a content document's `epub:type` value
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Report a link to a CSS file instead of a content document
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Report a link to a missing resource
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Report a search key map file that does not have an `.xml` extension
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Report a single dictionary without any content documents with dictionary content
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Report multiple dictionaries without any content documents with dictionary content
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Verify a publication with a single dictionary
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Verify a publication with a single glossary
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Verify a publication with multiple dictionaries
+EPUB Dictionaries and Glossaries ▸ Full Publication Checks#Verify the 'glossary' manifest item property is not mandatory in the default checking profile
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A Search Key Map document must have the correct media type
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A dictionary collection can be used to define multiple EPUB Dictionaries
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A dictionary collection must contain a search key map
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A dictionary collection must not contain a search key map used by another collection
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A dictionary collection must not contain child collections
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A dictionary collection must not contain more than one search key map
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A dictionary collection must not contain resources not in the manifest
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A dictionary collection must not contain resources other than XHTML Content Documents and Search Key Map
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A dictionary-type property `monolingual` is valid
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A dictionary-type property with an unknown value is reported
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A publication with single EPUB Dictionary is valid
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A single EPUB Dictionary must declare a search key map
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#A single EPUB Dictionary search key map must have the 'dictionary' property
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#An EPUB Dictionary publication must have a 'dictionary' `dc:type` property
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#The source language of a dictionary collection must not be defined more than once
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#The source language of a single-dictionary publication must be defined
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#The source language of a single-dictionary publication must not be defined more than once
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#The source/target languages of a multiple-dictionary publication can be defined in the collections
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#The target language of a dictionary collection must be defined
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#The target language of a dictionary collection must one of the declared 'dc:language' values
+EPUB Dictionaries and Glossaries ▸ Package Document Checks#The target language of a single-dictionary publication must one of the declared 'dc:language' values
+EPUB Distributable Objects ▸ Package Document Checks#a simple EPUB Embedded Object
+EPUB Distributable Objects ▸ Package Document Checks#an embedded object must have a `dc:identifier` metadata
+EPUB Indexes ▸ Full Publication Checks#Report a single-file index with an invalid content model
+EPUB Indexes ▸ Full Publication Checks#Report a single-file index without an index
+EPUB Indexes ▸ Full Publication Checks#Report an index collection with an invalid content model
+EPUB Indexes ▸ Full Publication Checks#Report an index collection without an index
+EPUB Indexes ▸ Full Publication Checks#Report an index publication with an invalid content model
+EPUB Indexes ▸ Full Publication Checks#Report an index publication without an index
+EPUB Indexes ▸ Full Publication Checks#Verify a single-file index
+EPUB Indexes ▸ Full Publication Checks#Verify an index collection
+EPUB Indexes ▸ Full Publication Checks#Verify an index publication
+EPUB Indexes ▸ Package Document Checks#An index collection is reported as valid
+EPUB Indexes ▸ Package Document Checks#An index collection may contain index-group child collections
+EPUB Indexes ▸ Package Document Checks#An index collection must not contain child collections other than index-group
+EPUB Indexes ▸ Package Document Checks#An index collection must only contain links to XHTML Content Documents
+EPUB Indexes ▸ Package Document Checks#An index-group collection must be a child collection of an index collection
+EPUB Indexes ▸ Package Document Checks#An index-group collection must not contain child collections
+EPUB Indexes ▸ XHTML Content Document Checks#Report `index` semantic not declared on `body` element
+EPUB Indexes ▸ XHTML Content Document Checks#Report document without an index declaration
+EPUB Indexes ▸ XHTML Content Document Checks#Verify a minimal index
+EPUB Multiple-Rendition ▸ Full Publication Checks#Report a container with more than one mapping document
+EPUB Multiple-Rendition ▸ Full Publication Checks#Report a container with multiple renditions but missing all the core identifying features
+EPUB Multiple-Rendition ▸ Full Publication Checks#Report a mapping document that is not identified as XHTML in the container document
+EPUB Multiple-Rendition ▸ Full Publication Checks#Report a mapping document with an unknown nav type
+EPUB Multiple-Rendition ▸ Full Publication Checks#Report a mapping document without a resource map
+EPUB Multiple-Rendition ▸ Full Publication Checks#Report a mapping document without a version identifier
+EPUB Multiple-Rendition ▸ Full Publication Checks#Report a media query syntax error in the 'rendition:media' rendition selection attribute
+EPUB Multiple-Rendition ▸ Full Publication Checks#Report a multiple-rendition publication with no 'metadata.xml' file
+EPUB Multiple-Rendition ▸ Full Publication Checks#Report a non-primary rootfile element without a rendition selection attribute
+EPUB Multiple-Rendition ▸ Full Publication Checks#Report an incomplete identifier in multiple-rendition 'metadata.xml' file
+EPUB Multiple-Rendition ▸ Full Publication Checks#Report an unknown rendition selection attribute
+EPUB Multiple-Rendition ▸ Full Publication Checks#Verify a rendition mapping document with multiple nav elements
+EPUB Multiple-Rendition ▸ Full Publication Checks#Verify basic multiple rendition publication
+EPUB Previews ▸ Full Publication Checks#Report a preview pubication that does not identify its source publication
+EPUB Previews ▸ Full Publication Checks#Report a preview publication that does not identify itself in a `dc:type` element
+EPUB Previews ▸ Full Publication Checks#Report a preview publication that uses its own identifier as the source publication
+EPUB Previews ▸ Full Publication Checks#Report an embedded preview that does not have a manifest
+EPUB Previews ▸ Full Publication Checks#Report an embedded preview that uses EPUB CFIs in the links to xhtml content documents
+EPUB Previews ▸ Full Publication Checks#Report an embedded preview without any links to preview content
+EPUB Previews ▸ Full Publication Checks#Report an embedded preview without that links to non-xhtml content documents
+EPUB Previews ▸ Full Publication Checks#Verify a preview publication
+EPUB Previews ▸ Full Publication Checks#Verify an embedded preview
+EPUB Previews ▸ Package Document Checks#an embedded EPUB preview collection
+EPUB Region-Based Navigation ▸ Full Publication Checks#Report a data nav file included in the spine
+EPUB Region-Based Navigation ▸ Full Publication Checks#Report a data nav file that is not encoded as `application/xhtml+xml`
+EPUB Region-Based Navigation ▸ Full Publication Checks#Report a data nav with an unidentified `nav` element in it
+EPUB Region-Based Navigation ▸ Full Publication Checks#Report a region-based `nav` element that does not point to fixed-layout documents
+EPUB Region-Based Navigation ▸ Full Publication Checks#Report a region-based `nav` element with an invalid content model
+EPUB Region-Based Navigation ▸ Full Publication Checks#Report region-based navigation not defined on a `nav` element
+EPUB Region-Based Navigation ▸ Full Publication Checks#Report the inclusion of more than one data nav file
+EPUB Region-Based Navigation ▸ Full Publication Checks#Verify a basic data nav file
+EPUB Region-Based Navigation ▸ Full Publication Checks#Verify a data nav that defines region-based navgiation
+EPUB Region-Based Navigation ▸ Full Publication Checks#Verify subregion navigation using comics semantics
+EPUB Scriptable Components ▸ Package Document Checks#A minimal embedded scriptable component is reported as valid
+EPUB Scriptable Components ▸ Package Document Checks#The 'epubsc' prefix must be declared
+EPUB for Education ▸ Full Publication Checks#Report a missing publication-level 'dc:type' for edupub publication with multiple renditions
+EPUB for Education ▸ Full Publication Checks#Report a missing rendition-level 'dc:type' for edupub publication with multiple renditions
+EPUB for Education ▸ Full Publication Checks#Report an edupub publication missing a page list
+EPUB for Education ▸ Full Publication Checks#Report an edupub publication with a page list but the source of the pagination is not identified
+EPUB for Education ▸ Full Publication Checks#Report an edupub publication with microdata attributes
+EPUB for Education ▸ Full Publication Checks#Verify a basic edupub publication
+EPUB for Education ▸ Full Publication Checks#Verify an edupub publication with a page list
+EPUB for Education ▸ Full Publication Checks#Verify an edupub publication with fixed-layout documents
+EPUB for Education ▸ Full Publication Checks#Verify an edupub publication with multiple renditions
+EPUB for Education ▸ Full Publication Checks#Verify that non-linear content does not have to follow the sectioning rules
+EPUB for Education ▸ Package Document Checks#a minimal EDUPUB publication is reported as valid
+EPUB for Education ▸ Package Document Checks#a minimal EDUPUB teachers’s edition is reported as valid
+EPUB for Education ▸ Package Document Checks#an EDUPUB publication must declare the type 'edupub'
+EPUB for Education ▸ Package Document Checks#an EDUPUB teachers’s edition must declare the type 'edupub'
+EPUB for Education ▸ Package Document Checks#an EDUPUB teachers’s edition should declare the source student edition
+EPUB for Education ▸ Package Document Checks#an EDUPUB’s accessibility features must at least include 'tableOfContents'
+EPUB for Education ▸ Package Document Checks#an EDUPUB’s accessibility features must be declared
+EPUB for Education ▸ XHTML Content Document Checks#Allow a section heading specified as ARIA heading role
+EPUB for Education ▸ XHTML Content Document Checks#Minimal Content Document
+EPUB for Education ▸ XHTML Content Document Checks#Report `aria-label` on `body` and `section` with headings
+EPUB for Education ▸ XHTML Content Document Checks#Report `body` used as an explicit section without a heading
+EPUB for Education ▸ XHTML Content Document Checks#Report a heading with only an `img` without alternative text
+EPUB for Education ▸ XHTML Content Document Checks#Report a missing section heading
+EPUB for Education ▸ XHTML Content Document Checks#Report incorrect heading level following `aria-label` on `body`
+EPUB for Education ▸ XHTML Content Document Checks#Report invalid and missing headings in sectioning elements
+EPUB for Education ▸ XHTML Content Document Checks#Report invalid subheadings within a `body` used as an explicit section
+EPUB for Education ▸ XHTML Content Document Checks#Report section subtitle not in a `header` element
+EPUB for Education ▸ XHTML Content Document Checks#Verify `body` only contains sectioning elements when no heading
+EPUB for Education ▸ XHTML Content Document Checks#Verify `body` only contains sectioning elements when no heading (remove this invalid duplicate? see issue 1109)
+EPUB for Education ▸ XHTML Content Document Checks#Verify `body` used as an explicit section of content
+EPUB for Education ▸ XHTML Content Document Checks#Verify a heading with only an `img` that has alternative text
+EPUB for Education ▸ XHTML Content Document Checks#Verify section title and subtitle are in a `header` element
+EPUBCheck - JSON Report tests#Basic well-formedness checks #1
+EPUBCheck - JSON Report tests#Basic well-formedness checks #2
+EPUBCheck - JSON Report tests#Font embedded
+EPUBCheck - JSON Report tests#Font remote
+EPUBCheck - JSON Report tests#`renditionLayout` "pre-paginated" on item
+EPUBCheck - JSON Report tests#`renditionLayout` "pre-paginated" on publication
+EPUBCheck - JSON Report tests#`renditionLayout` "reflowable" on item
+EPUBCheck - JSON Report tests#`renditionLayout` "reflowable" on publication
+EPUBCheck - JSON Report tests#`renditionOrientation` on item
+EPUBCheck - JSON Report tests#`renditionOrientation` on publication
+EPUBCheck - JSON Report tests#`renditionSpread` on item
+EPUBCheck - JSON Report tests#`renditionSpread` on publication
+EPUBCheck - JSON Report tests#cross-HTML references
+EPUBCheck - JSON Report tests#layout field defaults
+EPUBCheck - JSON Report tests#the default maximum number of each message is 25
+EPUBCheck - JSON Report tests#the maximum number can be configured to 0
+EPUBCheck - JSON Report tests#the maximum number can be configured to a limit
+EPUBCheck - JSON Report tests#the maximum number can be unlimited
+EPUBCheck - XML Report tests#the creation date is set
+EPUBCheck - XML Report tests#the default maximum number of each message is 25
+EPUBCheck - XML Report tests#the maximum number can be configured to 0
+EPUBCheck - XML Report tests#the maximum number can be configured to a limit
+EPUBCheck - XML Report tests#the maximum number can be unlimited
+EPUBCheck - XML Report tests#the report is well-formed and has content
+EPUBCheck Command Line#ERROR messages are silenced with option `-f`
+EPUBCheck Command Line#Option `--version` is used when checking file
+EPUBCheck Command Line#USAGE messages are not reported by default
+EPUBCheck Command Line#USAGE messages are reported with option `-u`
+EPUBCheck Command Line#WARNING messages are reported with option `-w`
+EPUBCheck Command Line#WARNING messages are silenced with option `-e`
+EPUBCheck Command Line#`--locale` option can be used to localize messages
+EPUBCheck Command Line#check a packaged EPUB with no extension
+EPUBCheck Command Line#check a packaged EPUB with non-epub extension
+EPUBCheck Command Line#check a packaged EPUB with poorly cased extension
+EPUBCheck Command Line#check a packaged EPUB with warnings
+EPUBCheck Command Line#check a single invalid navigation document
+EPUBCheck Command Line#check a single valid navigation document
+EPUBCheck Command Line#check a valid packaged EPUB
+EPUBCheck Command Line#check an unreadable file
+EPUBCheck Command Line#information about the EPUB version comes first
+EPUBCheck Command Line#invalid locale falls back to the default locale
+EPUBCheck Command Line#messages and severities are overridden with the `-c` option
+EPUBCheck Command Line#messages and severities overridden with the `-c` option
+EPUBCheck Command Line#option `--faileonwarnings` make the command fail when a WARNING is reported
+EPUBCheck Command Line#option `--maxOfEachMessage` applies to JSON reports
+EPUBCheck Command Line#option `--maxOfEachMessage` applies to XMP reports
+EPUBCheck Command Line#option `--maxOfEachMessage` can be set to a negative value
+EPUBCheck Command Line#option `--maxOfEachMessage` can be set to the keyword 'unlimited'
+EPUBCheck Command Line#option `--maxOfEachMessage` configures the number of maximum unique messages
+EPUBCheck Command Line#option `--maxOfEachMessage` is case insensitive
+EPUBCheck Command Line#output a JSON report to the standard output
+EPUBCheck Command Line#quiet mode does not conflict with saving a report
+EPUBCheck Command Line#quiet mode prevents extra output
+EPUBCheck Command Line#report an error when overriding an unknown message ID
+EPUBCheck Command Line#report an error when overriding to a message suggestion with parameters mismatch
+EPUBCheck Command Line#report an error when overriding to a message with parameters mismatch
+EPUBCheck Command Line#report an error when overriding to an unknown severity
+EPUBCheck Command Line#save a JSON report with the `-j` option
+EPUBCheck Command Line#save an XML report with the `-o` option
+EPUBCheck Command Line#save an XML report with the `-out` option
+EPUBCheck Command Line#save an XMP report with the `-x` option
+EPUBCheck Command Line#save the resulting EPUB
+EPUBCheck Command Line#the default number of maximum unique messages is 25
+EPUBCheck Command Line#unsupported locale falls back to the default locale
+EPUBCheck ▸ Localization#CSS messages are localized
+EPUBCheck ▸ Localization#Case-conversion is locale-dependent
+EPUBCheck ▸ Localization#Jing locale is properly reset (after the previous scenario)
+EPUBCheck ▸ Localization#Schema messages (Jing library) are localized
+EPUBCheck ▸ Localization#The default testing locale is English
+EPUBCheck ▸ Localization#The reporting locale can be configured
+EPUBCheck ▸ Localization#The reporting locale overrides the default locale

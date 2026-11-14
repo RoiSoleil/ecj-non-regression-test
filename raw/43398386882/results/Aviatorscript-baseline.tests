@@ -1,0 +1,14 @@
+failed 870 13 0 65
+com.googlecode.aviator.runtime.function.seq.SeqFilterFunctionUnitTest#testFilter_map
+com.googlecode.aviator.runtime.function.seq.SeqMapFunctionUnitTest#testMap_Map
+com.googlecode.aviator.runtime.function.seq.SeqReduceFunctionUnitTest#testReduce_Array
+com.googlecode.aviator.scripts.TestScripts#testLibs
+com.googlecode.aviator.scripts.TestScripts#testSeqEntry
+com.googlecode.aviator.scripts.TestScriptsWithIntepreter#testLibs
+com.googlecode.aviator.scripts.TestScriptsWithIntepreter#testSeqEntry
+com.googlecode.aviator.scripts.TestScriptsWithIntepreterSerialize#testLibs
+com.googlecode.aviator.scripts.TestScriptsWithIntepreterSerialize#testSeqEntry
+com.googlecode.aviator.scripts.TestScriptsWithSerialize#testLibs
+com.googlecode.aviator.scripts.TestScriptsWithSerialize#testSeqEntry
+com.googlecode.aviator.test.function.FunctionTest#testSeqFilterMapWithProperty
+com.googlecode.aviator.test.function.FunctionTest#testSeqFunction

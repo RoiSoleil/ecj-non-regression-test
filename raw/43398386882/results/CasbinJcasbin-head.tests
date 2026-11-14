@@ -1,0 +1,3 @@
+failed 358 2 1 54
+org.casbin.jcasbin.main.LogUtilTest#testLogUtil
+org.casbin.jcasbin.main.UtilTest#should_logged_when_splitCommaDelimited_given_ioException

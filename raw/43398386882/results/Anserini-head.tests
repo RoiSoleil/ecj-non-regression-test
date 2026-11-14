@@ -1,0 +1,4 @@
+failed 1200 3 0 614
+io.anserini.reproduce.SummarizeLogsFromDocumentCollectionTest#testSummarizeLogs
+io.anserini.reproduce.SummarizeLogsFromDocumentCollectionTest#testSummarizeLogsJson
+io.anserini.reproduce.SummarizeLogsFromDocumentCollectionTest#testSummarizeLogsMarkdown

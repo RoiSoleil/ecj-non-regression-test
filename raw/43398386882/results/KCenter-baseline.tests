@@ -1,0 +1,4 @@
+failed 5 3 0 11
+org.nesc.ec.bigdata.email.EmailTest#testSendEmail
+org.nesc.ec.bigdata.monitor.ElasticsearchServiceTest#testQuery
+org.nesc.ec.bigdata.monitor.ElasticsearchServiceTest#testQueryOffset

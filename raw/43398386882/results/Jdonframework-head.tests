@@ -1,0 +1,11 @@
+failed 14 10 0 9
+com.jdon.SampleAppTest#testBankAccount
+com.jdon.SampleAppTest#testCQRS
+com.jdon.SampleAppTest#testCommand
+com.jdon.SampleAppTest#testComponentsEvent
+com.jdon.SampleAppTest#testDomainEvent
+com.jdon.SampleAppTest#testDomainEventSimple
+com.jdon.SampleAppTest#testEvent
+com.jdon.SampleAppTest#testGetService
+com.jdon.SampleAppTest#testOnEvent
+com.jdon.SampleAppTest#testXml

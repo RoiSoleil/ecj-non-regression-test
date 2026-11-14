@@ -1,0 +1,14 @@
+failed 645 13 2 7
+org.stringtemplate.v4.test.TestEarlyEvaluation#testBugArrayIndexOutOfBoundsExceptionInSTRuntimeMessage_getSourceLocation
+org.stringtemplate.v4.test.TestEarlyEvaluation#testEarlyEval
+org.stringtemplate.v4.test.TestEarlyEvaluation#testEarlyEval2
+org.stringtemplate.v4.test.TestImports#testImportDirInJarViaCLASSPATH
+org.stringtemplate.v4.test.TestImports#testImportGroupAtSameLevelInJar
+org.stringtemplate.v4.test.TestImports#testImportGroupAtSameLevelInJar2
+org.stringtemplate.v4.test.TestImports#testImportGroupAtTopLevelInJar
+org.stringtemplate.v4.test.TestImports#testImportGroupInJarViaCLASSPATH
+org.stringtemplate.v4.test.TestImports#testImportTemplateFileInJarViaCLASSPATH
+org.stringtemplate.v4.test.TestRenderers#testRendererForGroup
+org.stringtemplate.v4.test.TestRenderers#testRendererWithPredefinedFormat
+org.stringtemplate.v4.test.TestRenderers#testRendererWithPredefinedFormat2
+org.stringtemplate.v4.test.TestRenderers#testRendererWithPredefinedFormat4

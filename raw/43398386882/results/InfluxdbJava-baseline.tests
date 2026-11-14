@@ -1,0 +1,5 @@
+timeout 5 4 1 1801
+PerformanceTests#testMaxWritePointsPerformance()
+PerformanceTests#testRetryWritePointsInBatch()
+PerformanceTests#testWriteCompareUDPPerformanceForBatchWithSinglePoints()
+PerformanceTests#testWriteSinglePointPerformance()

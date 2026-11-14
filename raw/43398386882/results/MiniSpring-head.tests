@@ -1,0 +1,9 @@
+failed 34 8 0 8
+org.springframework.test.aop.AutoProxyTest#testAutoProxy
+org.springframework.test.aop.AutoProxyTest#testPopulateProxyBeanWithPropertyValues
+org.springframework.test.aop.DynamicProxyTest#testAdvisor
+org.springframework.test.aop.DynamicProxyTest#testBeforeAdvice
+org.springframework.test.aop.DynamicProxyTest#testCglibDynamicProxy
+org.springframework.test.aop.DynamicProxyTest#testProxyFactory
+org.springframework.test.aop.ProxyFactoryTest#testAdvisor
+org.springframework.test.ioc.CircularReferenceWithProxyBeanTest#testCircularReference

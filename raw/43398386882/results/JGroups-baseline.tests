@@ -1,0 +1,13 @@
+failed 1715 12 0 98
+org.jgroups.tests.MergeTest6#testViewInconsistency
+org.jgroups.tests.RelayTest#testCoordinatorShutdown[class org.jgroups.protocols.relay.RELAY3](4)
+org.jgroups.tests.RelayTest#testMulticastWithMultipleSiteMasters[class org.jgroups.protocols.relay.RELAY3](4)
+org.jgroups.tests.RelayTest#testSitesUp[class org.jgroups.protocols.relay.RELAY3](4)
+org.jgroups.tests.RelayTestAsym#testFailoverSiteDown2
+org.jgroups.tests.RelayTestAsym#testMessageSending
+org.jgroups.tests.RelayTestAsym#testMultipleSiteMastersSM
+org.jgroups.tests.RelayTestAsym#testRetransmissionToUnicastAddress
+org.jgroups.tests.RelayTestAsym#testSendFromHF_To_NET3
+org.jgroups.tests.RelayTestAsym#testTopology
+org.jgroups.tests.ServerTests#testConcurrentConnect[NioServer (127.0.0.1:41555, 0 conns), NioServer (127.0.0.1:40585, 0 conns)](2)
+org.jgroups.tests.ServerUnitTest#testConnectionCountOnStop

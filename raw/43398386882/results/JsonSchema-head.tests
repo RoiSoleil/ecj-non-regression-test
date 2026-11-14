@@ -1,0 +1,19 @@
+failed 809 18 5 11
+org.everit.json.schema.ArraySchemaTest#equalsVerifier
+org.everit.json.schema.CombinedSchemaTest#equalsVerifier
+org.everit.json.schema.EmptySchemaTest#equalsVerifier
+org.everit.json.schema.EnumSchemaTest#equalsVerifier
+org.everit.json.schema.NotSchemaTest#equalsVerifier
+org.everit.json.schema.NullSchemaTest#equalsVerifier
+org.everit.json.schema.NumberSchemaTest#equalsVerifier
+org.everit.json.schema.ObjectSchemaTest#equalsVerifier
+org.everit.json.schema.ReferenceSchemaTest#equalsVerifier
+org.everit.json.schema.SchemaLocationTest#equalsVerifier
+org.everit.json.schema.StringSchemaTest#equalsVerifier
+org.everit.json.schema.event.CombinedSchemaMatchEventTest#equalsVerifier
+org.everit.json.schema.event.CombinedSchemaMismatchEventTest#equalsVerifier
+org.everit.json.schema.event.ConditionalSchemaMatchEventTest#equalsVerifier
+org.everit.json.schema.event.ConditionalSchemaMismatchEventTest#equalsVerifier
+org.everit.json.schema.event.SchemaReferencedEventTest#equalsVerifier
+org.everit.json.schema.regexp.JavaUtilRegexpTest#equalsVerifier
+org.everit.json.schema.regexp.RE2JRegexpTest#equalsVerifier

@@ -1,0 +1,8 @@
+failed 487 7 3 7
+com.tagtraum.perf.gcviewer.ctrl.impl.TestGCModelLoaderController#dropOnDesktopPane
+com.tagtraum.perf.gcviewer.ctrl.impl.TestGCModelLoaderController#openAsSeries
+com.tagtraum.perf.gcviewer.ctrl.impl.TestGCModelLoaderController#openString
+com.tagtraum.perf.gcviewer.ctrl.impl.TestGCModelLoaderController#openStringFail
+com.tagtraum.perf.gcviewer.ctrl.impl.TestGCModelLoaderController#open_File
+com.tagtraum.perf.gcviewer.ctrl.impl.TestGCModelLoaderController#open_GcResourceFile
+com.tagtraum.perf.gcviewer.ctrl.impl.TestGCModelLoaderController#open_GcResourceSeries
