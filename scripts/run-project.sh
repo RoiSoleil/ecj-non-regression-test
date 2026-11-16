@@ -190,6 +190,7 @@ BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Deditorconfig.skip=true"
 # pgpverify-maven-plugin asks a key server for the signature of every dependency: a key server that answers 404 failed
 # Dropwizard, with javac too (nothing to do with the compiler)
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dpgpverify.skip=true"
+BUILD_SKIPS="-Dasciidoctor.skip=true -Dremoteresources.skip=true -Dmaven.gitcommitid.skip=true"
 # two builds at a time on the runner (SHARED_RUNNER): the Maven processes lock the local repository between them
 [ -z "${SHARED_RUNNER:-}" ] || BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.syncContext.named.factory=file-lock -Daether.syncContext.named.nameMapper=file-gav"
 RUNS="$ROOT/work/$NAME-$LABEL-runs"   # the directory of the measured build (1): time, GC logs, Maven log, produced classes
@@ -213,7 +214,7 @@ measured_build() {
   # gc: every pause; gc+cpu: the CPU time of the GC threads of every pause
   export GC_OPTS="-Xlog:gc,gc+cpu:file=$rd/gc-%p.log:uptime:filecount=0"
   export MAVEN_OPTS="$MAVEN_OPTS $GC_OPTS"
-  export MAVEN_ARGS="$BASE_MAVEN_ARGS"
+  export MAVEN_ARGS="$BASE_MAVEN_ARGS $BUILD_SKIPS"
   # a build that hangs (HummerRisk waited 3.5 hours for nothing) must not hold the whole job: the longest build, NiFi
   # with javac, takes about 75 minutes. It exits with 124, or 137 when the build ignored SIGTERM and was killed
   /usr/bin/time -f '%e %U %S %M' -o "$rd/time" timeout -k 60 "${BUILD_TIMEOUT:-5400}" bash -c "$CMD" >"$rd/run.log" 2>&1 9>&-
