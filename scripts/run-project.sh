@@ -184,6 +184,7 @@ BASE_MAVEN_ARGS="-Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLo
 # sortpom verifies that the poms are sorted: the compiler plugin that enable-ecj-maven.py adds is not (Ranger, Slice,
 # Aircompressor, Spring Data Neo4j). Skipped for every label, so that javac and ECJ build in the same conditions.
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dsort.skip=true"
+BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.connector.http.retryHandler.count=6 -Daether.connector.http.retryHandler.interval=15000 -Daether.connector.http.retryHandler.intervalMax=60000 -Daether.connector.http.retryHandler.serviceUnavailable=429,503"
 # editorconfig-maven-plugin checks the formatting of every file, the poms that enable-ecj-maven.py rewrote too (Stormcrawler)
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Deditorconfig.skip=true"
 # pgpverify-maven-plugin asks a key server for the signature of every dependency: a key server that answers 404 failed
@@ -237,10 +238,10 @@ for attempt in 1 2 3; do
   measured_build 1
   STATUS=$?
   [ "$STATUS" != 0 ] && [ "$STATUS" != 124 ] && [ "$STATUS" != 137 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] \
-    && grep -q -E 'Could not transfer artifact|status code: 5[0-9][0-9]|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length' "$RUNS/1/run.log" \
-    && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:' "$RUNS/1/run.log" || break
+    && grep -q -E 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|status code: (429|5[0-9][0-9])|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length' "$RUNS/1/run.log" \
+    && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:|Could not find artifact' "$RUNS/1/run.log" || break
   echo "== build failed on a network error" >>"$LOG"
-  sleep 20
+  sleep $((60 + RANDOM % 60))
   clean_build
 done
 if [ "$STATUS" = 0 ]; then
