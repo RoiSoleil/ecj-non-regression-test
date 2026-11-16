@@ -192,6 +192,9 @@ The JDK project needs a JDK with `lib/src.zip`; otherwise set `JDK_SRC_DIR` to a
   `projects.json`.
 * 48 projects build with javac on JDK 21 only (`"jdk": "21"`). 136 candidates added on 2026-11-02 and 03 did not build with javac
   on JDK 21 nor 27 and were removed (list in the history of `projects.json`).
+* Projects that need javac internals cannot build with ECJ and were removed: JQF (`com.sun.tools.javac.main.Main`),
+  Bucket4j and Tika (Ignite's annotation processor calls `com.sun.source.util.Trees.instance`), Heritrix3 (its
+  `BeanDocProcessor` calls `Trees.instance`).
 * With JDK 27, ECJ fails on projects that it compiles on JDK 21: APIs removed after the release of the project
   ([#5660](https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5660): javax.tools ignores `--release`, fixed by
   [#5663](https://github.com/eclipse-jdt/eclipse.jdt.core/pull/5663)), and module errors ("The package ... conflicts with a
