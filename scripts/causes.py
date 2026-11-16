@@ -34,6 +34,9 @@ RULES = [
     ('Lombok (works with ECJ only through its agent)', 'both',
      (r'lombok[/:]', r'is undefined|cannot be resolved|may not have been initialized')),
     ('blank final in a lambda (#5593)', 'errors', r'may not have been initialized'),
+    ('type annotation placement or annotation targets', 'errors',
+     r'Type annotations are not allowed|is disallowed for this location|do not specify explicit target element types'
+     r'|container annotation type'),
     ('name clash on an override with an erasure (#5594)', 'errors', r'Name clash'),
     ('ECJ crash', 'log', r'Internal compiler error|Inconsistent classfile|Unknown source: java\.lang\.NullPointerException'),
     ('error that ECJ does not print', 'log', r'has not written it to its logging'),
@@ -42,6 +45,17 @@ RULES = [
      r'|inferred type|[Cc]annot infer|type inference'),
     ('module system', 'errors', r'is not visible|is not accessible'),
     ('missing types or members', 'errors', r'cannot be resolved|is undefined'),
+    ('Lombok agent: ECJ internal method removed (isDefaultAbstract, #5723)', 'log',
+     r'NoSuchMethodError: .boolean org\.eclipse\.jdt\.internal\.compiler\.lookup\.MethodBinding\.isDefaultAbstract\(\)'),
+    ('Lombok agent: two copies of ECJ in the Maven JVM (argument type mismatch)', 'log',
+     r'IllegalArgumentException: argument type mismatch'),
+    ('annotation processor that needs javac (com.sun.source Trees)', 'log',
+     r'(?m)Unknown source: java\.lang\.IllegalArgumentException\s*$'),
+    ('plexus-compiler-eclipse: option or plugin incompatible', 'log',
+     r'Failed to run the ecj compiler: (option -extdirs|Compliance level .* is incompatible with target level)'
+     r'|NoSuchMethodError: .*org\.codehaus\.plexus\.compiler'),
+    ('build step other than the compiler (antrun, dependency copy)', 'log',
+     r'maven-antrun-plugin:[^ ]+:run .*BuildException|has not been packaged yet'),
 ]
 COMPILED = [(cause, where, tuple(re.compile(r) for r in rule) if where == 'both' else re.compile(rule))
             for cause, where, rule in RULES]
