@@ -169,25 +169,12 @@ export MAVEN_OPTS="${MAVEN_OPTS:-} $HEAP_OPTS"
 # One pinned version of the agent for every project: it handles the annotations of the older versions too.
 # Limits: a project that gets Lombok from a parent pom outside its repository is not detected, a compiler forked in
 # another JVM does not get the agent, and the agent adds a little to the measured time of the ECJ builds.
-LOMBOK_VERSION=1.18.48
 if [ "$ECJ_VERSION" != javac ] && grep -rlq --include=pom.xml 'org.projectlombok' "$DIR" 2>/dev/null; then
-  LOMBOK_JAR="$HOME/.cache/ecj-non-regression/lombok-$LOMBOK_VERSION.jar"
-  if [ ! -s "$LOMBOK_JAR" ]; then
-    mkdir -p "$(dirname "$LOMBOK_JAR")"
-    # two builds of a job may download it at the same time: each one to a file of its own, then renamed
-    url="https://repo1.maven.org/maven2/org/projectlombok/lombok/$LOMBOK_VERSION/lombok-$LOMBOK_VERSION.jar"
-    # checked against the SHA-1 that Maven Central publishes: a truncated jar would stay in the cache
-    if curl -fsSL --retry 5 --retry-all-errors --retry-delay 10 -o "$LOMBOK_JAR.$$" "$url" >>"$LOG" 2>&1 \
-      && [ "$(sha1sum "$LOMBOK_JAR.$$" | cut -d' ' -f1)" = "$(curl -fsSL --retry 5 "$url.sha1" | cut -c1-40)" ]; then
-      mv -f "$LOMBOK_JAR.$$" "$LOMBOK_JAR"
-    else
-      rm -f "$LOMBOK_JAR.$$"
-      echo "== Lombok agent: download failed" >>"$LOG"
-    fi
-  fi
-  if [ -s "$LOMBOK_JAR" ]; then
+  if LOMBOK_JAR=$(bash "$ROOT/scripts/lombok-agent.sh" "$HOME/.cache/lombok-agent" 2 2>>"$LOG"); then
     export MAVEN_OPTS="$MAVEN_OPTS -javaagent:$LOMBOK_JAR=ECJ"
-    echo "== Lombok agent $LOMBOK_VERSION for ECJ" >>"$LOG"
+    echo "== Lombok agent $(basename "$LOMBOK_JAR" .jar | sed "s/^lombok-//") for ECJ" >>"$LOG"
+  else
+    echo "== Lombok agent: download failed" >>"$LOG"
   fi
 fi
 BASE_MAVEN_OPTS="$MAVEN_OPTS"

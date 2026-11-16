@@ -109,6 +109,11 @@ jobs:
         env:
           BASELINE: ${{ inputs.baseline }}
         run: bash scripts/baseline-ecj.sh "$BASELINE" "$HOME/.cache/ecj-baseline" "$HOME/.m2/repository/org/eclipse/jdt/ecj/$BASELINE"
+      - uses: actions/cache/restore@v4
+        if: matrix.label != 'javac'
+        with:
+          path: ~/.cache/lombok-agent
+          key: lombok-${{ hashFiles('scripts/lombok-agent.sh') }}
       - name: "Build ${{ join(matrix.projects, ', ') }} (${{ matrix.label }})"
         env:
           BASELINE: ${{ inputs.baseline }}

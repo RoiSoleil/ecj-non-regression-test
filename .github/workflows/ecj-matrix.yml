@@ -151,6 +151,21 @@ jobs:
         env:
           BASELINE: ${{ needs.setup.outputs.baseline }}
         run: bash scripts/baseline-ecj.sh "$BASELINE" "$HOME/.cache/ecj-baseline"
+      - id: lombok-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/lombok-agent
+          key: lombok-${{ hashFiles('scripts/lombok-agent.sh') }}
+      - id: lombok
+        name: Download the Lombok agent
+        if: steps.lombok-cache.outputs.cache-hit != 'true'
+        continue-on-error: true
+        run: bash scripts/lombok-agent.sh "$HOME/.cache/lombok-agent"
+      - uses: actions/cache/save@v4
+        if: steps.lombok.outcome == 'success'
+        with:
+          path: ~/.cache/lombok-agent
+          key: lombok-${{ hashFiles('scripts/lombok-agent.sh') }}
       - id: build
         env:
           REF: ${{ github.event.inputs.ecj_ref || inputs.ecj_ref }}
