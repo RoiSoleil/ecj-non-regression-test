@@ -190,6 +190,7 @@ BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Deditorconfig.skip=true"
 # pgpverify-maven-plugin asks a key server for the signature of every dependency: a key server that answers 404 failed
 # Dropwizard, with javac too (nothing to do with the compiler)
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dpgpverify.skip=true"
+BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.dependencyCollector.impl=bf -Daether.dependencyCollector.bf.threads=3 -Daether.checksums.algorithms=SHA-1 -Daether.layout.maven2.checksumAlgorithms=SHA-1"
 BUILD_SKIPS="-Dasciidoctor.skip=true -Dremoteresources.skip=true -Dmaven.gitcommitid.skip=true"
 # two builds at a time on the runner (SHARED_RUNNER): the Maven processes lock the local repository between them
 [ -z "${SHARED_RUNNER:-}" ] || BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.syncContext.named.factory=file-lock -Daether.syncContext.named.nameMapper=file-gav"
