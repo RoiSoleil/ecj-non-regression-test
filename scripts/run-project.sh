@@ -162,7 +162,7 @@ fi
 # The same heap and collector for every label and every project: the defaults (a quarter of the RAM, SerialGC on a
 # runner with fewer than 2 CPUs) differ between machines. compile-jdk.sh uses the same HEAP_OPTS.
 export HEAP_OPTS="${HEAP_OPTS:--Xms4g -Xmx4g -XX:+UseG1GC}"
-export MAVEN_OPTS="${MAVEN_OPTS:-} $HEAP_OPTS"
+export MAVEN_OPTS="${MAVEN_OPTS:-} $HEAP_OPTS -Xss4m"
 # Lombok generates its members in javac through an annotation processor, but in ECJ only through its Java agent, which
 # patches the compiler in the JVM that runs it (Maven's, plexus-compiler-eclipse compiles in process). Without it a
 # Lombok project fails with ECJ for no reason of the compiler (getters, builders, log fields and constructors missing).
@@ -191,7 +191,8 @@ BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Deditorconfig.skip=true"
 # Dropwizard, with javac too (nothing to do with the compiler)
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dpgpverify.skip=true"
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.dependencyCollector.impl=bf -Daether.dependencyCollector.bf.threads=3 -Daether.checksums.algorithms=SHA-1 -Daether.layout.maven2.checksumAlgorithms=SHA-1"
-BUILD_SKIPS="-Dasciidoctor.skip=true -Dremoteresources.skip=true -Dmaven.gitcommitid.skip=true"
+BUILD_SKIPS="-Dasciidoctor.skip=true -Dmaven.gitcommitid.skip=true"
+[ "$(field no_build_skips)" != true ] || BUILD_SKIPS=""
 # two builds at a time on the runner (SHARED_RUNNER): the Maven processes lock the local repository between them
 [ -z "${SHARED_RUNNER:-}" ] || BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.syncContext.named.factory=file-lock -Daether.syncContext.named.nameMapper=file-gav"
 RUNS="$ROOT/work/$NAME-$LABEL-runs"   # the directory of the measured build (1): time, GC logs, Maven log, produced classes

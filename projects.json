@@ -449,6 +449,7 @@
   },
   {
     "name": "HibernateValidator",
+    "no_build_skips": true,
     "url": "https://github.com/hibernate/hibernate-validator.git",
     "ref": "7f81240513bbb522327d8b477b6a4b5e78d4d8a1",
     "cmd": "mvn -B -fae install -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
@@ -6252,6 +6253,7 @@
   },
   {
     "name": "Inception",
+    "no_build_skips": true,
     "url": "https://github.com/eclipse-inception/inception.git",
     "ref": "3c7cd3321018d3ff0fc5cc50fb1461ffa22e653c",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
