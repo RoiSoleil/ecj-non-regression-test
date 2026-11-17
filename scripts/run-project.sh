@@ -40,7 +40,7 @@ fi
 
 rm -rf "$DIR"
 # the next projects of the job need the disk space, also after an early exit (clone or patch failed)
-trap 'cd "$ROOT" && rm -rf "$DIR" "$DIR.jvm-args" "$DIR.effective-pom.xml"' EXIT
+trap 'cd "$ROOT" && rm -rf "$DIR" "$DIR.jvm-args" "$DIR.effective-pom.xml" "$DIR.effective-start"' EXIT
 if [ -n "$URL" ]; then
   git init -q "$DIR"
   git -C "$DIR" remote add origin "$URL"
@@ -152,11 +152,14 @@ rm -f "$ECJ_JVM_ARGS_FILE" "$DIR.effective-pom.xml"
 export ECJ_EFFECTIVE_POM=""
 if [ "$ECJ_VERSION" != javac ] && ! { [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; } && [ -f pom.xml ]; then
   EFFECTIVE_ARGS=$(grep -oE '(^| )(-(P|D)[^ ]+|(-f|--file) [^ ]+)' <<<"$CMD" | tr '\n' ' ')
+  touch "$DIR.effective-start"
   if timeout 300 mvn -B -q $EFFECTIVE_ARGS -Dsort.skip=true -Daether.connector.http.retryHandler.count=6 -Daether.connector.http.retryHandler.interval=15000 -Daether.connector.http.retryHandler.serviceUnavailable=429,503 help:effective-pom -Doutput="$DIR.effective-pom.xml" >>"$LOG" 2>&1; then
     ECJ_EFFECTIVE_POM="$DIR.effective-pom.xml"
   else
     echo "== effective pom failed: the compiler arguments of remote parents are not cleaned" >>"$LOG"
   fi
+  find "$HOME/.m2/repository" -newer "$DIR.effective-start" \( -name '*.lastUpdated' -o -name 'resolver-status.properties' \) -delete 2>/dev/null
+  rm -f "$DIR.effective-start"
   # every pom: the modules do not always inherit from the root pom
   find . -name pom.xml -not -path '*/src/*' -not -path '*/target/*' | while read -r pom; do
     python3 "$ROOT/scripts/enable-ecj-maven.py" "$pom" "$ECJ_VERSION" >>"$LOG" 2>&1
