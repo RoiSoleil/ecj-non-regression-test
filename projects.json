@@ -776,13 +776,6 @@
     "test": "mvn -B -fae test -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
-    "name": "Fastjson2",
-    "url": "https://github.com/alibaba/fastjson2.git",
-    "ref": "35111f33d5e204c325c7fc6921a51096b5be9b44",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
-    "jdk": "21"
-  },
-  {
     "name": "AlibabaDruid",
     "url": "https://github.com/alibaba/druid.git",
     "ref": "fa8dc9912637a2f729eef9f55356621fec18d40e",
@@ -5596,12 +5589,6 @@
     "name": "DaxPay",
     "url": "https://github.com/dromara/dax-pay.git",
     "ref": "e8ce3905b307d526579b07510e6274b87309ba02",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
-  },
-  {
-    "name": "Cobalt",
-    "url": "https://github.com/Auties00/Cobalt.git",
-    "ref": "cb9fbf172507626948fbc3611d0a6fb00bb3a0f1",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
