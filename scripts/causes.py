@@ -49,7 +49,7 @@ RULES = [
      r'NoSuchMethodError: .boolean org\.eclipse\.jdt\.internal\.compiler\.lookup\.MethodBinding\.isDefaultAbstract\(\)'),
     ('Lombok agent: two copies of ECJ in the Maven JVM (argument type mismatch)', 'log',
      r'IllegalArgumentException: argument type mismatch'),
-    ('annotation processor that needs javac (com.sun.source Trees)', 'log',
+    ('IllegalArgumentException without message (javac-only processor API such as Trees.instance, or an ECJ crash)', 'log',
      r'(?m)Unknown source: java\.lang\.IllegalArgumentException\s*$'),
     ('plexus-compiler-eclipse: option or plugin incompatible', 'log',
      r'Failed to run the ecj compiler: (option -extdirs|Compliance level .* is incompatible with target level)'

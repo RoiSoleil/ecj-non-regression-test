@@ -40,7 +40,7 @@ fi
 
 rm -rf "$DIR"
 # the next projects of the job need the disk space, also after an early exit (clone or patch failed)
-trap 'cd "$ROOT" && rm -rf "$DIR"' EXIT
+trap 'cd "$ROOT" && rm -rf "$DIR" "$DIR.jvm-args" "$DIR.effective-pom.xml"' EXIT
 if [ -n "$URL" ]; then
   git init -q "$DIR"
   git -C "$DIR" remote add origin "$URL"
@@ -133,15 +133,36 @@ for path in sys.argv[1:]:
     open(path, "w").write(re.sub(r"\s*<predictiveSelection>.*?</predictiveSelection>", "", text, flags=re.S))
 ' && echo "== <predictiveSelection> removed from the poms" >>"$LOG"
 fi
+# a command that prepares the project (Logback needs the SNAPSHOT of SLF4J it is developed with)
+if [ -n "$PRE" ]; then (eval "$PRE") >>"$LOG" 2>&1 || echo "pre command failed" >>"$LOG"; fi
+LOMBOK=""
+LOMBOK_JAR=""
+CP_AGENT=""
+if [ "$ECJ_VERSION" != javac ] && { grep -rlq --include=pom.xml 'org.projectlombok' "$DIR" 2>/dev/null \
+    || grep -rlqE --include='*.java' '^import (static )?lombok\.|@lombok\.' "$DIR" 2>/dev/null; }; then
+  LOMBOK=1
+  LOMBOK_JAR=$(bash "$ROOT/scripts/lombok-agent.sh" "$HOME/.cache/lombok-agent" 2 2>>"$LOG") || LOMBOK_JAR=""
+  if [ -n "$LOMBOK_JAR" ] && [ -f "$ECJ_JAR" ] && ! { [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; }; then
+    CP_AGENT=$(bash "$ROOT/scripts/ecj-cp-agent.sh" "$HOME/.cache/ecj-cp-agent" 2>>"$LOG") || CP_AGENT=""
+  fi
+fi
+export ECJ_LOMBOK="${CP_AGENT:+1}"
+export ECJ_JVM_ARGS_FILE="$DIR.jvm-args"
+rm -f "$ECJ_JVM_ARGS_FILE" "$DIR.effective-pom.xml"
+export ECJ_EFFECTIVE_POM=""
 if [ "$ECJ_VERSION" != javac ] && ! { [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; } && [ -f pom.xml ]; then
+  EFFECTIVE_ARGS=$(grep -oE '(^| )(-(P|D)[^ ]+|(-f|--file) [^ ]+)' <<<"$CMD" | tr '\n' ' ')
+  if timeout 300 mvn -B -q $EFFECTIVE_ARGS -Dsort.skip=true -Daether.connector.http.retryHandler.count=6 -Daether.connector.http.retryHandler.interval=15000 -Daether.connector.http.retryHandler.serviceUnavailable=429,503 help:effective-pom -Doutput="$DIR.effective-pom.xml" >>"$LOG" 2>&1; then
+    ECJ_EFFECTIVE_POM="$DIR.effective-pom.xml"
+  else
+    echo "== effective pom failed: the compiler arguments of remote parents are not cleaned" >>"$LOG"
+  fi
   # every pom: the modules do not always inherit from the root pom
   find . -name pom.xml -not -path '*/src/*' -not -path '*/target/*' | while read -r pom; do
     python3 "$ROOT/scripts/enable-ecj-maven.py" "$pom" "$ECJ_VERSION" >>"$LOG" 2>&1
   done
 fi
 
-# a command that prepares the project (Logback needs the SNAPSHOT of SLF4J it is developed with)
-if [ -n "$PRE" ]; then (eval "$PRE") >>"$LOG" 2>&1 || echo "pre command failed" >>"$LOG"; fi
 # Java Flight Recorder: ECJ runs inside the Maven JVM (and inside the java process of the JDK project).
 # JFR_FILE is the recording to write. It collects as much as possible: the `profile` settings with a CPU sample every
 # JFR_CPU_PERIOD (default 5 ms, instead of 10 ms), up to JFR_ALLOC_THROTTLE allocation samples (default 1000/s, instead
@@ -167,15 +188,20 @@ export MAVEN_OPTS="${MAVEN_OPTS:-} $HEAP_OPTS -Xss4m"
 # patches the compiler in the JVM that runs it (Maven's, plexus-compiler-eclipse compiles in process). Without it a
 # Lombok project fails with ECJ for no reason of the compiler (getters, builders, log fields and constructors missing).
 # One pinned version of the agent for every project: it handles the annotations of the older versions too.
-# Limits: a project that gets Lombok from a parent pom outside its repository is not detected, a compiler forked in
-# another JVM does not get the agent, and the agent adds a little to the measured time of the ECJ builds.
-if [ "$ECJ_VERSION" != javac ] && grep -rlq --include=pom.xml 'org.projectlombok' "$DIR" 2>/dev/null; then
-  if LOMBOK_JAR=$(bash "$ROOT/scripts/lombok-agent.sh" "$HOME/.cache/lombok-agent" 2 2>>"$LOG"); then
+# Limits: a compiler forked in another JVM does not get the agent, and the agent adds a little to the measured time of
+# the ECJ builds.
+if [ -n "$LOMBOK" ]; then
+  if [ -n "$LOMBOK_JAR" ]; then
+    [ -z "$CP_AGENT" ] || export MAVEN_OPTS="$MAVEN_OPTS -javaagent:$CP_AGENT=$ECJ_JAR"
     export MAVEN_OPTS="$MAVEN_OPTS -javaagent:$LOMBOK_JAR=ECJ"
     echo "== Lombok agent $(basename "$LOMBOK_JAR" .jar | sed "s/^lombok-//") for ECJ" >>"$LOG"
   else
     echo "== Lombok agent: download failed" >>"$LOG"
   fi
+fi
+if [ -s "$ECJ_JVM_ARGS_FILE" ]; then
+  export MAVEN_OPTS="$MAVEN_OPTS $(sort -u "$ECJ_JVM_ARGS_FILE" | tr '\n' ' ')"
+  echo "== JVM options of the compiler arguments: $(sort -u "$ECJ_JVM_ARGS_FILE" | tr '\n' ' ')" >>"$LOG"
 fi
 BASE_MAVEN_OPTS="$MAVEN_OPTS"
 # Maven (3.9 and later) reads these arguments from the environment: time stamps on every log line give the time spent
@@ -187,6 +213,7 @@ BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dsort.skip=true"
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.connector.http.retryHandler.count=6 -Daether.connector.http.retryHandler.interval=15000 -Daether.connector.http.retryHandler.intervalMax=60000 -Daether.connector.http.retryHandler.serviceUnavailable=429,503"
 # editorconfig-maven-plugin checks the formatting of every file, the poms that enable-ecj-maven.py rewrote too (Stormcrawler)
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Deditorconfig.skip=true"
+BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dformatter.skip=true -Dspring-javaformat.skip=true"
 # pgpverify-maven-plugin asks a key server for the signature of every dependency: a key server that answers 404 failed
 # Dropwizard, with javac too (nothing to do with the compiler)
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dpgpverify.skip=true"
