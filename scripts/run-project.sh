@@ -40,7 +40,7 @@ fi
 
 rm -rf "$DIR"
 # the next projects of the job need the disk space, also after an early exit (clone or patch failed)
-trap 'cd "$ROOT" && rm -rf "$DIR" "$DIR.jvm-args" "$DIR.effective-pom.xml" "$DIR.effective-start"' EXIT
+trap 'cd "$ROOT" && rm -rf "$DIR" "$DIR.jvm-args" "$DIR.effective-pom.xml" "$DIR.effective-start" "$DIR.attempt-start"' EXIT
 if [ -n "$URL" ]; then
   git init -q "$DIR"
   git -C "$DIR" remote add origin "$URL"
@@ -67,7 +67,7 @@ if [ "$ECJ_VERSION" = javac ]; then
   ECJ_JAR=""
 else
   ECJ_JAR="$HOME/.m2/repository/org/eclipse/jdt/ecj/$ECJ_VERSION/ecj-$ECJ_VERSION.jar"
-  [ -f "$ECJ_JAR" ] || mvn -B -q dependency:get -Dartifact="org.eclipse.jdt:ecj:$ECJ_VERSION" >>"$LOG" 2>&1
+  [ -f "$ECJ_JAR" ] || mvn -B -q -gs "$ROOT/settings/google-mirror.xml" dependency:get -Dartifact="org.eclipse.jdt:ecj:$ECJ_VERSION" >>"$LOG" 2>&1
 fi
 export ECJ_JAR ROOT
 [ -z "$OVERRIDE_ARGS" ] || export ECJ_OVERRIDE_COMPILER_ARGS=1
@@ -153,7 +153,7 @@ export ECJ_EFFECTIVE_POM=""
 if [ "$ECJ_VERSION" != javac ] && ! { [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; } && [ -f pom.xml ]; then
   EFFECTIVE_ARGS=$(grep -oE '(^| )(-(P|D)[^ ]+|(-f|--file) [^ ]+)' <<<"$CMD" | tr '\n' ' ')
   touch "$DIR.effective-start"
-  if timeout 300 mvn -B -q $EFFECTIVE_ARGS -Dsort.skip=true -Daether.connector.http.retryHandler.count=6 -Daether.connector.http.retryHandler.interval=15000 -Daether.connector.http.retryHandler.serviceUnavailable=429,503 help:effective-pom -Doutput="$DIR.effective-pom.xml" >>"$LOG" 2>&1; then
+  if timeout 300 mvn -B -q -gs "$ROOT/settings/google-mirror.xml" $EFFECTIVE_ARGS -Dsort.skip=true -Daether.connector.http.retryHandler.count=6 -Daether.connector.http.retryHandler.interval=15000 -Daether.connector.http.retryHandler.serviceUnavailable=429,503 help:effective-pom -Doutput="$DIR.effective-pom.xml" >>"$LOG" 2>&1; then
     ECJ_EFFECTIVE_POM="$DIR.effective-pom.xml"
   else
     echo "== effective pom failed: the compiler arguments of remote parents are not cleaned" >>"$LOG"
@@ -279,20 +279,19 @@ STATUS=0
 for attempt in 1 2 3; do
   MIRROR_ARGS=""
   RUN_CMD="$CMD"
-  if [ "$attempt" = 2 ]; then
+  if [ "$attempt" != 2 ]; then
     MIRROR_ARGS="-gs $ROOT/settings/google-mirror.xml"
     RUN_CMD="${CMD//settings\/central-mirror.xml/settings\/google-mirror.xml}"
   fi
-  echo "== build, attempt $attempt${MIRROR_ARGS:+ (Google mirror of Maven Central)}" >>"$LOG"
+  echo "== build, attempt $attempt (${MIRROR_ARGS:+Google mirror of }Maven Central)" >>"$LOG"
+  touch "$DIR.attempt-start"
   measured_build 1
   STATUS=$?
-  NOT_FOUND='|Could not find artifact'
-  [ -z "$MIRROR_ARGS" ] || NOT_FOUND=""
-  ! grep -q -E 'status code: (429|5[0-9][0-9])|Connect to [^ ]+ .*failed|Connection (reset|timed out)|Read timed out' "$RUNS/1/run.log" || NOT_FOUND=""
   [ "$STATUS" != 0 ] && [ "$STATUS" != 124 ] && [ "$STATUS" != 137 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] \
-    && grep -q -E 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|status code: (429|5[0-9][0-9])|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length|Could not acquire lock|Could not resolve all (artifacts|dependencies|files)' "$RUNS/1/run.log" \
-    && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:'"$NOT_FOUND" "$RUNS/1/run.log" || break
+    && grep -q -E 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|status code: (429|5[0-9][0-9])|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length|Could not acquire lock|Could not resolve all (artifacts|dependencies|files)|Could not find artifact|was cached in the local repository|Error grabbing Grapes' "$RUNS/1/run.log" \
+    && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:' "$RUNS/1/run.log" || break
   echo "== build failed on a network error" >>"$LOG"
+  find "$HOME/.m2/repository" -newer "$DIR.attempt-start" \( -name '*.lastUpdated' -o -name 'resolver-status.properties' \) -delete 2>/dev/null
   sleep $((60 + RANDOM % 60))
   clean_build
 done

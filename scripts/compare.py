@@ -71,9 +71,14 @@ def verdict(directory, name):
 # (a run without head builds compares nothing)
 names = sorted({path.name[:-len(f'-{label}.status')] for label in (baseline, head)
                 for path in results.glob(f'*-{label}.status')}) if any(results.glob(f'*-{head}.status')) else []
+def lost(result):
+    return result[0] not in TESTED or result[1] not in TESTED
+
+
 if options.suspects:
     for name in names:
-        if verdict(results, name)[-1]:
+        result = verdict(results, name)
+        if result[-1] or lost(result):
             print(name)
     sys.exit(0)
 
@@ -84,7 +89,13 @@ for name in names:
     first = verdict(results, name)
     current = first
     note = ''
-    if confirm and first[-1]:
+    if confirm and lost(first) and not first[-1]:
+        second = verdict(confirm / 'results', name)
+        if second[0] in TESTED and second[1] in TESTED:
+            confirmation[name] = 'built again'
+            note = ' (built again: a first build was not tested)'
+            current = second
+    elif confirm and first[-1]:
         second = verdict(confirm / 'results', name)
         # a second build counts only when both compilers built (or failed to build) the project, and, when the first
         # baseline build ran, with the same status: a second baseline that the runner broke proves nothing
