@@ -246,7 +246,7 @@ measured_build() {
   # gc: every pause; gc+cpu: the CPU time of the GC threads of every pause
   export GC_OPTS="-Xlog:gc,gc+cpu:file=$rd/gc-%p.log:uptime:filecount=0"
   export MAVEN_OPTS="$MAVEN_OPTS $GC_OPTS"
-  export MAVEN_ARGS="$BASE_MAVEN_ARGS $BUILD_SKIPS"
+  export MAVEN_ARGS="$BASE_MAVEN_ARGS $BUILD_SKIPS $MIRROR_ARGS"
   # a build that hangs (HummerRisk waited 3.5 hours for nothing) must not hold the whole job: the longest build, NiFi
   # with javac, takes about 75 minutes. It exits with 124, or 137 when the build ignored SIGTERM and was killed
   /usr/bin/time -f '%e %U %S %M' -o "$rd/time" timeout -k 60 "${BUILD_TIMEOUT:-5400}" bash -c "$CMD" >"$rd/run.log" 2>&1 9>&-
@@ -267,12 +267,16 @@ measured_build() {
 # itself (Avro, no_rebuild in projects.json: it cannot run again after its classes were deleted).
 STATUS=0
 for attempt in 1 2 3; do
-  echo "== build, attempt $attempt" >>"$LOG"
+  MIRROR_ARGS=""
+  [ "$attempt" = 2 ] && MIRROR_ARGS="-gs $ROOT/settings/google-mirror.xml"
+  echo "== build, attempt $attempt${MIRROR_ARGS:+ (Google mirror of Maven Central)}" >>"$LOG"
   measured_build 1
   STATUS=$?
+  NOT_FOUND='|Could not find artifact'
+  [ -z "$MIRROR_ARGS" ] || NOT_FOUND=""
   [ "$STATUS" != 0 ] && [ "$STATUS" != 124 ] && [ "$STATUS" != 137 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] \
     && grep -q -E 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|status code: (429|5[0-9][0-9])|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length' "$RUNS/1/run.log" \
-    && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:|Could not find artifact' "$RUNS/1/run.log" || break
+    && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:'"$NOT_FOUND" "$RUNS/1/run.log" || break
   echo "== build failed on a network error" >>"$LOG"
   sleep $((60 + RANDOM % 60))
   clean_build
