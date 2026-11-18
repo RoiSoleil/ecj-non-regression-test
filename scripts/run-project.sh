@@ -203,8 +203,18 @@ if [ -n "$LOMBOK" ]; then
   fi
 fi
 if [ -s "$ECJ_JVM_ARGS_FILE" ]; then
-  export MAVEN_OPTS="$MAVEN_OPTS $(sort -u "$ECJ_JVM_ARGS_FILE" | tr '\n' ' ')"
-  echo "== JVM options of the compiler arguments: $(sort -u "$ECJ_JVM_ARGS_FILE" | tr '\n' ' ')" >>"$LOG"
+  JVM_ARGS=""
+  while IFS= read -r option; do
+    if "${JAVA_HOME:+$JAVA_HOME/bin/}java" "$option" -version >/dev/null 2>&1; then
+      JVM_ARGS="$JVM_ARGS $option"
+    else
+      echo "== JVM option of the compiler arguments that this JDK refuses, dropped: $option" >>"$LOG"
+    fi
+  done < <(sort -u "$ECJ_JVM_ARGS_FILE")
+  if [ -n "$JVM_ARGS" ]; then
+    export MAVEN_OPTS="$MAVEN_OPTS$JVM_ARGS"
+    echo "== JVM options of the compiler arguments:$JVM_ARGS" >>"$LOG"
+  fi
 fi
 BASE_MAVEN_OPTS="$MAVEN_OPTS"
 # Maven (3.9 and later) reads these arguments from the environment: time stamps on every log line give the time spent
@@ -249,7 +259,7 @@ measured_build() {
   export MAVEN_ARGS="$BASE_MAVEN_ARGS $BUILD_SKIPS $MIRROR_ARGS"
   # a build that hangs (HummerRisk waited 3.5 hours for nothing) must not hold the whole job: the longest build, NiFi
   # with javac, takes about 75 minutes. It exits with 124, or 137 when the build ignored SIGTERM and was killed
-  /usr/bin/time -f '%e %U %S %M' -o "$rd/time" timeout -k 60 "${BUILD_TIMEOUT:-5400}" bash -c "$CMD" >"$rd/run.log" 2>&1 9>&-
+  /usr/bin/time -f '%e %U %S %M' -o "$rd/time" timeout -k 60 "${BUILD_TIMEOUT:-5400}" bash -c "${RUN_CMD:-$CMD}" >"$rd/run.log" 2>&1 9>&-
   local rc=$?
   cat "$rd/run.log" >>"$LOG"
   # the work done: number and size of the class files (ECJ does not print the number of source files it compiles)
@@ -268,12 +278,17 @@ measured_build() {
 STATUS=0
 for attempt in 1 2 3; do
   MIRROR_ARGS=""
-  [ "$attempt" = 2 ] && MIRROR_ARGS="-gs $ROOT/settings/google-mirror.xml"
+  RUN_CMD="$CMD"
+  if [ "$attempt" = 2 ]; then
+    MIRROR_ARGS="-gs $ROOT/settings/google-mirror.xml"
+    RUN_CMD="${CMD//settings\/central-mirror.xml/settings\/google-mirror.xml}"
+  fi
   echo "== build, attempt $attempt${MIRROR_ARGS:+ (Google mirror of Maven Central)}" >>"$LOG"
   measured_build 1
   STATUS=$?
   NOT_FOUND='|Could not find artifact'
   [ -z "$MIRROR_ARGS" ] || NOT_FOUND=""
+  ! grep -q -E 'status code: (429|5[0-9][0-9])|Connect to [^ ]+ .*failed|Connection (reset|timed out)|Read timed out' "$RUNS/1/run.log" || NOT_FOUND=""
   [ "$STATUS" != 0 ] && [ "$STATUS" != 124 ] && [ "$STATUS" != 137 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] \
     && grep -q -E 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|status code: (429|5[0-9][0-9])|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length|Could not acquire lock|Could not resolve all (artifacts|dependencies|files)' "$RUNS/1/run.log" \
     && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:'"$NOT_FOUND" "$RUNS/1/run.log" || break

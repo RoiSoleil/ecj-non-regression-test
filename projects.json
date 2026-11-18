@@ -57,7 +57,7 @@
     "name": "Quarkus",
     "url": "https://github.com/quarkusio/quarkus.git",
     "ref": "58f93d849c5f857f129465ba2a4449a6c3f15597",
-    "cmd": "./mvnw -B -fae -Dquickly -DskipTests -DskipITs install"
+    "cmd": "./mvnw -B -fae -Dquickly -Dno-format -Dformat.skip=true -DskipTests -DskipITs install"
   },
   {
     "name": "Camel",
@@ -931,7 +931,8 @@
     "name": "Kryo",
     "url": "https://github.com/EsotericSoftware/kryo.git",
     "ref": "61a8ef19f357da32996408570367caeb3b485995",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "jdk": "25"
   },
   {
     "name": "XStream",
@@ -1308,7 +1309,7 @@
   {
     "name": "Helidon",
     "url": "https://github.com/helidon-io/helidon.git",
-    "ref": "d1952b4ec06f6ee89e9a2c39db2d485f4b8c2825",
+    "ref": "1379ebccb9780e5100c87eb77d3c2a039ea8a55c",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
@@ -2531,7 +2532,7 @@
     "name": "JavaThreadAffinity",
     "url": "https://github.com/OpenHFT/Java-Thread-Affinity.git",
     "ref": "e3964e93ace669bf781a68db7d45261afcf96734",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
+    "cmd": "mvn -B -fae -Dexec.skip=true compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },
   {
     "name": "ChronicleCore",
@@ -3908,7 +3909,8 @@
     "name": "NsUsbloader",
     "url": "https://github.com/developersu/ns-usbloader.git",
     "ref": "04d5b145fd687b92ff8312d5de8a05a863017138",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "cache_m2": true
   },
   {
     "name": "OinonePamirs",
@@ -3978,7 +3980,8 @@
     "name": "Ratel",
     "url": "https://github.com/ainilili/ratel.git",
     "ref": "6742f86e2d19cca338edb585c34082e8cc4712b2",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "jdk": "25"
   },
   {
     "name": "SpringBootCodeGenerator",
@@ -5383,7 +5386,8 @@
     "name": "Pwm",
     "url": "https://github.com/pwm-project/pwm.git",
     "ref": "643d604d219cac6c6e33a34dfe517b1acf5b6884",
-    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
+    "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true",
+    "pre": "perl -0pi -e 's#(<artifactId>jspc-maven-plugin</artifactId>.*?<phase>)compile(</phase>)#${1}none${2}#s' webapp/pom.xml"
   },
   {
     "name": "Hilla",
