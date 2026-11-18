@@ -383,7 +383,7 @@ def main():
             regression = bool(new) or (base['status'] == 'success' and head['status'] != 'success')
             # the verdict of the second builds of the suspect projects (scripts/compare.py --confirm), which decides the
             # run: a regression that they did not show is no regression of the run either
-            if regression and confirmation.get(name) == 'not reproduced':
+            if regression and confirmation.get(name) in ('not reproduced', 'baseline crashed'):
                 regression = False
             regressions += regression
             fixes += bool(fixed) and not new

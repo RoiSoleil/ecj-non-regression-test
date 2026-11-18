@@ -20,6 +20,7 @@ both compilers, before it fails a run.
 import argparse
 import json
 import pathlib
+import re
 import sys
 
 parser = argparse.ArgumentParser(allow_abbrev=False)
@@ -32,11 +33,20 @@ mode.add_argument('--confirm', type=pathlib.Path)
 options = parser.parse_args()
 results, baseline, head, confirm = pathlib.Path(options.results), options.baseline, options.head, options.confirm
 TESTED = ('success', 'build failed')
+CRASH = re.compile(r'Unknown source: java\.lang\.\w+(Exception|Error)|internal compiler error')
 
 
 def read(directory, name, label, extension):
     path = directory / f'{name}-{label}.{extension}'
     return path.read_text().splitlines() if path.exists() else None
+
+
+def crashed(directory, name, label):
+    path = directory.parent / 'logs' / f'{name}-{label}.log'
+    if not path.exists():
+        return False
+    with path.open(errors='replace') as log:
+        return any(CRASH.search(line) for line in log)
 
 
 def verdict(directory, name):
@@ -46,11 +56,15 @@ def verdict(directory, name):
     errors_base = set(read(directory, name, baseline, 'errors') or [])
     new = sorted(errors_head - errors_base)
     fixed = sorted(errors_base - errors_head)
+    base_crashed = bool(new) and status_base == 'build failed' and crashed(directory, name, baseline)
+    if base_crashed:
+        reached = {error.split(':')[0] for error in errors_base}
+        new = [error for error in new if error.split(':')[0] in reached]
     # anything but success or a failing build (clone failed, patch failed, missing) means the project was not tested
     untested = status_head not in TESTED or status_base not in TESTED
     # a project that is not tested (or that already fails with the baseline) is shown in the table but is not a regression
     regression = bool(new) or (status_base == 'success' and status_head != 'success')
-    return status_base, status_head, errors_base, errors_head, new, fixed, untested, regression
+    return status_base, status_head, errors_base, errors_head, new, fixed, untested, base_crashed, regression
 
 
 # a project whose head job was lost has no head result at all: it is compared too, as "missing"
@@ -64,7 +78,7 @@ if options.suspects:
     sys.exit(0)
 
 regressions = 0
-rows, details, not_reproduced, unconfirmed = [], [], [], []
+rows, details, not_reproduced, unconfirmed, base_crashes = [], [], [], [], []
 confirmation = {}
 for name in names:
     first = verdict(results, name)
@@ -95,9 +109,14 @@ for name in names:
             confirmation[name] = 'not reproduced'
             not_reproduced.append(name)
             current = second
-    status_base, status_head, errors_base, errors_head, new, fixed, untested, regression = current
+    status_base, status_head, errors_base, errors_head, new, fixed, untested, base_crashed, regression = current
     regressions += regression
-    mark = '❌' if regression else '⚠️ not reproduced' if name in not_reproduced else '⚠️ not tested' if untested else '✅'
+    if base_crashed:
+        base_crashes.append(name)
+        if not regression:
+            confirmation[name] = 'baseline crashed'
+    mark = ('❌' if regression else '⚠️ not reproduced' if name in not_reproduced else '⚠️ not tested' if untested
+            else '⚠️ baseline crashed' if base_crashed else '✅')
     rows.append(f'| {name} | {status_base} | {status_head} | {len(errors_base)} | {len(errors_head)} | {len(new)} | {len(fixed)} | {mark}{note if regression else ""} |')
     for title, lines in (('New errors', new), ('Errors that disappeared', fixed)):
         if lines:
@@ -110,6 +129,9 @@ if not_reproduced:
     print(f'{len(not_reproduced)} project(s) showed no regression when built a second time (a failure of the shared '
           f'runner: no new compile error, their first logs are in the artifacts): '
           f'{", ".join(not_reproduced)}\n')
+if base_crashes:
+    print(f'{len(base_crashes)} project(s) whose baseline ECJ crashed: only the files with baseline errors are compared: '
+          f'{", ".join(base_crashes)}\n')
 if unconfirmed:
     print(f'{len(unconfirmed)} suspect project(s) without a valid second build (they stay regressions): {", ".join(unconfirmed)}\n')
 print('| Project | Baseline | Head | Errors baseline | Errors head | New | Gone | |')
@@ -117,7 +139,7 @@ print('|---|---|---|---|---|---|---|---|')
 print('\n'.join(rows))
 print()
 print('\n'.join(details))
-if confirm:
+if confirm or confirmation:
     # the results of the first builds stay as they are (the evidence of what failed); the verdict of the second builds
     # is kept next to them, for the dashboard
     (results / 'confirmation.json').write_text(json.dumps(confirmation, indent=1, sort_keys=True) + '\n')

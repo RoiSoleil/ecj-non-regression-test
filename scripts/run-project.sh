@@ -275,7 +275,7 @@ for attempt in 1 2 3; do
   NOT_FOUND='|Could not find artifact'
   [ -z "$MIRROR_ARGS" ] || NOT_FOUND=""
   [ "$STATUS" != 0 ] && [ "$STATUS" != 124 ] && [ "$STATUS" != 137 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] \
-    && grep -q -E 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|status code: (429|5[0-9][0-9])|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length' "$RUNS/1/run.log" \
+    && grep -q -E 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|status code: (429|5[0-9][0-9])|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length|Could not acquire lock|Could not resolve all (artifacts|dependencies|files)' "$RUNS/1/run.log" \
     && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:'"$NOT_FOUND" "$RUNS/1/run.log" || break
   echo "== build failed on a network error" >>"$LOG"
   sleep $((60 + RANDOM % 60))
