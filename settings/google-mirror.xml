@@ -3,7 +3,7 @@
   <mirrors>
     <mirror>
       <id>google-maven-central</id>
-      <mirrorOf>central,maven-central,central-repo,Maven Central,central2,central maven repo,maven_central,A_maven.central,central-redeclared,cengtral,sonatype-maven-org,maven-central-fallback</mirrorOf>
+      <mirrorOf>central,scala-tools.org,maven-central,central-repo,Maven Central,central2,central maven repo,maven_central,A_maven.central,central-redeclared,cengtral,sonatype-maven-org,maven-central-fallback</mirrorOf>
       <url>https://maven-central.storage-download.googleapis.com/maven2/</url>
     </mirror>
   </mirrors>
