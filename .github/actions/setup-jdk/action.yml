@@ -21,7 +21,7 @@ runs:
           && sha256=$(jq -er --arg v "$VERSION" '.[$v].sha256' "$downloads") \
           || { echo "::error::no url and sha256 of JDK $VERSION in jdk-downloads.json"; exit 1; }
         archive="$RUNNER_TEMP/jdk-$VERSION.tar.gz"
-        curl -fsSL --retry 5 --retry-all-errors --retry-delay 10 -o "$archive" "$url"
+        curl -fsSL --retry 30 --retry-all-errors --retry-delay 30 --retry-max-time 900 -o "$archive" "$url"
         echo "$sha256  $archive" | sha256sum -c --quiet
         echo "archive=$archive" >> "$GITHUB_OUTPUT"
     - uses: actions/setup-java@v5

@@ -5061,7 +5061,7 @@
   {
     "name": "Fess",
     "url": "https://github.com/codelibs/fess.git",
-    "ref": "95e4661860c95d38533f6026b94eb359a9ad51e4",
+    "ref": "d7a5cce8c542ee40f21520b9617c32d9d22cc195",
     "pre": "sed -i 's#https://repo1.maven.org/maven2#https://maven-central.storage-download.googleapis.com/maven2#' deps.xml",
     "cmd": "mvn -B -fae compile test-compile -DskipTests -Drat.skip -Dcheckstyle.skip -Dspotbugs.skip -Djapicmp.skip -Danimal.sniffer.skip -Dpmd.skip -Dcpd.skip -Djacoco.skip -Dmaven.javadoc.skip=true -Denforcer.skip -Dlicense.skip -Dspotless.check.skip=true -Dspotless.apply.skip=true -Dxml.skip=true -Dtidy.skip=true"
   },

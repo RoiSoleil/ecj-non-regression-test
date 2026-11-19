@@ -2,7 +2,7 @@
 <settings>
   <mirrors>
     <mirror>
-      <id>google</id>
+      <id>gcs-central</id>
       <mirrorOf>scala-tools.org,maven-central,central-repo,Maven Central,central2,central maven repo,maven_central,A_maven.central,central-redeclared,cengtral,sonatype-maven-org,maven-central-fallback</mirrorOf>
       <url>https://maven-central.storage-download.googleapis.com/maven2/</url>
     </mirror>
@@ -12,7 +12,7 @@
       <id>google-mirror-first</id>
       <repositories>
         <repository>
-          <id>google</id>
+          <id>gcs-central</id>
           <url>https://maven-central.storage-download.googleapis.com/maven2/</url>
           <releases><enabled>true</enabled></releases>
           <snapshots><enabled>false</enabled></snapshots>
@@ -20,7 +20,7 @@
       </repositories>
       <pluginRepositories>
         <pluginRepository>
-          <id>google</id>
+          <id>gcs-central</id>
           <url>https://maven-central.storage-download.googleapis.com/maven2/</url>
           <releases><enabled>true</enabled></releases>
           <snapshots><enabled>false</enabled></snapshots>

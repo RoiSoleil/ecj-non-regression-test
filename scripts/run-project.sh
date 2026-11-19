@@ -62,12 +62,13 @@ else
   mkdir -p "$DIR"
 fi
 
+REPO_ARGS="-gs $ROOT/settings/google-mirror.xml -Daether.enhancedLocalRepository.trackingFilename=_harness.repositories"
 # the ECJ jar itself, for projects that run the batch compiler directly
 if [ "$ECJ_VERSION" = javac ]; then
   ECJ_JAR=""
 else
   ECJ_JAR="$HOME/.m2/repository/org/eclipse/jdt/ecj/$ECJ_VERSION/ecj-$ECJ_VERSION.jar"
-  [ -f "$ECJ_JAR" ] || mvn -B -q -gs "$ROOT/settings/google-mirror.xml" dependency:get -Dartifact="org.eclipse.jdt:ecj:$ECJ_VERSION" >>"$LOG" 2>&1
+  [ -f "$ECJ_JAR" ] || mvn -B -q $REPO_ARGS dependency:get -Dartifact="org.eclipse.jdt:ecj:$ECJ_VERSION" >>"$LOG" 2>&1
 fi
 export ECJ_JAR ROOT
 export MVNW_REPOURL=https://maven-central.storage-download.googleapis.com/maven2
@@ -138,7 +139,13 @@ for path in sys.argv[1:]:
 ' && echo "== <predictiveSelection> removed from the poms" >>"$LOG"
 fi
 # a command that prepares the project (Logback needs the SNAPSHOT of SLF4J it is developed with)
-if [ -n "$PRE" ]; then (eval "$PRE") >>"$LOG" 2>&1 || echo "pre command failed" >>"$LOG"; fi
+if [ -n "$PRE" ]; then
+  for attempt in 1 2 3; do
+    (export MAVEN_ARGS="$REPO_ARGS -Daether.connector.http.retryHandler.count=6 -Daether.connector.http.retryHandler.interval=15000 -Daether.connector.http.retryHandler.serviceUnavailable=429,503"; eval "$PRE") >>"$LOG" 2>&1 && break
+    echo "pre command failed (attempt $attempt)" >>"$LOG"
+    [ "$attempt" = 3 ] || sleep 60
+  done
+fi
 LOMBOK=""
 LOMBOK_JAR=""
 CP_AGENT=""
@@ -157,7 +164,7 @@ export ECJ_EFFECTIVE_POM=""
 if [ "$ECJ_VERSION" != javac ] && ! { [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; } && [ -f pom.xml ]; then
   EFFECTIVE_ARGS=$(grep -oE '(^| )(-(P|D)[^ ]+|(-f|--file) [^ ]+)' <<<"$CMD" | tr '\n' ' ')
   touch "$DIR.effective-start"
-  if MAVEN_OPTS="${MAVEN_OPTS:-} -Xmx3g" timeout 300 mvn -B -q -gs "$ROOT/settings/google-mirror.xml" $EFFECTIVE_ARGS -Dsort.skip=true -Daether.connector.http.retryHandler.count=6 -Daether.connector.http.retryHandler.interval=15000 -Daether.connector.http.retryHandler.serviceUnavailable=429,503 help:effective-pom -Doutput="$DIR.effective-pom.xml" >>"$LOG" 2>&1; then
+  if MAVEN_OPTS="${MAVEN_OPTS:-} -Xmx3g" timeout 300 mvn -B -q $REPO_ARGS $EFFECTIVE_ARGS -Dsort.skip=true -Daether.connector.http.retryHandler.count=6 -Daether.connector.http.retryHandler.interval=15000 -Daether.connector.http.retryHandler.serviceUnavailable=429,503 help:effective-pom -Doutput="$DIR.effective-pom.xml" >>"$LOG" 2>&1; then
     ECJ_EFFECTIVE_POM="$DIR.effective-pom.xml"
   else
     echo "== effective pom failed: the compiler arguments of remote parents are not cleaned" >>"$LOG"
@@ -281,7 +288,7 @@ measured_build() {
 # itself (Avro, no_rebuild in projects.json: it cannot run again after its classes were deleted).
 STATUS=0
 for attempt in 1 2 3; do
-  MIRROR_ARGS="-gs $ROOT/settings/google-mirror.xml"
+  MIRROR_ARGS="$REPO_ARGS"
   echo "== build, attempt $attempt (Google mirror, then Maven Central)" >>"$LOG"
   touch "$DIR.attempt-start"
   measured_build 1
