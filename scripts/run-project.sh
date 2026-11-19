@@ -141,7 +141,7 @@ fi
 # a command that prepares the project (Logback needs the SNAPSHOT of SLF4J it is developed with)
 if [ -n "$PRE" ]; then
   for attempt in 1 2 3; do
-    (export MAVEN_ARGS="$REPO_ARGS -Daether.connector.http.retryHandler.count=6 -Daether.connector.http.retryHandler.interval=15000 -Daether.connector.http.retryHandler.serviceUnavailable=429,503"; eval "$PRE") >>"$LOG" 2>&1 && break
+    (export MAVEN_ARGS="$REPO_ARGS -Daether.connector.http.retryHandler.count=6 -Daether.connector.http.retryHandler.interval=15000 -Daether.connector.http.retryHandler.serviceUnavailable=429,503"; export MAVEN_CONFIG="$MAVEN_ARGS"; eval "$PRE") >>"$LOG" 2>&1 && break
     echo "pre command failed (attempt $attempt)" >>"$LOG"
     [ "$attempt" = 3 ] || sleep 60
   done
@@ -268,6 +268,7 @@ measured_build() {
   export GC_OPTS="-Xlog:gc,gc+cpu:file=$rd/gc-%p.log:uptime:filecount=0"
   export MAVEN_OPTS="$MAVEN_OPTS $GC_OPTS"
   export MAVEN_ARGS="$BASE_MAVEN_ARGS $BUILD_SKIPS $MIRROR_ARGS"
+  export MAVEN_CONFIG="$MAVEN_ARGS"
   # a build that hangs (HummerRisk waited 3.5 hours for nothing) must not hold the whole job: the longest build, NiFi
   # with javac, takes about 75 minutes. It exits with 124, or 137 when the build ignored SIGTERM and was killed
   /usr/bin/time -f '%e %U %S %M' -o "$rd/time" timeout -k 60 "${BUILD_TIMEOUT:-5400}" bash -c "$CMD" >"$rd/run.log" 2>&1 9>&-
