@@ -4,7 +4,7 @@
 <settings>
   <mirrors>
     <mirror>
-      <id>maven-central</id>
+      <id>central</id>
       <mirrorOf>central</mirrorOf>
       <url>https://repo.maven.apache.org/maven2</url>
     </mirror>
