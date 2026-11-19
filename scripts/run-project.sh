@@ -263,7 +263,7 @@ measured_build() {
   export MAVEN_ARGS="$BASE_MAVEN_ARGS $BUILD_SKIPS $MIRROR_ARGS"
   # a build that hangs (HummerRisk waited 3.5 hours for nothing) must not hold the whole job: the longest build, NiFi
   # with javac, takes about 75 minutes. It exits with 124, or 137 when the build ignored SIGTERM and was killed
-  /usr/bin/time -f '%e %U %S %M' -o "$rd/time" timeout -k 60 "${BUILD_TIMEOUT:-5400}" bash -c "${RUN_CMD:-$CMD}" >"$rd/run.log" 2>&1 9>&-
+  /usr/bin/time -f '%e %U %S %M' -o "$rd/time" timeout -k 60 "${BUILD_TIMEOUT:-5400}" bash -c "$CMD" >"$rd/run.log" 2>&1 9>&-
   local rc=$?
   cat "$rd/run.log" >>"$LOG"
   # the work done: number and size of the class files (ECJ does not print the number of source files it compiles)
@@ -281,13 +281,8 @@ measured_build() {
 # itself (Avro, no_rebuild in projects.json: it cannot run again after its classes were deleted).
 STATUS=0
 for attempt in 1 2 3; do
-  MIRROR_ARGS=""
-  RUN_CMD="$CMD"
-  if [ "$attempt" != 2 ]; then
-    MIRROR_ARGS="-gs $ROOT/settings/google-mirror.xml"
-    RUN_CMD="${CMD//settings\/central-mirror.xml/settings\/google-mirror.xml}"
-  fi
-  echo "== build, attempt $attempt (${MIRROR_ARGS:+Google mirror of }Maven Central)" >>"$LOG"
+  MIRROR_ARGS="-gs $ROOT/settings/google-mirror.xml"
+  echo "== build, attempt $attempt (Google mirror, then Maven Central)" >>"$LOG"
   touch "$DIR.attempt-start"
   measured_build 1
   STATUS=$?

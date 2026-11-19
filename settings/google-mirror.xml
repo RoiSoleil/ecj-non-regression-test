@@ -2,9 +2,33 @@
 <settings>
   <mirrors>
     <mirror>
-      <id>central</id>
-      <mirrorOf>central,scala-tools.org,maven-central,central-repo,Maven Central,central2,central maven repo,maven_central,A_maven.central,central-redeclared,cengtral,sonatype-maven-org,maven-central-fallback</mirrorOf>
+      <id>google</id>
+      <mirrorOf>scala-tools.org,maven-central,central-repo,Maven Central,central2,central maven repo,maven_central,A_maven.central,central-redeclared,cengtral,sonatype-maven-org,maven-central-fallback</mirrorOf>
       <url>https://maven-central.storage-download.googleapis.com/maven2/</url>
     </mirror>
   </mirrors>
+  <profiles>
+    <profile>
+      <id>google-mirror-first</id>
+      <repositories>
+        <repository>
+          <id>google</id>
+          <url>https://maven-central.storage-download.googleapis.com/maven2/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>google</id>
+          <url>https://maven-central.storage-download.googleapis.com/maven2/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>false</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>google-mirror-first</activeProfile>
+  </activeProfiles>
 </settings>
