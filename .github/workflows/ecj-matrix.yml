@@ -74,7 +74,9 @@ jobs:
           V="$INPUT_BASELINE"
           # a baseline built from a ref by the build-ecj job, installed under this version by the build jobs
           [ -z "$INPUT_BASELINE_REF" ] || V=BASE-SNAPSHOT
-          [ -n "$V" ] || V=$(curl -fsS https://repo1.maven.org/maven2/org/eclipse/jdt/ecj/maven-metadata.xml | sed -n 's:.*<release>\(.*\)</release>.*:\1:p')
+          for base in https://repo1.maven.org/maven2 https://repo.maven.apache.org/maven2 https://maven-central.storage-download.googleapis.com/maven2; do
+            [ -n "$V" ] || V=$(curl -fsS --retry 3 --retry-all-errors --retry-delay 15 "$base/org/eclipse/jdt/ecj/maven-metadata.xml" | sed -n 's:.*<release>\(.*\)</release>.*:\1:p') || true
+          done
           [ -n "$V" ] || { echo "cannot determine the baseline ECJ version"; exit 1; }
           echo "version=$V" >> "$GITHUB_OUTPUT"
       # The durations of the last full run, to group the short projects and start the longest jobs first

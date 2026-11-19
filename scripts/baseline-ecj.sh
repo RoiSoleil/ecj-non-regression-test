@@ -12,7 +12,7 @@ valid() { [ -s "$CACHE/ecj-$VERSION.$1" ] && [ -s "$CACHE/ecj-$VERSION.$1.sha1" 
 for f in jar pom; do
   for attempt in 1 2 3; do
     valid "$f" && break
-    for base in https://repo1.maven.org/maven2 https://repo.maven.apache.org/maven2; do
+    for base in https://repo1.maven.org/maven2 https://repo.maven.apache.org/maven2 https://maven-central.storage-download.googleapis.com/maven2; do
       url="$base/org/eclipse/jdt/ecj/$VERSION/ecj-$VERSION.$f"
       curl -fsSL --retry 2 --retry-all-errors --retry-delay 10 -o "$CACHE/ecj-$VERSION.$f.sha1" "$url.sha1" \
         && curl -fsSL --retry 2 --retry-all-errors --retry-delay 10 -o "$CACHE/ecj-$VERSION.$f" "$url" \
