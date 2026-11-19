@@ -71,6 +71,9 @@ else
 fi
 export ECJ_JAR ROOT
 export MVNW_REPOURL=https://maven-central.storage-download.googleapis.com/maven2
+if [ "${GITHUB_ACTIONS:-}" = true ] && ! grep -q 'oss\.sonatype\.org' /etc/hosts; then
+  echo "127.0.0.1 oss.sonatype.org" | sudo tee -a /etc/hosts >/dev/null || true
+fi
 [ -z "$OVERRIDE_ARGS" ] || export ECJ_OVERRIDE_COMPILER_ARGS=1
 [ -z "$NO_MODULE_PATH" ] || export ECJ_NO_MODULE_PATH=1
 export ECJ_COMPILER_ARGS="$ECJ_ARGS"   # always set: a value left in the environment must not reach another project
@@ -289,7 +292,7 @@ for attempt in 1 2 3; do
   measured_build 1
   STATUS=$?
   [ "$STATUS" != 0 ] && [ "$STATUS" != 124 ] && [ "$STATUS" != 137 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] \
-    && grep -q -E 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|status code: (429|5[0-9][0-9])|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length|Could not acquire lock|Could not resolve all (artifacts|dependencies|files)|Could not find artifact|was cached in the local repository|Error grabbing Grapes|Failed to fetch https?://|curl: \(([67]|18|22|28|35|56)\)' "$RUNS/1/run.log" \
+    && grep -q -E 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|status code: (429|5[0-9][0-9])|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length|Could not acquire lock|Could not resolve all (artifacts|dependencies|files)|Could not find artifact|was cached in the local repository|Error grabbing Grapes|Failed to fetch https?://|Can.t get https?://|curl: \(([67]|18|22|28|35|56)\)' "$RUNS/1/run.log" \
     && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:' "$RUNS/1/run.log" || break
   echo "== build failed on a network error" >>"$LOG"
   find "$HOME/.m2/repository" -newer "$DIR.attempt-start" \( -name '*.lastUpdated' -o -name 'resolver-status.properties' \) -delete 2>/dev/null
