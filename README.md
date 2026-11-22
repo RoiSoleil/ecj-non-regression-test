@@ -29,6 +29,9 @@ dependencies, unless the project keeps its `~/.m2` between the runs (`"cache_m2"
 of a repository are limited to 10 GB, so only the projects with the longest downloads ask for it). The compile time is
 the time spent in the compiler plugin alone and does not include the downloads.
 A build that fails on a network error (a 502 from Maven Central, a timeout) is tried again, up to 3 times.
+A javac build is a reference only when it really compiled: a pom that keeps the build successful despite compiler
+errors (`<failOnError>false</failOnError>`) is reported as a failed build, and the diagnostics of the plugins that run
+javac for themselves (delombok, annotation processing) are not reported as compile errors.
 
 Metrics (`scripts/metrics.py`): wall and CPU time, compile time (the time spent in the compiler plugin, from the time
 stamps of the Maven log), peak memory, garbage collections (`-Xlog:gc,gc+cpu`: pauses, CPU time of the GC threads,
@@ -190,7 +193,7 @@ The JDK project needs a JDK with `lib/src.zip`; otherwise set `JDK_SRC_DIR` to a
   Tried and not kept yet: needing `install` instead of `compile` (`has not been packaged yet`): Karaf, MINA SSHD,
   OpenJPA, TomEE, Maven Resolver, OpenWebBeans, MapStruct; other build problems with javac: see the history of
   `projects.json`.
-* 48 projects build with javac on JDK 21 only (`"jdk": "21"`). 136 candidates added on 2026-11-02 and 03 did not build with javac
+* 49 projects build with javac on JDK 21 only (`"jdk": "21"`). 136 candidates added on 2026-11-02 and 03 did not build with javac
   on JDK 21 nor 27 and were removed (list in the history of `projects.json`).
 * Projects that need javac internals cannot build with ECJ and were removed: JQF (`com.sun.tools.javac.main.Main`),
   Bucket4j and Tika (Ignite's annotation processor calls `com.sun.source.util.Trees.instance`), Heritrix3 (its

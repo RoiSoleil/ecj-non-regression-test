@@ -312,6 +312,17 @@ else
   echo "build failed" > "$ROOT/results/$NAME-$LABEL.status"
 fi
 
+# A javac build that prints compiler errors and still exits 0 (a pom with <failOnError>false</failOnError>) is not the
+# reference of the performance comparison: it did not compile the project. The plugins that run javac for themselves
+# (delombok, annotation processing) also print errors without failing the build: only the diagnostics of the Maven
+# compiler plugin, '[ERROR] /path/File.java:[line,col]', count here.
+if [ "$ECJ_VERSION" = javac ] && [ "$STATUS" = 0 ] \
+    && grep -qE "^([0-9:.]+ )?\[ERROR\] $DIR/?[^:]*\.java:\[[0-9]+,[0-9]+\]" "$LOG"; then
+  echo "== the compiler reported errors although the build exited 0: no reference build (a pom with failOnError=false?)" >>"$LOG"
+  echo "build failed" > "$ROOT/results/$NAME-$LABEL.status"
+  STATUS=1
+fi
+
 # A Maven build that never says it compiled with ECJ was silently built with javac and would prove nothing.
 if [ "$ECJ_VERSION" != javac ] && [ -z "$PATCH" ] && [ -f "$DIR/${SUBDIR:-.}/pom.xml" ] && ! grep -q "Compiling with eclipse" "$LOG"; then
   echo "ecj not used" > "$ROOT/results/$NAME-$LABEL.status"
@@ -319,11 +330,17 @@ fi
 
 # One normalized line per compile error: "<path relative to the project>:<line> <message>".
 # Maven prints "[ERROR] /path/File.java:[12,5] message", ECJ itself prints "ERROR in /path/File.java (at line 12)".
-{
-  sed -n -E "s#^([0-9:.]+ )?\[ERROR\] $DIR/?([^:]*\.java):\[([0-9]+),[0-9]+\] (.*)#\2:\3 \4#p" "$LOG"
-  sed -n -E "s#^$DIR/?([^:]*\.java):([0-9]+): error: (.*)#\1:\2 \3#p" "$LOG"
-  awk -v d="$DIR/" '/^[0-9]+\. ERROR in /{sub(d,""); f=$4; l=$7; sub(/\)/,"",l); getline; getline; getline; print f ":" l " " $0}' "$LOG"
-} | sort -u > "$ROOT/results/$NAME-$LABEL.errors"
+# A successful javac build has no compile error: the diagnostics that the other plugins print (delombok, annotation
+# processing: Spring Data MongoDB, Dnsjava) do not belong to the reference build and are not reported.
+if [ "$ECJ_VERSION" = javac ] && [ "$STATUS" = 0 ]; then
+  : > "$ROOT/results/$NAME-$LABEL.errors"
+else
+  {
+    sed -n -E "s#^([0-9:.]+ )?\[ERROR\] $DIR/?([^:]*\.java):\[([0-9]+),[0-9]+\] (.*)#\2:\3 \4#p" "$LOG"
+    sed -n -E "s#^$DIR/?([^:]*\.java):([0-9]+): error: (.*)#\1:\2 \3#p" "$LOG"
+    awk -v d="$DIR/" '/^[0-9]+\. ERROR in /{sub(d,""); f=$4; l=$7; sub(/\)/,"",l); getline; getline; getline; print f ":" l " " $0}' "$LOG"
+  } | sort -u > "$ROOT/results/$NAME-$LABEL.errors"
+fi
 python3 "$ROOT/scripts/metrics.py" 0 0 "$RUNS"/* > "$ROOT/results/$NAME-$LABEL.metrics" 2>>"$LOG" || true
 
 # The class files, when the run compares those of the baseline and head builds (bytecode input of the workflow): one line
