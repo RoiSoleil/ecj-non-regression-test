@@ -1,0 +1,21 @@
+version: 2
+updates:
+  # The actions of the workflows (actions/checkout, setup-java, cache, upload-artifact, download-artifact...).
+  # One pull request for all of them: the versions are moved together and the run tests the whole set.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "CI"
+    labels:
+      - "dependencies"
+      - "github-actions"
