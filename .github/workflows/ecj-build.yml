@@ -73,7 +73,7 @@ jobs:
       # The head builds use the jar of this run, and so do the baseline builds when the baseline is built from a ref
       # (baseline_ref input of ecj-matrix.yml): HEAD-SNAPSHOT, BASE-SNAPSHOT. It is copied into the local repository with
       # a minimal pom (Maven resolves such a SNAPSHOT as one installed locally): mvn install:install-file took 3 seconds.
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v8.0.2
         if: matrix.label == 'head' || (matrix.label == 'baseline' && inputs.baseline_jar)
         with: { name: "${{ matrix.label == 'head' && 'ecj-HEAD.jar' || 'ecj-BASE.jar' }}" }
       - name: Install the ECJ of this run in the local Maven repository

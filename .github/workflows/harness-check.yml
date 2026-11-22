@@ -1,0 +1,76 @@
+name: Harness checks
+
+# A pull request that changes the scripts, the workflows or the project list is tested here before a full run: a shell
+# syntax error, an invalid JSON or a project that refers to a JDK without an exact version would otherwise only fail
+# in the next nightly run (after an hour of setup). The Dependabot pull requests get the same check.
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - '.github/**'
+      - 'scripts/**'
+      - 'projects.json'
+      - 'jdks.json'
+      - 'jdk-downloads.json'
+      - 'settings/**'
+      - 'dashboard/**'
+      - 'patches/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Shell syntax
+        run: |
+          status=0
+          while IFS= read -r -d '' script; do
+            bash -n "$script" || status=1
+          done < <(find scripts .github -name '*.sh' -print0)
+          exit $status
+      - name: Python syntax
+        run: python3 -m py_compile scripts/*.py
+      - name: JSON and projects.json
+        run: |
+          python3 - <<'PY'
+          import json
+          import pathlib
+
+          projects = json.load(open('projects.json'))
+          names = [project['name'] for project in projects]
+          assert len(names) == len(set(names)), 'a project name is duplicated'
+          for project in projects:
+              for field in ('url', 'ref', 'cmd'):
+                  assert field in project, f"{project.get('name')}: no {field}"
+              assert project['cmd'], f"{project['name']}: no cmd"
+              if project.get('patch'):
+                  assert (pathlib.Path('patches') / project['patch']).is_file(), f"{project['name']}: patch not found"
+          jdks = json.load(open('jdks.json'))
+          downloads = json.load(open('jdk-downloads.json'))
+          used = {project.get('jdk', '27') for project in projects}
+          assert used <= set(jdks), f"no exact version in jdks.json for {sorted(used - set(jdks))}"
+          assert set(jdks.values()) <= set(downloads), f"no download in jdk-downloads.json for {sorted(set(jdks.values()) - set(downloads))}"
+          for version, download in downloads.items():
+              assert download.get('url') and download.get('sha256'), f'{version}: no url or sha256'
+          print(f"{len(projects)} projects, {len(jdks)} exact JDKs")
+          PY
+      - name: YAML syntax
+        run: |
+          python3 -m pip install --quiet --disable-pip-version-check PyYAML
+          python3 - <<'PY'
+          import glob
+          import yaml
+
+          for path in glob.glob('.github/**/*.yml', recursive=True):
+              with open(path, encoding='utf-8') as content:
+                  yaml.safe_load(content)
+          print('workflows and actions read')
+          PY
+      - name: Plan a small run
+        run: python3 scripts/plan.py --jdk 27 --projects JquickCurl,Dnsjava --labels baseline,head,javac --durations /dev/null > /dev/null
