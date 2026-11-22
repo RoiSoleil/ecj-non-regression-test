@@ -14,7 +14,7 @@ jobs:
       changed: ${{ steps.check.outputs.changed }}
       sha: ${{ steps.check.outputs.sha }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - id: check
         run: |
           LATEST=$(git ls-remote https://github.com/eclipse-jdt/eclipse.jdt.core.git refs/heads/master | cut -f1)
@@ -44,7 +44,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - env:
           SHA: ${{ needs.check.outputs.sha }}
         run: |
