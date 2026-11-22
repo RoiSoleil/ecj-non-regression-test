@@ -50,7 +50,7 @@ jobs:
     # dashboard-data.py reads the projects of a job from its name
     name: "build (${{ matrix.id }} ${{ matrix.label }}: ${{ join(matrix.projects, ', ') }})"
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       # not setup-java with "distribution: temurin": api.adoptium.net blocks some runners (see the action)
       - uses: ./.github/actions/setup-jdk
         with: { version: "${{ matrix.jdk }}" }
@@ -65,7 +65,7 @@ jobs:
       # plan.py gives them a job of their own): the caches of a repository are limited to 10 GB, far less than the
       # dependencies of every project. One cache for the three labels of a project. It must stay before the
       # installation of the head ECJ, which replaces the HEAD-SNAPSHOT that a saved cache may hold.
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         if: matrix.cache_key != ''
         with:
           path: ~/.m2/repository
@@ -99,7 +99,7 @@ jobs:
       # the baseline ECJ once for the job, before the builds that run two at a time: from the cache that the build-ecj
       # job of ecj-matrix.yml fills (hundreds of jobs that ask Maven Central for it at the same time get 429 answers,
       # which failed whole jobs), else from Maven Central
-      - uses: actions/cache/restore@v5
+      - uses: actions/cache/restore@v6
         if: matrix.label == 'baseline' && !inputs.baseline_jar
         with:
           path: ~/.cache/ecj-baseline
@@ -109,7 +109,7 @@ jobs:
         env:
           BASELINE: ${{ inputs.baseline }}
         run: bash scripts/baseline-ecj.sh "$BASELINE" "$HOME/.cache/ecj-baseline" "$HOME/.m2/repository/org/eclipse/jdt/ecj/$BASELINE"
-      - uses: actions/cache/restore@v5
+      - uses: actions/cache/restore@v6
         if: matrix.label != 'javac'
         with:
           path: ~/.cache/lombok-agent
@@ -144,7 +144,7 @@ jobs:
         if: always()
         # tells scripts/download-results.sh that the artifact is downloaded
         run: mkdir -p markers && touch "markers/${{ inputs.prefix }}-${{ matrix.id }}-${{ matrix.label }}"
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: ${{ inputs.prefix }}-${{ matrix.id }}-${{ matrix.label }}
@@ -153,7 +153,7 @@ jobs:
             logs
             markers
             classes
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         if: always() && matrix.label == 'head'
         with:
           name: jfr-${{ matrix.id }}
