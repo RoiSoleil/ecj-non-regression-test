@@ -295,7 +295,7 @@ for attempt in 1 2 3; do
   measured_build 1
   STATUS=$?
   [ "$STATUS" != 0 ] && [ "$STATUS" != 124 ] && [ "$STATUS" != 137 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] \
-    && grep -q -E 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|status code: (429|5[0-9][0-9])|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length|Could not acquire lock|Could not resolve all (artifacts|dependencies|files)|Could not find artifact|was cached in the local repository|Error grabbing Grapes|Failed to fetch https?://|Can.t get https?://|curl: \(([67]|18|22|28|35|56)\)' "$RUNS/1/run.log" \
+    && grep -q -E 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|status code:? (429|5[0-9][0-9])|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length|Could not acquire lock|Could not resolve all (artifacts|dependencies|files)|Could not find artifact|was cached in the local repository|Error grabbing Grapes|Failed to fetch https?://|Can.t get https?://|curl: \(([67]|18|22|28|35|56)\)' "$RUNS/1/run.log" \
     && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:' "$RUNS/1/run.log" || break
   echo "== build failed on a network error" >>"$LOG"
   find "$HOME/.m2/repository" -newer "$DIR.attempt-start" \( -name '*.lastUpdated' -o -name 'resolver-status.properties' \) -delete 2>/dev/null
@@ -312,15 +312,22 @@ else
   echo "build failed" > "$ROOT/results/$NAME-$LABEL.status"
 fi
 
-# A javac build that prints compiler errors and still exits 0 (a pom with <failOnError>false</failOnError>) is not the
-# reference of the performance comparison: it did not compile the project. The plugins that run javac for themselves
-# (delombok, annotation processing) also print errors without failing the build: only the diagnostics of the Maven
-# compiler plugin, '[ERROR] /path/File.java:[line,col]', count here.
-if [ "$ECJ_VERSION" = javac ] && [ "$STATUS" = 0 ] \
-    && grep -qE "^([0-9:.]+ )?\[ERROR\] $DIR/?[^:]*\.java:\[[0-9]+,[0-9]+\]" "$LOG"; then
-  echo "== the compiler reported errors although the build exited 0: no reference build (a pom with failOnError=false?)" >>"$LOG"
-  echo "build failed" > "$ROOT/results/$NAME-$LABEL.status"
-  STATUS=1
+# A build that prints compiler errors and still exits 0 (a pom with <failOnError>false</failOnError>) is not a real
+# build: it did not compile the project. The plugins that run javac for themselves (delombok, annotation processing)
+# also print errors without failing the build: for javac only the diagnostics of the Maven compiler plugin,
+# '[ERROR] /path/File.java:[line,col]', count here; for ECJ its own 'N. ERROR in ...' lines are the compiler's.
+if [ "$STATUS" = 0 ]; then
+  SILENT_COMPILE_ERRORS=0
+  if [ "$ECJ_VERSION" = javac ]; then
+    grep -qE "^([0-9:.]+ )?\[ERROR\] $DIR/?[^:]*\.java:\[[0-9]+,[0-9]+\]" "$LOG" && SILENT_COMPILE_ERRORS=1
+  else
+    grep -qE '^[0-9]+\. ERROR in ' "$LOG" && SILENT_COMPILE_ERRORS=1
+  fi
+  if [ "$SILENT_COMPILE_ERRORS" = 1 ]; then
+    echo "== the compiler reported errors although the build exited 0: not a successful build (a pom with failOnError=false?)" >>"$LOG"
+    echo "build failed" > "$ROOT/results/$NAME-$LABEL.status"
+    STATUS=1
+  fi
 fi
 
 # A Maven build that never says it compiled with ECJ was silently built with javac and would prove nothing.
@@ -330,9 +337,10 @@ fi
 
 # One normalized line per compile error: "<path relative to the project>:<line> <message>".
 # Maven prints "[ERROR] /path/File.java:[12,5] message", ECJ itself prints "ERROR in /path/File.java (at line 12)".
-# A successful javac build has no compile error: the diagnostics that the other plugins print (delombok, annotation
-# processing: Spring Data MongoDB, Dnsjava) do not belong to the reference build and are not reported.
-if [ "$ECJ_VERSION" = javac ] && [ "$STATUS" = 0 ]; then
+# A successful build has no compile error: the diagnostics that other plugins print (delombok, annotation processing:
+# Spring Data MongoDB, Dnsjava) are not compile errors of the build and are not reported (a silent compiler failure
+# was turned into a failed build above).
+if [ "$STATUS" = 0 ]; then
   : > "$ROOT/results/$NAME-$LABEL.errors"
 else
   {

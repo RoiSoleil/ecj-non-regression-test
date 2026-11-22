@@ -27,7 +27,7 @@ runs:
     - uses: actions/setup-java@v5
       with:
         distribution: jdkfile
-        jdkFile: ${{ steps.download.outputs.archive }}
+        jdk-file: ${{ steps.download.outputs.archive }}
         java-version: ${{ inputs.version }}
         architecture: x64
         # the vendor of the toolchains.xml that setup-java writes, as with "distribution: temurin"

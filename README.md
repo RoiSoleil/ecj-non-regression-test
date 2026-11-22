@@ -29,9 +29,9 @@ dependencies, unless the project keeps its `~/.m2` between the runs (`"cache_m2"
 of a repository are limited to 10 GB, so only the projects with the longest downloads ask for it). The compile time is
 the time spent in the compiler plugin alone and does not include the downloads.
 A build that fails on a network error (a 502 from Maven Central, a timeout) is tried again, up to 3 times.
-A javac build is a reference only when it really compiled: a pom that keeps the build successful despite compiler
-errors (`<failOnError>false</failOnError>`) is reported as a failed build, and the diagnostics of the plugins that run
-javac for themselves (delombok, annotation processing) are not reported as compile errors.
+A build is kept only when it really compiled: a pom that keeps the build successful despite compiler errors
+(`<failOnError>false</failOnError>`) is reported as a failed build, and the diagnostics of the plugins that run the
+compiler for themselves (delombok, annotation processing) are not reported as compile errors.
 
 Metrics (`scripts/metrics.py`): wall and CPU time, compile time (the time spent in the compiler plugin, from the time
 stamps of the Maven log), peak memory, garbage collections (`-Xlog:gc,gc+cpu`: pauses, CPU time of the GC threads,
