@@ -141,6 +141,16 @@ A run must only fail for the compiler. Besides the second build of the suspect p
   (`scripts/seed-m2.sh`), saves it again when its contents changed, even if an entry failed (a warning of the run
   names it), and every build job copies it into its local Maven repository, so that an outage of repo.eclipse.org does
   not fail the builds;
+* the Gradle builds (JavaHamcrest, the Gradle modules of Quarkus) download from the same Google mirror of Maven
+  Central as Maven: on CI, `settings/mirror.init.gradle.kts` is installed in `~/.gradle/init.d` (or
+  `$GRADLE_USER_HOME/init.d`); it puts the mirror before the Gradle Plugin Portal (which redirects the artifacts of
+  Maven Central to repo.maven.apache.org) and replaces Maven Central in the repositories of the builds (from Gradle
+  6.0; the repositories of `dependencyResolutionManagement` from 6.8; an older Gradle is left as it is). It is a
+  Kotlin DSL script, which Gradle compiles with the Kotlin compiler of the `.gradle.kts` scripts of the builds: the
+  Groovy of Gradle 9.7.0 cannot read the classes of JDK 27 ("Unsupported class file major version 71"), and it calls
+  the API of Gradle 6.0 and 6.8 by reflection, behind its version checks. A build that fails in the script (its
+  failure names `mirror.init.gradle.kts`: a Gradle that cannot compile or run it on the JDK of the build) is built
+  again without it;
 * a build stops after 90 minutes, so that a hanging build cannot hold its job until the 6-hour limit of GitHub.
 
 ## Run it

@@ -91,10 +91,14 @@ if [ -n "${CI:-}" ] && [ -n "${JAVA_HOME:-}" ]; then # only on CI: this file als
   # renamed in one step: a build running next to this one (SHARED_RUNNER) may be reading the file
   mv -f "$HOME/.m2/toolchains.xml.$$" "$HOME/.m2/toolchains.xml"
 fi
+GRADLE_MIRROR_SCRIPT="${GRADLE_USER_HOME:-$HOME/.gradle}/init.d/mirror.init.gradle.kts"
 if [ -n "${CI:-}" ]; then
   mkdir -p "$HOME/.groovy"
   cp "$ROOT/settings/grapeConfig.xml" "$HOME/.groovy/grapeConfig.xml.$$"
   mv -f "$HOME/.groovy/grapeConfig.xml.$$" "$HOME/.groovy/grapeConfig.xml"
+  mkdir -p "$(dirname "$GRADLE_MIRROR_SCRIPT")"
+  cp "$ROOT/settings/mirror.init.gradle.kts" "$GRADLE_MIRROR_SCRIPT.$$"
+  mv -f "$GRADLE_MIRROR_SCRIPT.$$" "$GRADLE_MIRROR_SCRIPT"
 fi
 cd "$DIR/${SUBDIR:-.}"
 
@@ -300,6 +304,13 @@ for attempt in 1 2 3; do
   touch "$DIR.attempt-start"
   measured_build 1
   STATUS=$?
+  if [ "$STATUS" != 0 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] && [ -f "$GRADLE_MIRROR_SCRIPT" ] \
+      && grep -q "^Initialization script '.*/mirror\.init\.gradle\.kts'" "$RUNS/1/run.log"; then
+    echo "== the Gradle init script of the Google mirror failed: built again without it" >>"$LOG"
+    rm -f "$GRADLE_MIRROR_SCRIPT"
+    clean_build
+    continue
+  fi
   [ "$STATUS" != 0 ] && [ "$STATUS" != 124 ] && [ "$STATUS" != 137 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] \
     && grep -q -E -e "$TRANSIENT_ERRORS" -e 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|Could not resolve host|Could not resolve all (artifacts|dependencies|files)|Could not find artifact|was cached in the local repository|Error grabbing Grapes|Failed to fetch https?://|Can.t get https?://|curl: \(([67]|18|22|28|35|56)\)' "$RUNS/1/run.log" \
     && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:' "$RUNS/1/run.log" || break
