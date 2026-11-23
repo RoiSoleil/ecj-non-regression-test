@@ -63,6 +63,9 @@ else
 fi
 
 REPO_ARGS="-gs $ROOT/settings/google-mirror.xml -Daether.enhancedLocalRepository.trackingFilename=_harness.repositories"
+REPO_ARGS="$REPO_ARGS -Daether.syncContext.named.time=120 -Daether.syncContext.named.retry=3 -Daether.syncContext.named.retry.wait=2000"
+# two builds at a time on the runner (SHARED_RUNNER): the Maven processes lock the local repository between them
+[ -z "${SHARED_RUNNER:-}" ] || REPO_ARGS="$REPO_ARGS -Daether.syncContext.named.factory=file-lock -Daether.syncContext.named.nameMapper=file-hgav"
 # the ECJ jar itself, for projects that run the batch compiler directly
 if [ "$ECJ_VERSION" = javac ]; then
   ECJ_JAR=""
@@ -253,8 +256,6 @@ BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Dpgpverify.skip=true"
 BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.dependencyCollector.impl=bf -Daether.dependencyCollector.bf.threads=3 -Daether.checksums.algorithms=SHA-1 -Daether.layout.maven2.checksumAlgorithms=SHA-1"
 BUILD_SKIPS="-Dasciidoctor.skip=true -Dmaven.gitcommitid.skip=true"
 [ "$(field no_build_skips)" != true ] || BUILD_SKIPS=""
-# two builds at a time on the runner (SHARED_RUNNER): the Maven processes lock the local repository between them
-[ -z "${SHARED_RUNNER:-}" ] || BASE_MAVEN_ARGS="$BASE_MAVEN_ARGS -Daether.syncContext.named.factory=file-lock -Daether.syncContext.named.nameMapper=file-gav"
 RUNS="$ROOT/work/$NAME-$LABEL-runs"   # the directory of the measured build (1): time, GC logs, Maven log, produced classes
 rm -rf "$RUNS"; mkdir -p "$RUNS"
 echo "== $NAME with ECJ $ECJ_VERSION ($LABEL): $CMD" | tee -a "$LOG"
@@ -417,7 +418,8 @@ if [ -n "${RUN_TESTS:-}" ] && [ -n "$TEST_CMD" ] \
     && [ "$(cat "$ROOT/results/$NAME-$LABEL.status")" = success ]; then
   echo "== tests: $TEST_CMD" | tee -a "$LOG"
   TEST_START=$SECONDS
-  MAVEN_OPTS="$BASE_MAVEN_OPTS" MAVEN_ARGS="$BASE_MAVEN_ARGS -Dsurefire.rerunFailingTestsCount=1 -Dfailsafe.rerunFailingTestsCount=1" \
+  MAVEN_OPTS="$BASE_MAVEN_OPTS" MAVEN_ARGS="$BASE_MAVEN_ARGS $REPO_ARGS -Dsurefire.rerunFailingTestsCount=1 -Dfailsafe.rerunFailingTestsCount=1" \
+    MAVEN_CONFIG="$BASE_MAVEN_ARGS $REPO_ARGS -Dsurefire.rerunFailingTestsCount=1 -Dfailsafe.rerunFailingTestsCount=1" \
     timeout -k 60 "${TEST_TIMEOUT:-1800}" bash -c "$TEST_CMD" >>"$LOG" 2>&1 9>&-
   TEST_STATUS=$?
   python3 "$ROOT/scripts/test-results.py" . "$TEST_STATUS" "$((SECONDS - TEST_START))" > "$ROOT/results/$NAME-$LABEL.tests" 2>>"$LOG" \
