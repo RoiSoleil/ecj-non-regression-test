@@ -91,6 +91,11 @@ if [ -n "${CI:-}" ] && [ -n "${JAVA_HOME:-}" ]; then # only on CI: this file als
   # renamed in one step: a build running next to this one (SHARED_RUNNER) may be reading the file
   mv -f "$HOME/.m2/toolchains.xml.$$" "$HOME/.m2/toolchains.xml"
 fi
+if [ -n "${CI:-}" ]; then
+  mkdir -p "$HOME/.groovy"
+  cp "$ROOT/settings/grapeConfig.xml" "$HOME/.groovy/grapeConfig.xml.$$"
+  mv -f "$HOME/.groovy/grapeConfig.xml.$$" "$HOME/.groovy/grapeConfig.xml"
+fi
 cd "$DIR/${SUBDIR:-.}"
 
 if [ "$ECJ_VERSION" = javac ]; then
