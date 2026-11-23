@@ -49,9 +49,14 @@ The Java Flight Recording (head run, about 1 % overhead) keeps the last measured
 The goal is that every project compiles with ECJ without any compile error. The
 [dashboard](https://roisoleil.github.io/ecj-non-regression-test/) shows, for each run, whether each project compiles
 with the released ECJ, the head ECJ and javac, its compile errors grouped by families, and the performance of the
-compilers (time, CPU, memory, GC), with the history of the last 60 runs and a page per project. Every number links to
-the raw file it comes from. Each failing case has to be analysed one by one: a build configuration problem is fixed in
-`projects.json` or in the scripts, a real ECJ bug gets an issue.
+compilers (time, CPU, memory, GC), with the history of the last 60 runs and a page per project. A released or head ECJ
+build that gave up on a download, or on a local repository that stayed locked (`download failed`), is shown as
+inconclusive and is not counted as a failure of the compiler in the totals and the regressions; the trend of the
+projects that do not compile counts every build that did not succeed, inconclusive ones included, so that it compares
+with the older runs. A failing ECJ build of a project that javac does not compile either (compile errors) only gets a
+"javac fails too" note: it is still counted as a failure. Every number links to the raw file it comes from. Each
+failing case has to be analysed one by one: a build configuration problem is fixed in `projects.json` or in the
+scripts, a real ECJ bug gets an issue.
 
 ### Analysis of the failing projects
 

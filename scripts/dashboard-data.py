@@ -31,6 +31,7 @@ import test_runs  # noqa: E402
 LABELS = ('baseline', 'head', 'javac')
 DEFAULT_JDK = '27'  # keep in sync with ecj-build.yml
 NO_RESULT = 3  # exit status
+DOWNLOAD_FAILED = 'download failed'
 GIT_FILE_MAX = 95_000_000  # GitHub refuses a file over 100 MB
 LOG_MAX = 500_000_000  # bytes of a log (a gzipped log is about 10 times smaller)
 # metrics shown on the dashboard; lower is better for all of them
@@ -106,6 +107,12 @@ def load_label(results, name, label):
             'metrics': metrics, 'tests': test_runs.read(results / f'{name}-{label}.tests')}
 
 
+def javac_fails_too(labels):
+    javac = labels.get('javac')
+    return bool(javac and javac['status'] == 'build failed' and javac['errors']) \
+        and any(labels.get(label) and labels[label]['status'] == 'build failed' for label in ('baseline', 'head'))
+
+
 def is_tested(status):
     # anything but success or a failing build (clone failed, patch failed, ecj not used...) means not tested
     return status in ('success', 'build failed')
@@ -151,6 +158,17 @@ def job_links(jobs, plan):
     return links
 
 
+def confirm_job_links(jobs):
+    links, ids = {}, {}
+    for job in jobs:
+        match = re.search(r'build \((c\d+) (\w+): ([^)]*)\)', job.get('name', ''))
+        if match:
+            for project in (project.strip() for project in match.group(3).split(',')):
+                links[(project, match.group(2))] = job.get('html_url')
+                ids[project] = match.group(1)
+    return links, ids
+
+
 def plan_groups(path):
     """{group id: [projects]} from the plan of the run (scripts/plan.py), if given."""
     if not path or not pathlib.Path(path).exists():
@@ -186,6 +204,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--results', required=True, help='results directory (<project>-<label>.status, .errors, .metrics)')
     parser.add_argument('--logs', help='logs directory (<project>-<label>.log)')
+    parser.add_argument('--confirm', help='directory of the second builds of the suspect projects (results/ and logs/): '
+                        'their baseline and head results replace the first ones of a project built again, reproduced or '
+                        'not reproduced, as in compare.py')
     parser.add_argument('--site', default=os.environ.get('SITE'), help='checkout of the gh-pages branch, updated in place (default: $SITE)')
     parser.add_argument('--run-id', required=True)
     parser.add_argument('--run-attempt', default='1')
@@ -225,12 +246,22 @@ def main():
     confirmation_file = results / 'confirmation.json'
     confirmation = json.loads(confirmation_file.read_text()) if confirmation_file.exists() else {}
     cause_counts = {}
+    confirm = pathlib.Path(options.confirm) if options.confirm else None
+
+    def from_confirm(name, label):
+        return bool(confirm) and label in ('baseline', 'head') \
+            and confirmation.get(name) in ('built again', 'reproduced', 'not reproduced') \
+            and (confirm / 'results' / f'{name}-{label}.status').exists()
+
+    def sources(name, label):
+        return (confirm / 'results', confirm / 'logs') if from_confirm(name, label) else (results, logs)
 
     def log_text(name, label):
         """The build log, for scripts/causes.py (at most its first 50 MB)."""
-        if not logs:
+        label_logs = sources(name, label)[1]
+        if not label_logs:
             return ''
-        log, log_gz = logs / f'{name}-{label}.log', logs / f'{name}-{label}.log.gz'
+        log, log_gz = label_logs / f'{name}-{label}.log', label_logs / f'{name}-{label}.log.gz'
         try:
             if log.exists():
                 with log.open('rb') as source:
@@ -251,10 +282,17 @@ def main():
 
     definitions = {project['name']: project for project in read_json(pathlib.Path(options.projects), [])}
     plan = plan_groups(options.plan)
-    jobs = job_links(read_jsonl(options.jobs), plan)
+    job_list = read_jsonl(options.jobs)
+    jobs = job_links(job_list, plan)
+    confirm_jobs, confirm_ids = confirm_job_links(job_list)
     groups = {project: group for group, projects in plan.items() for project in projects}
 
+    def job_link(name, label):
+        return confirm_jobs.get((name, label)) if from_confirm(name, label) else jobs.get((name, label))
+
     def result_artifact(name, label):
+        if from_confirm(name, label):
+            return artifacts.get(f'confirm-{confirm_ids[name]}-{label}') if name in confirm_ids else None
         # result-<group>-<label> holds the results of the projects of a group (older runs: result-<project>-<label>)
         return artifacts.get(f'result-{groups[name]}-{label}') if name in groups else artifacts.get(f'result-{name}-{label}')
 
@@ -290,12 +328,31 @@ def main():
     families = {}  # family -> {label: count, projects: {label: set}}
     ratios = {'wall_s': [], 'compile_s': [], 'cpu_s': [], 'rss_mb': [], 'alloc_mb': []}
     head_vs_base = []
-    totals = {label: {'success': 0, 'failed': 0, 'other': 0, 'missing': 0, 'errors': 0} for label in LABELS}
-    regressions = fixes = 0
+    totals = {label: {'success': 0, 'failed': 0, 'other': 0, 'inconclusive': 0, 'missing': 0, 'errors': 0} for label in LABELS}
+    regressions = fixes = inconclusive_count = 0
     test_suites = test_regressions = 0  # the projects that ran their tests, those whose tests regressed
 
     for name in names:
-        labels = {label: load_label(results, name, label) for label in LABELS}
+        labels = {label: load_label(sources(name, label)[0], name, label) for label in LABELS}
+        base, head = labels['baseline'], labels['head']
+        new = fixed = []
+        regression = False
+        # a project that could not be tested (clone, patch, ECJ not used...) with one of them says nothing about ECJ
+        tested = all(labels[label] and is_tested(labels[label]['status']) for label in ('baseline', 'head'))
+        if tested:
+            errors_base, errors_head = set(base['errors']), set(head['errors'])
+            new = sorted(errors_head - errors_base)
+            fixed = sorted(errors_base - errors_head)
+            regression = bool(new) or (base['status'] == 'success' and head['status'] != 'success')
+            # the verdict of the second builds of the suspect projects (scripts/compare.py --confirm), which decides the
+            # run: a regression that they did not show is no regression of the run either
+            if regression and confirmation.get(name) in ('not reproduced', 'baseline crashed'):
+                regression = False
+            regressions += regression
+            fixes += bool(fixed) and not new
+        inconclusive = DOWNLOAD_FAILED if any(labels[label] and labels[label]['status'] == DOWNLOAD_FAILED for label in ('baseline', 'head')) else ''
+        inconclusive_count += bool(inconclusive)
+        hint = 'javac fails too' if javac_fails_too(labels) else ''
         definition = definitions.get(name, {})
         raw = {}
         project_labels = {}
@@ -305,11 +362,17 @@ def main():
                 totals[label]['missing'] += 1
                 continue
             status = data['status']
-            totals[label]['success' if status == 'success' else 'failed' if status == 'build failed' else 'other'] += 1
+            if status == 'success':
+                totals[label]['success'] += 1
+            elif status == DOWNLOAD_FAILED:
+                totals[label]['inconclusive'] += 1
+            else:
+                totals[label]['failed' if status == 'build failed' else 'other'] += 1
             totals[label]['errors'] += len(data['errors'])
             files = {}
+            label_results, label_logs = sources(name, label)
             for extension in ('status', 'metrics', 'errors', 'tests'):
-                source = results / f'{name}-{label}.{extension}'
+                source = label_results / f'{name}-{label}.{extension}'
                 if source.exists():
                     target = raw_dir / 'results' / (source.name + ('.gz' if extension == 'errors' else ''))
                     target.parent.mkdir(parents=True, exist_ok=True)
@@ -319,9 +382,9 @@ def main():
                     else:
                         shutil.copyfile(source, target)
                     files[extension] = f'raw/{run_id}/results/{target.name}'
-            if logs:
-                log = logs / f'{name}-{label}.log'
-                log_gz = logs / f'{name}-{label}.log.gz'
+            if label_logs:
+                log = label_logs / f'{name}-{label}.log'
+                log_gz = label_logs / f'{name}-{label}.log.gz'
                 target = raw_dir / 'logs' / f'{name}-{label}.log.gz'
                 # GitHub refuses files over 100 MB: a huge log stays on the job page only
                 if (log_gz.exists() and log_gz.stat().st_size < LOG_MAX // 10) or (not log_gz.exists() and log.exists() and log.stat().st_size < LOG_MAX):
@@ -351,6 +414,8 @@ def main():
             metrics = data['metrics'] or {}
             summary_labels[label] = {
                 'status': status, 'errors': len(data['errors']),
+                **({'inconclusive': DOWNLOAD_FAILED} if status == DOWNLOAD_FAILED and label != 'javac' else {}),
+                **({'hint': hint} if hint and label != 'javac' and status == 'build failed' else {}),
                 'metrics': {key: metrics[key] for key in METRICS if key in metrics},
                 # since the warm-up build is gone every build is measured (its wall time may include downloads); the
                 # older results were only measured after a warm-up build, offline
@@ -366,27 +431,11 @@ def main():
                 # the families with their count and a few examples (with their line in the raw .errors file)
                 'families': sorted(({'family': fam, 'count': count, 'examples': examples[fam]}
                                     for fam, count in label_families.items()), key=lambda item: -item['count']),
-                'job': jobs.get((name, label)),
+                'job': job_link(name, label),
             }
             if tests:
                 project_labels[label]['tests'] = tests | {'failing': tests['failing'][:MAX_DIFF]}
 
-        base, head = labels['baseline'], labels['head']
-        new = fixed = []
-        regression = False
-        # a project that could not be tested (clone, patch, ECJ not used...) with one of them says nothing about ECJ
-        tested = all(labels[label] and is_tested(labels[label]['status']) for label in ('baseline', 'head'))
-        if tested:
-            errors_base, errors_head = set(base['errors']), set(head['errors'])
-            new = sorted(errors_head - errors_base)
-            fixed = sorted(errors_base - errors_head)
-            regression = bool(new) or (base['status'] == 'success' and head['status'] != 'success')
-            # the verdict of the second builds of the suspect projects (scripts/compare.py --confirm), which decides the
-            # run: a regression that they did not show is no regression of the run either
-            if regression and confirmation.get(name) in ('not reproduced', 'baseline crashed'):
-                regression = False
-            regressions += regression
-            fixes += bool(fixed) and not new
         # the tests that fail only with the head ECJ (scripts/test_runs.py)
         test_verdict, test_reason, test_new = test_runs.verdict(base and base['tests'], head and head['tests'])
         ran_tests = any(data and data['tests'] for data in labels.values())
@@ -418,10 +467,11 @@ def main():
                 head_vs_base.append(value)
         summary_projects.append({
             'name': name, 'labels': summary_labels, 'new': len(new), 'fixed': len(fixed), 'regression': regression, 'confirmation': confirmation.get(name, ''), 'cause': cause,
+            'inconclusive': inconclusive, 'hint': hint,
             'tested': tested, 'ratios': project_ratios, 'jfr': jfr_artifact(name),
             **({'tests': {'verdict': test_verdict, 'reason': test_reason, 'new': len(test_new)}}
                if ran_tests else {}),
-            'jobs': {label: jobs.get((name, label)) for label in LABELS if jobs.get((name, label))},
+            'jobs': {label: link for label in LABELS if (link := job_link(name, label))},
             'artifacts': {label: link for label in LABELS if (link := result_artifact(name, label))},
         })
         write_json(run_dir / 'projects' / f'{name}.json', {
@@ -429,7 +479,7 @@ def main():
             'cmd': definition.get('cmd', ''), 'jdk': definition.get('jdk', ''), 'labels': project_labels,
             'new': new[:MAX_DIFF], 'fixed': fixed[:MAX_DIFF], 'new_count': len(new), 'fixed_count': len(fixed),
             'regression': regression, 'raw': raw, 'jfr': jfr_artifact(name), 'confirmation': confirmation.get(name, ''),
-            'cause': cause,
+            'cause': cause, 'inconclusive': inconclusive, 'hint': hint,
             'tests': {'verdict': test_verdict, 'reason': test_reason, 'new': test_new[:MAX_DIFF], 'new_count': len(test_new)},
             'result_artifacts': {label: result_artifact(name, label) for label in LABELS},
         })
@@ -441,6 +491,7 @@ def main():
     run['projects'] = len(names)
     run['regressions'] = regressions
     run['fixes'] = fixes
+    run['inconclusive'] = inconclusive_count
     if test_suites:
         run['test_suites'] = test_suites
         run['test_regressions'] = test_regressions
@@ -496,7 +547,9 @@ def main():
         history = [entry for entry in read_json(path, {}).get('history', []) if str(entry.get('run')) in kept and entry.get('run') != run_id]
         history.append({
             'run': run_id, 'date': options.date, 'partial': partial, 'ecj': options.ecj_sha,
+            'inconclusive': item['inconclusive'], 'hint': item['hint'],
             'labels': {label: {'status': data['status'], 'errors': data['errors'],
+                               **{key: data[key] for key in ('inconclusive', 'hint') if data.get(key)},
                                **{key: data['metrics'].get(key) for key in HISTORY_METRICS}}
                        for label, data in item['labels'].items()},
         })

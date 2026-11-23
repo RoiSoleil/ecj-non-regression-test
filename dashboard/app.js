@@ -70,10 +70,21 @@ function chart(el, option) {
 	return c;
 }
 
+const INCONCLUSIVE_TITLES = {
+	'download failed': 'a dependency could not be downloaded, or the local repository stayed locked, in the last attempt of the build: no result of the compiler',
+};
+const HINT_TITLES = {
+	'javac fails too': 'javac fails on compile errors too in this run: maybe a problem of the project; still counted as a failure of ECJ',
+};
+function hintChip(hint) {
+	return hint ? ` <span class="chip none" title="${esc(HINT_TITLES[hint] || '')}">${esc(hint)}</span>` : '';
+}
 function statusChip(s, errors) {
 	if (!s) return '<span class="chip none">not run</span>';
 	if (s.status === 'success') return '<span class="chip ok">compiles</span>';
-	if (s.status === 'build failed') return `<span class="chip ko">${errors ? fmt(errors, 0) + ' errors' : 'build failed'}</span>`;
+	if (s.inconclusive)
+		return `<span class="chip warn" title="${esc(INCONCLUSIVE_TITLES[s.inconclusive])}">${errors ? fmt(errors, 0) + ' errors (inconclusive)' : 'inconclusive'}</span>`;
+	if (s.status === 'build failed') return `<span class="chip ko">${errors ? fmt(errors, 0) + ' errors' : 'build failed'}</span>${hintChip(s.hint)}`;
 	return `<span class="chip warn">${esc(s.status)}</span>`;
 }
 
@@ -242,11 +253,12 @@ async function viewOverview() {
 		<h1>All the projects</h1>
 		${runHeader(run, summaryPath)}
 		<div class="tiles">
-			${LABELS.map(l => tile(`${fmt(t[l].success, 0)} / ${fmt(t[l].success + t[l].failed + t[l].other, 0)}`, `${LABEL_NAMES[l]}: projects that compile`, { path: summaryPath, key: 'totals' })).join('')}
+			${LABELS.map(l => tile(`${fmt(t[l].success, 0)} / ${fmt(t[l].success + t[l].failed + t[l].other + (t[l].inconclusive || 0), 0)}`, `${LABEL_NAMES[l]}: projects that compile`, { path: summaryPath, key: 'totals' })).join('')}
 			${tile(`<span class="${run.regressions ? 'worse' : ''}">${fmt(run.regressions, 0)}</span>`, 'Regressions (head against released)', { path: summaryPath, key: 'regressions' })}
 			${tile(fmt(run.fixes, 0), 'Projects with gone errors and no new one', { path: summaryPath, key: 'fixes' })}
 			${run.test_suites ? tile(`<span class="${run.test_regressions ? 'worse' : ''}">${fmt(run.test_regressions, 0)}</span> / ${fmt(run.test_suites, 0)}`, 'Test suites that fail only with head ECJ / run', { path: summaryPath, key: 'test_regressions' }) : ''}
 			${tile(fmt(javacOkHeadKo.length, 0), 'Compile with javac, not with head ECJ')}
+			${run.inconclusive != null ? tile(fmt(run.inconclusive, 0), 'Inconclusive: a dependency download failed (or the local repository stayed locked) in the released or head ECJ build', { path: summaryPath, key: 'inconclusive' }) : ''}
 			${tile(`${fmt(t.baseline.errors, 0)} → ${fmt(t.head.errors, 0)}`, 'Compile errors, released → head', { path: summaryPath, key: 'errors' })}
 			${tile(pct(run.median?.head_javac_wall_s), 'Median wall time, head ECJ against javac', { path: summaryPath, key: 'head_javac_wall_s' })}
 		</div>
@@ -263,6 +275,7 @@ async function viewOverview() {
 				<option value="all">all the projects</option>
 				<option value="regression">regressions</option>
 				<option value="headko">not compiling with head ECJ</option>
+				<option value="inconclusive">inconclusive: a dependency download failed (or the local repository stayed locked) in the released or head ECJ build</option>
 				<option value="javacok">compiling with javac, not with head ECJ</option>
 				<option value="fixed">gone errors, no new one</option>
 				${run.test_suites ? '<option value="tests">ran their tests</option><option value="testreg">tests that fail only with head ECJ</option>' : ''}
@@ -278,7 +291,7 @@ async function viewOverview() {
 		tooltip: { trigger: 'axis' }, legend: { bottom: 0 }, grid: { left: 50, right: 16, top: 34, bottom: 60 },
 		xAxis: { type: 'category', data: trend.map(r => (r.date || r.id).slice(0, 10)) },
 		yAxis: { type: 'value', name: 'projects' },
-		series: [...LABELS.map(l => ({ name: LABEL_NAMES[l], type: 'line', color: COLORS[l], data: trend.map(r => r.totals[l].failed + r.totals[l].other) })),
+		series: [...LABELS.map(l => ({ name: LABEL_NAMES[l], type: 'line', color: COLORS[l], data: trend.map(r => r.totals[l].failed + r.totals[l].other + (r.totals[l].inconclusive || 0)) })),
 			// the gap to close: projects that javac compiles and the head ECJ does not (counted since November 2026)
 			{ name: 'javac yes, head ECJ no', type: 'line', lineStyle: { type: 'dashed' }, connectNulls: false, data: trend.map(r => r.javac_only ?? null) }],
 	}).on('click', p => { location.hash = href('overview', null, { run: trend[p.dataIndex].id }); });
@@ -316,6 +329,7 @@ async function viewOverview() {
 		let rows = projects.filter(p => !search || p.name.toLowerCase().includes(search));
 		if (filter === 'regression') rows = rows.filter(p => p.regression);
 		if (filter === 'headko') rows = rows.filter(p => p.labels.head?.status === 'build failed');
+		if (filter === 'inconclusive') rows = rows.filter(p => p.inconclusive);
 		if (filter === 'javacok') rows = rows.filter(p => javacOkHeadKo.includes(p));
 		if (filter === 'fixed') rows = rows.filter(p => p.fixed > 0 && !p.new);
 		if (filter === 'tests') rows = rows.filter(p => p.tests);
@@ -540,6 +554,9 @@ async function viewProject(name) {
 		${entry.tests ? `<p>Test suite:${testsChip(entry)} <span class="muted">${esc(entry.tests.reason || '')}</span></p>
 			${detail?.tests?.new?.length ? `<details><summary>Tests that fail only with the head ECJ (${fmt(detail.tests.new_count, 0)})</summary>
 				<ul class="examples mono">${detail.tests.new.map(t => `<li>${esc(t)}</li>`).join('')}</ul></details>` : ''}` : ''}
+		${entry.inconclusive ? `<p>Inconclusive in this run: <strong>${esc(entry.inconclusive)}</strong>
+			<span class="muted">(${esc(INCONCLUSIVE_TITLES[entry.inconclusive] || '')})</span></p>` : ''}
+		${entry.hint ? `<p>Note:${hintChip(entry.hint)} <span class="muted">${esc(HINT_TITLES[entry.hint] || '')}</span></p>` : ''}
 		${entry.confirmation ? `<p>Second build of this suspect project:${confirmationChip(entry)}
 			<span class="muted">${esc(CONFIRMATION_TITLES[entry.confirmation] || '')}</span></p>` : ''}
 		<div class="tiles">${LABELS.map(l => {
@@ -616,6 +633,9 @@ function projectHistory(el, name, history) {
 	const h = (history.history || []).slice().reverse();
 	if (!h.length) { el.innerHTML = '<p class="muted">No history.</p>'; return; }
 	el.innerHTML = `<p class="muted">${rawButton('History data', `data/projects/${name}.json`)} · a click on a point opens the run.</p>
+		<div class="table-wrap"><table><thead><tr><th>Run</th>${LABELS.map(l => `<th>${LABEL_NAMES[l]}</th>`).join('')}</tr></thead>
+			<tbody>${h.slice().reverse().map(e => `<tr><td><a href="${href('project', name, { run: e.run })}">${esc((e.date || e.run).slice(0, 10))}</a>${e.partial ? ' *' : ''}</td>
+				${LABELS.map(l => `<td>${statusChip(e.labels[l], e.labels[l]?.errors)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
 		<div class="grid2"><div class="card"><h2>Compile errors</h2><div class="chart" id="h-errors"></div></div>
 		<div class="card"><h2>Wall time</h2><div class="chart" id="h-wall"></div></div>
 		<div class="card"><h2>Peak memory (RSS)</h2><div class="chart" id="h-rss"></div></div>
