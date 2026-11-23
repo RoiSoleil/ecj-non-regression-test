@@ -33,6 +33,7 @@ mode.add_argument('--confirm', type=pathlib.Path)
 options = parser.parse_args()
 results, baseline, head, confirm = pathlib.Path(options.results), options.baseline, options.head, options.confirm
 TESTED = ('success', 'build failed')
+DOWNLOAD_FAILED = 'download failed'
 CRASH = re.compile(r'Unknown source: java\.lang\.\w+(Exception|Error)|internal compiler error')
 
 
@@ -63,7 +64,8 @@ def verdict(directory, name):
     # anything but success or a failing build (clone failed, patch failed, missing) means the project was not tested
     untested = status_head not in TESTED or status_base not in TESTED
     # a project that is not tested (or that already fails with the baseline) is shown in the table but is not a regression
-    regression = bool(new) or (status_base == 'success' and status_head != 'success')
+    downloads_failed = DOWNLOAD_FAILED in (status_base, status_head)
+    regression = not downloads_failed and (bool(new) or (status_base == 'success' and status_head != 'success'))
     return status_base, status_head, errors_base, errors_head, new, fixed, untested, base_crashed, regression
 
 

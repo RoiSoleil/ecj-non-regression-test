@@ -118,7 +118,29 @@ A run must only fail for the compiler. Besides the second build of the suspect p
   while an update or a new feature release is out, with the entries to paste, or while a pinned archive cannot be
   downloaded any more;
 * every download is tried again: the clone of a project and of `eclipse.jdt.core` (3 times), the JDK, Maven and
-  the baseline ECJ (`curl --retry 5`), the dependencies of a build (3 builds when the log shows a network error);
+  the baseline ECJ (`curl --retry 5`), the dependencies of a build (3 builds when the log shows a network error). A
+  build that still fails after its last attempt (the third, or the only one of a `no_rebuild` project) gets the status
+  `download failed` (a dependency could not be downloaded, or the local repository stayed locked: not tested, no
+  regression) only when its `[ERROR]` lines (or Gradle's `> ...` causes) show one of these transient errors, the same
+  that make the script build again: `status code 429` or `5xx` (`status code: 503`, Gradle's `Received status code
+  429`), `Could not acquire lock(s)`, `Could not acquire read lock` or `Could not acquire write lock` (older Maven
+  Resolver versions), `Connection reset`, `Connection timed out`, `Connect timed out` or `Read timed out` (either
+  case), `Premature end of Content-Length`; and when the log has no compile error or compiler crash (`COMPILATION
+  ERROR`, `Compilation failure`, `Compilation failed`, `Fatal error compiling`, javac or ECJ diagnostics, `internal
+  compiler error`, `Unknown source: java.lang.*`), no failed goal other than the resolution of dependencies or of a
+  plugin (maven-compiler-plugin included: only the resolution of its own dependencies), and every Gradle failure block
+  (`* What went wrong:` up to `* Try:`) is a `Could not resolve ...` with one of these errors. `Could not find
+  artifact` (Gradle's `Could not find`), `Failure to find`, `was cached in the local repository`, `was not found in
+  ... during a previous attempt`, `Could not resolve host`, `Unknown host` (`UnknownHostException`), `Name or service
+  not known`, `Temporary failure in name resolution`, `Connection refused`, the other 4xx and Maven's http blocker may
+  be permanent: a build with one of them in these lines stays `build failed`. The plugins that only repo.eclipse.org
+  has (`settings/m2-seed.txt`, one `groupId:artifactId[:packaging[:classifier]]:version repository-url` per line,
+  blank lines and lines starting with `#` ignored: the Eclipse Dash license plugin) are kept in a cache
+  (`m2-seed-<hash of settings/m2-seed.txt and scripts/seed-m2.sh>-<hash of the contents of its files>`): the
+  `build-ecj` job restores the latest one, downloads the entries that it misses or whose jar is not a valid archive
+  (`scripts/seed-m2.sh`), saves it again when its contents changed, even if an entry failed (a warning of the run
+  names it), and every build job copies it into its local Maven repository, so that an outage of repo.eclipse.org does
+  not fail the builds;
 * a build stops after 90 minutes, so that a hanging build cannot hold its job until the 6-hour limit of GitHub.
 
 ## Run it

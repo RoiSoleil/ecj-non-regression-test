@@ -287,6 +287,7 @@ measured_build() {
 # times, from scratch (the classes of the failed attempt are deleted, so that the measured build compiles everything).
 # Not when the build has compile errors (it is a result), nor for a project whose reactor plugin is built by the build
 # itself (Avro, no_rebuild in projects.json: it cannot run again after its classes were deleted).
+TRANSIENT_ERRORS='status code:? (429|5[0-9][0-9])|Could not acquire (read |write )?lock|Connection reset|[Cc]onnect(ion)? timed out|[Rr]ead timed out|Premature end of Content-Length'
 STATUS=0
 for attempt in 1 2 3; do
   MIRROR_ARGS="$REPO_ARGS"
@@ -295,7 +296,7 @@ for attempt in 1 2 3; do
   measured_build 1
   STATUS=$?
   [ "$STATUS" != 0 ] && [ "$STATUS" != 124 ] && [ "$STATUS" != 137 ] && [ "$attempt" -lt 3 ] && [ -z "$NO_REBUILD" ] \
-    && grep -q -E 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|status code:? (429|5[0-9][0-9])|Connection (reset|timed out)|Read timed out|Could not resolve host|Premature end of Content-Length|Could not acquire lock|Could not resolve all (artifacts|dependencies|files)|Could not find artifact|was cached in the local repository|Error grabbing Grapes|Failed to fetch https?://|Can.t get https?://|curl: \(([67]|18|22|28|35|56)\)' "$RUNS/1/run.log" \
+    && grep -q -E -e "$TRANSIENT_ERRORS" -e 'Could not transfer artifact|Failed to read artifact descriptor|Unresolveable build extension|Could not resolve host|Could not resolve all (artifacts|dependencies|files)|Could not find artifact|was cached in the local repository|Error grabbing Grapes|Failed to fetch https?://|Can.t get https?://|curl: \(([67]|18|22|28|35|56)\)' "$RUNS/1/run.log" \
     && ! grep -q -E 'COMPILATION ERROR|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:' "$RUNS/1/run.log" || break
   echo "== build failed on a network error" >>"$LOG"
   find "$HOME/.m2/repository" -newer "$DIR.attempt-start" \( -name '*.lastUpdated' -o -name 'resolver-status.properties' \) -delete 2>/dev/null
@@ -304,6 +305,23 @@ for attempt in 1 2 3; do
 done
 if [ "$STATUS" = 0 ]; then
   echo "success" > "$ROOT/results/$NAME-$LABEL.status"
+elif [ "$STATUS" != 124 ] && [ "$STATUS" != 137 ] \
+    && grep -E '^([0-9:.]+ )?\[ERROR\]|^ *> ' "$RUNS/1/run.log" | grep -q -E "$TRANSIENT_ERRORS" \
+    && ! grep -q -E 'COMPILATION ERROR|Compilation failure|Compilation failed|^[0-9]+\. ERROR in |\[ERROR\] .*\.java:\[[0-9]+,[0-9]+\]|\.java:[0-9]+: error:|Fatal error compiling|internal compiler error|Unknown source: java\.lang\.' "$RUNS/1/run.log" \
+    && [ -z "$(grep -E '^([0-9:.]+ )?\[ERROR\] Failed to execute goal' "$RUNS/1/run.log" | grep -v -E 'Failed to execute goal on project [^:]+: Could not (resolve|collect) dependencies|Execution [^ ]+ of goal [^ ]+ failed: Plugin .* or one of its dependencies could not be resolved')" ] \
+    && [ -z "$(grep -E '^([0-9:.]+ )?\[ERROR\]|^ *> ' "$RUNS/1/run.log" | grep -E 'status code:? 4([01][0-9]|2[0-8]|[3-9][0-9])|Could not find artifact|> Could not find |Failure to find|was cached in the local repository|was not found in .* during a previous attempt|maven-default-http-blocker|Could not resolve host|Unknown ?[Hh]ost|Name or service not known|Temporary failure in name resolution|Connection refused')" ] \
+    && [ "$(awk -v transient="$TRANSIENT_ERRORS" '
+        function close_block() { if (open && !(block ~ /Could not resolve/ && block ~ transient)) failed++; open = 0; block = "" }
+        /^\* What went wrong:/ { close_block(); open = 1; next }
+        /^\* (Try|Exception is):/ || /^BUILD FAILED/ || /^[0-9]+: Task failed with an exception/ { close_block(); next }
+        open { block = block "\n" $0 }
+        END { close_block(); print failed + 0 }' "$RUNS/1/run.log")" = 0 ]; then
+  if [ -n "$NO_REBUILD" ]; then
+    echo "== build failed on a download error in its only attempt (no_rebuild): no result of the compiler" >>"$LOG"
+  else
+    echo "== build failed on a download error in its last attempt ($attempt of 3): no result of the compiler" >>"$LOG"
+  fi
+  echo "download failed" > "$ROOT/results/$NAME-$LABEL.status"
 elif [ "$STATUS" = 124 ] || [ "$STATUS" = 137 ]; then
   # 137 is also a build that the kernel killed for lack of memory
   echo "== build killed (exit $STATUS: stopped after ${BUILD_TIMEOUT:-5400} seconds, or out of memory)" >>"$LOG"
@@ -331,7 +349,8 @@ if [ "$STATUS" = 0 ]; then
 fi
 
 # A Maven build that never says it compiled with ECJ was silently built with javac and would prove nothing.
-if [ "$ECJ_VERSION" != javac ] && [ -z "$PATCH" ] && [ -f "$DIR/${SUBDIR:-.}/pom.xml" ] && ! grep -q "Compiling with eclipse" "$LOG"; then
+if [ "$ECJ_VERSION" != javac ] && [ -z "$PATCH" ] && [ -f "$DIR/${SUBDIR:-.}/pom.xml" ] && ! grep -q "Compiling with eclipse" "$LOG" \
+    && [ "$(cat "$ROOT/results/$NAME-$LABEL.status")" != "download failed" ]; then
   echo "ecj not used" > "$ROOT/results/$NAME-$LABEL.status"
 fi
 

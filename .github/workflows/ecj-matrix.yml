@@ -168,6 +168,28 @@ jobs:
         with:
           path: ~/.cache/lombok-agent
           key: lombok-${{ hashFiles('scripts/lombok-agent.sh') }}
+      - id: m2-seed-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/.cache/m2-seed
+          key: m2-seed-${{ hashFiles('settings/m2-seed.txt', 'scripts/seed-m2.sh') }}-
+          restore-keys: m2-seed-${{ hashFiles('settings/m2-seed.txt', 'scripts/seed-m2.sh') }}-
+      - id: m2-seed
+        name: Download the plugins that Maven Central does not have
+        env:
+          PREFIX: m2-seed-${{ hashFiles('settings/m2-seed.txt', 'scripts/seed-m2.sh') }}
+        run: |
+          bash scripts/seed-m2.sh settings/m2-seed.txt "$HOME/.cache/m2-seed" 2> seed-m2.err || true
+          cat seed-m2.err >&2
+          sed -n 's/^cannot download /::warning::cannot download, the builds may fail on it: /p' seed-m2.err
+          if [ -n "$(find "$HOME/.cache/m2-seed" -type f 2>/dev/null | head -1)" ]; then
+            echo "key=$PREFIX-$(cd "$HOME/.cache/m2-seed" && find . -type f -exec sha256sum {} + | sort | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/cache/save@v5
+        if: steps.m2-seed.outputs.key != '' && steps.m2-seed.outputs.key != steps.m2-seed-cache.outputs.cache-matched-key
+        with:
+          path: ~/.cache/m2-seed
+          key: ${{ steps.m2-seed.outputs.key }}
       - id: build
         env:
           REF: ${{ github.event.inputs.ecj_ref || inputs.ecj_ref }}

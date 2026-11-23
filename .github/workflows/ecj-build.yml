@@ -70,6 +70,15 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ matrix.cache_key }}
+      - uses: actions/cache/restore@v5
+        with:
+          path: ~/.cache/m2-seed
+          key: m2-seed-${{ hashFiles('settings/m2-seed.txt', 'scripts/seed-m2.sh') }}-
+          restore-keys: m2-seed-${{ hashFiles('settings/m2-seed.txt', 'scripts/seed-m2.sh') }}-
+      - name: Seed the local Maven repository
+        run: |
+          mkdir -p "$HOME/.m2/repository"
+          [ ! -d "$HOME/.cache/m2-seed" ] || cp -r "$HOME/.cache/m2-seed/." "$HOME/.m2/repository/"
       # The head builds use the jar of this run, and so do the baseline builds when the baseline is built from a ref
       # (baseline_ref input of ecj-matrix.yml): HEAD-SNAPSHOT, BASE-SNAPSHOT. It is copied into the local repository with
       # a minimal pom (Maven resolves such a SNAPSHOT as one installed locally): mvn install:install-file took 3 seconds.
