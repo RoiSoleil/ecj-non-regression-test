@@ -16,6 +16,9 @@ both compilers, before it fails a run.
   from the compiler. A suspect project without valid second builds (no job, a build that did not run, a baseline whose status
   changed) stays a regression. The results of the first builds are not changed: the verdicts go to
   <results dir>/confirmation.json.
+known-regressions.json lists the regressions of open issues: a regression of one of its projects whose new compile
+errors all match the pattern of its entry, or, without new compile errors, whose head build log matches it, is reported
+as known and does not fail the run; <results dir>/known.json gives their issue.
 """
 import argparse
 import json
@@ -34,6 +37,8 @@ options = parser.parse_args()
 results, baseline, head, confirm = pathlib.Path(options.results), options.baseline, options.head, options.confirm
 TESTED = ('success', 'build failed')
 DOWNLOAD_FAILED = 'download failed'
+KNOWN = {entry['project']: entry for entry in
+         json.loads((pathlib.Path(__file__).resolve().parent.parent / 'known-regressions.json').read_text())}
 CRASH = re.compile(r'Unknown source: java\.lang\.\w+(Exception|Error)|internal compiler error')
 
 
@@ -48,6 +53,21 @@ def crashed(directory, name, label):
         return False
     with path.open(errors='replace') as log:
         return any(CRASH.search(line) for line in log)
+
+
+def known(name, result, logs):
+    entry = KNOWN.get(name)
+    new = result[4]
+    if not entry or ('errors' if new else 'log') not in entry:
+        return None
+    if new:
+        return entry['issue'] if all(re.fullmatch(entry['errors'], error) for error in new) else None
+    path = logs / f'{name}-{head}.log'
+    if not path.exists():
+        return None
+    pattern = re.compile(entry['log'])
+    with path.open(errors='replace') as log:
+        return entry['issue'] if any(pattern.search(line) for line in log) else None
 
 
 def verdict(directory, name):
@@ -85,8 +105,8 @@ if options.suspects:
     sys.exit(0)
 
 regressions = 0
-rows, details, not_reproduced, unconfirmed, base_crashes = [], [], [], [], []
-confirmation = {}
+rows, details, not_reproduced, unconfirmed, base_crashes, known_regressions = [], [], [], [], [], []
+confirmation, known_issues = {}, {}
 for name in names:
     first = verdict(results, name)
     current = first
@@ -123,13 +143,18 @@ for name in names:
             not_reproduced.append(name)
             current = second
     status_base, status_head, errors_base, errors_head, new, fixed, untested, base_crashed, regression = current
+    issue = regression and known(name, current, results.parent / 'logs' if current is first else confirm / 'logs')
+    if issue:
+        regression = False
+        known_issues[name] = issue
+        known_regressions.append(f'[{name}]({issue})')
     regressions += regression
     if base_crashed:
         base_crashes.append(name)
-        if not regression:
+        if not regression and not issue:
             confirmation[name] = 'baseline crashed'
-    mark = ('❌' if regression else '⚠️ not reproduced' if name in not_reproduced else '⚠️ not tested' if untested
-            else '⚠️ baseline crashed' if base_crashed else '✅')
+    mark = ('❌' if regression else f'⚠️ [known]({issue})' if issue else '⚠️ not reproduced' if name in not_reproduced
+            else '⚠️ not tested' if untested else '⚠️ baseline crashed' if base_crashed else '✅')
     rows.append(f'| {name} | {status_base} | {status_head} | {len(errors_base)} | {len(errors_head)} | {len(new)} | {len(fixed)} | {mark}{note if regression else ""} |')
     for title, lines in (('New errors', new), ('Errors that disappeared', fixed)):
         if lines:
@@ -138,6 +163,9 @@ for name in names:
 print(f'### ECJ non-regression: baseline `{baseline}` against `{head}`\n')
 if regressions:
     print(f'**{regressions} regression(s).**\n')
+if known_regressions:
+    print(f'{len(known_regressions)} known regression(s), listed in known-regressions.json with their issue: '
+          f'{", ".join(known_regressions)}\n')
 if not_reproduced:
     print(f'{len(not_reproduced)} project(s) showed no regression when built a second time (a failure of the shared '
           f'runner: no new compile error, their first logs are in the artifacts): '
@@ -156,4 +184,5 @@ if confirm or confirmation:
     # the results of the first builds stay as they are (the evidence of what failed); the verdict of the second builds
     # is kept next to them, for the dashboard
     (results / 'confirmation.json').write_text(json.dumps(confirmation, indent=1, sort_keys=True) + '\n')
+(results / 'known.json').write_text(json.dumps(known_issues, indent=1, sort_keys=True) + '\n')
 sys.exit(1 if regressions else 0)

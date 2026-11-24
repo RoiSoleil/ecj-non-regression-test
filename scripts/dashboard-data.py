@@ -245,6 +245,8 @@ def main():
     names = {path.name.rsplit('-', 1)[0] for path in results.glob('*.status')}
     confirmation_file = results / 'confirmation.json'
     confirmation = json.loads(confirmation_file.read_text()) if confirmation_file.exists() else {}
+    known_file = results / 'known.json'
+    known = json.loads(known_file.read_text()) if known_file.exists() else {}
     cause_counts = {}
     confirm = pathlib.Path(options.confirm) if options.confirm else None
 
@@ -346,7 +348,7 @@ def main():
             regression = bool(new) or (base['status'] == 'success' and head['status'] != 'success')
             # the verdict of the second builds of the suspect projects (scripts/compare.py --confirm), which decides the
             # run: a regression that they did not show is no regression of the run either
-            if regression and confirmation.get(name) in ('not reproduced', 'baseline crashed'):
+            if regression and (confirmation.get(name) in ('not reproduced', 'baseline crashed') or name in known):
                 regression = False
             regressions += regression
             fixes += bool(fixed) and not new
