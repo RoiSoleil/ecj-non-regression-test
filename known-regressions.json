@@ -15,6 +15,8 @@
   "errors": "\\S+ The type [\\w.$]+ cannot be resolved\\. It is indirectly referenced from required type .*"},
  {"project": "IoGame", "issue": "https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5723",
   "errors": "\\S*/BoltChannelContext\\.java:1 The blank final field asyncContext may not have been initialized"},
+ {"project": "JakartaRest", "issue": "https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5648",
+  "errors": "jaxrs-api/src/test/java/.*"},
  {"project": "JamesProject", "issue": "https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5724",
   "errors": "\\S*/MailetProcessorImpl\\.java:\\d+ The type org\\.apache\\.james\\.mailetcontainer\\.impl\\.MailetProcessorImpl does not define toProcessor\\(java\\.lang\\.Object\\) that is applicable here|\\S*/ManageSieveServer\\.java:\\d+ The method initChannel\\(io\\.netty\\.channel\\.Channel\\) of type .* must override or implement a supertype method"},
  {"project": "JasyptSpringBoot", "issue": "https://github.com/eclipse-jdt/eclipse.jdt.core/issues/5723",
