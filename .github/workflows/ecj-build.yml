@@ -94,6 +94,12 @@ jobs:
           mkdir -p "$D"
           cp "ecj-$JAR.jar" "$D/ecj-$JAR-SNAPSHOT.jar"
           echo "<project xmlns=\"http://maven.apache.org/POM/4.0.0\"><modelVersion>4.0.0</modelVersion><groupId>org.eclipse.jdt</groupId><artifactId>ecj</artifactId><version>$JAR-SNAPSHOT</version></project>" > "$D/ecj-$JAR-SNAPSHOT.pom"
+      - uses: actions/download-artifact@v8.0.2
+        if: matrix.label == 'merapi'
+        with: { name: merapi }
+      - name: Install Merapi
+        if: matrix.label == 'merapi'
+        run: chmod +x merapi && echo "MERAPI=$PWD/merapi" >> "$GITHUB_ENV"
       # the class files to keep for the javap diff, in the second builds of the projects whose class files differ
       # (the keep field that the suspects job of ecj-matrix.yml adds to their job)
       - name: List the class files to keep
@@ -119,7 +125,7 @@ jobs:
           BASELINE: ${{ inputs.baseline }}
         run: bash scripts/baseline-ecj.sh "$BASELINE" "$HOME/.cache/ecj-baseline" "$HOME/.m2/repository/org/eclipse/jdt/ecj/$BASELINE"
       - uses: actions/cache/restore@v6
-        if: matrix.label != 'javac'
+        if: matrix.label != 'javac' && matrix.label != 'merapi'
         with:
           path: ~/.cache/lombok-agent
           key: lombok-${{ hashFiles('scripts/lombok-agent.sh') }}
@@ -138,6 +144,7 @@ jobs:
           VERSION="$BASELINE"
           [ "$LABEL" != javac ] || VERSION=javac   # untouched project, built with the JDK's javac
           [ "$LABEL" != head ] || VERSION=HEAD-SNAPSHOT
+          [ "$LABEL" != merapi ] || VERSION=merapi
           export LABEL VERSION JFR CLASS_DIGESTS KEEP_CLASSES_LISTS RUN_TESTS
           # builds that share the runner (the baseline, two at a time) are no performance measure; Maven locks its
           # local repository between processes

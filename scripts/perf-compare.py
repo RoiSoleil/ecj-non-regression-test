@@ -21,6 +21,7 @@ parser.add_argument('ecj', nargs='?', default='head')
 parser.add_argument('--html', metavar='FILE')
 options = parser.parse_args()
 results, javac, ecj, html_path = pathlib.Path(options.results), options.javac, options.ecj, options.html
+NAME = 'Merapi' if ecj == 'merapi' else 'ECJ'
 TIE = 0.05
 
 # (key, title, unit, decimals): lower is better for all of them
@@ -90,7 +91,7 @@ def warm(row):
     if 'warmup' not in row['j'] or 'warmup' not in row['e']:
         return 'unknown'   # results written before the field existed
     j, e = row['j']['warmup'], row['e']['warmup']
-    return 'yes' if j and e else 'no' if not j and not e else 'javac only' if j else 'ECJ only'
+    return 'yes' if j and e else 'no' if not j and not e else 'javac only' if j else f'{NAME} only'
 
 
 def runs(row):
@@ -104,17 +105,17 @@ def classes(row):
     return '–' if not j or not e else f'{j} / {e} ⚠️' if abs(j - e) > 0.1 * max(j, e) else f'{j} / {e}'
 
 
-ICON = {'javac': '🟦 javac', 'ECJ': '🟧 ECJ', 'tie': '⚪ tie'}
-print(f'## Performance: javac against ECJ `{ecj}`\n')
+ICON = {'javac': '🟦 javac', 'ECJ': f'🟧 {NAME}', 'tie': '⚪ tie'}
+print(f'## Performance: javac against {NAME} `{ecj}`\n')
 if rows:
-    print(f"**{len(rows)} projects compared** · 🟦 javac faster: **{wins['javac']}** · 🟧 ECJ faster: **{wins['ECJ']}** · "
+    print(f"**{len(rows)} projects compared** · 🟦 javac faster: **{wins['javac']}** · 🟧 {NAME} faster: **{wins['ECJ']}** · "
           f"⚪ tie (±{TIE:.0%}): **{wins['tie']}**  ")
-    print('Overall (geometric mean, ECJ against javac): ' + ' · '.join(
+    print(f'Overall (geometric mean, {NAME} against javac): ' + ' · '.join(
         f'{title.lower()} {pct(geo[k])}' for k, title, *_ in shown) + '\n')
-    print('A negative figure means ECJ needs less than javac (time, memory, GC), so lower is better for ECJ.')
+    print(f'A negative figure means {NAME} needs less than javac (time, memory, GC), so lower is better for {NAME}.')
     print('Fastest = the compile time of the compiler plugin when it was measured (Time of: compile), else the wall time of the whole build (Time of: build).')
-    print('Each figure is the median of the measured builds (Runs: javac / ECJ); the classes produced tell whether both did the same work (⚠️: more than 10 % apart; ECJ makes a few classes less than javac).\n')
-    print('| Project | Fastest | Time of | Warm-up | Runs | javac time | ECJ time | ' + ' | '.join(t for _, t, *_ in shown) + ' | Classes (javac / ECJ) |')
+    print(f'Each figure is the median of the measured builds (Runs: javac / {NAME}); the classes produced tell whether both did the same work (⚠️: more than 10 % apart; ECJ makes a few classes less than javac).\n')
+    print(f'| Project | Fastest | Time of | Warm-up | Runs | javac time | {NAME} time | ' + ' | '.join(t for _, t, *_ in shown) + f' | Classes (javac / {NAME}) |')
     print('|---|---|---|---|---|--:|--:|' + '--:|' * len(shown) + '--:|')
     for row in rows:
         r = row['r']
@@ -141,7 +142,7 @@ if html_path:
         return f'<span class="bar {side}" style="{style}"></span>'
 
     chart = ''.join(
-        f'<div class="line" title="{html.escape(row["name"])}: javac {row["j"][row["score"]]:.1f} s, ECJ {row["e"][row["score"]]:.1f} s">'
+        f'<div class="line" title="{html.escape(row["name"])}: javac {row["j"][row["score"]]:.1f} s, {NAME} {row["e"][row["score"]]:.1f} s">'
         f'<span class="name">{html.escape(row["name"])}</span>'
         f'<span class="track"><span class="axis"></span>{bar(row)}</span>'
         f'<span class="val">{pct(row["r"][row["score"]])}</span></div>' for row in rows)
@@ -161,7 +162,7 @@ if html_path:
 
     body = ''.join(
         f'<tr><th scope="row">{html.escape(row["name"])}</th>'
-        f'<td><span class="chip {row["winner"]}">{row["winner"]}</span></td>'
+        f'<td><span class="chip {row["winner"]}">{NAME if row["winner"] == "ECJ" else row["winner"]}</span></td>'
         f'<td>{"compile" if row["score"] == "compile_s" else "build"}</td><td>{warm(row)}</td><td>{runs(row)}</td>'
         + ''.join(cell(row, k, d, u) for k, _, u, d in shown) + f'<td>{classes(row)}</td></tr>' for row in rows)
     head_cells = ''.join(f'<th>{t}</th>' for _, t, *_ in shown)
@@ -170,7 +171,7 @@ if html_path:
                     if skipped else '')
     pathlib.Path(html_path).write_text(f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>javac against ECJ</title>
+<title>javac against {NAME}</title>
 <style>
 :root {{ color-scheme: light dark; --bg:#fcfcfb; --card:#ffffff; --line:#e4e3df; --ink:#0b0b0b; --ink2:#52514e; --ink3:#6b6a66;
   --javac:#2a78d6; --ecj:#eb6834; }}
@@ -208,28 +209,28 @@ tbody th {{ font-weight:600; }}
 .note {{ color:var(--ink2); font-size:13px; }}
 @media (max-width:560px) {{ .line,.axislabels {{ grid-template-columns:96px 1fr 48px; }} }}
 </style></head><body><main>
-<h1>javac against ECJ</h1>
-<p class="sub">Each project is built untouched with javac and with the ECJ <code>{html.escape(ecj)}</code>; builds are measured after a warm-up build (median of 3 for the short ones).</p>
+<h1>javac against {NAME}</h1>
+<p class="sub">Each project is built untouched with javac and with the {NAME} <code>{html.escape(ecj)}</code>; builds are measured after a warm-up build (median of 3 for the short ones).</p>
 <div class="stats">
   <div class="stat j"><b>{wins["javac"]}</b><span>projects where javac is faster</span></div>
-  <div class="stat e"><b>{wins["ECJ"]}</b><span>projects where ECJ is faster</span></div>
+  <div class="stat e"><b>{wins["ECJ"]}</b><span>projects where {NAME} is faster</span></div>
   <div class="stat"><b>{wins["tie"]}</b><span>ties (within {TIE:.0%})</span></div>
 </div>
-<h2>Speed of the compiler (compile time, else wall time), ECJ compared with javac</h2>
+<h2>Speed of the compiler (compile time, else wall time), {NAME} compared with javac</h2>
 <div class="card">
-  <div class="legend"><span><i style="background:var(--ecj)"></i>ECJ faster</span><span><i style="background:var(--javac)"></i>javac faster</span>
+  <div class="legend"><span><i style="background:var(--ecj)"></i>{NAME} faster</span><span><i style="background:var(--javac)"></i>javac faster</span>
   <span>logarithmic scale: 2× either way is the same length</span></div>
   {chart}
-  <div class="axislabels"><span></span><div><span>← ECJ faster</span><span>javac faster →</span></div><span></span></div>
+  <div class="axislabels"><span></span><div><span>← {NAME} faster</span><span>javac faster →</span></div><span></span></div>
 </div>
-<h2>Overall, ECJ compared with javac (geometric mean; negative: ECJ needs less)</h2>
+<h2>Overall, {NAME} compared with javac (geometric mean; negative: {NAME} needs less)</h2>
 <div class="stats">{overall}</div>
-<h2>All metrics (javac / ECJ, the better one underlined; lower is better)</h2>
+<h2>All metrics (javac / {NAME}, the better one underlined; lower is better)</h2>
 <div class="card scroll"><table><thead><tr><th>Project</th><th>Fastest</th><th>Time of</th><th>Warm-up</th><th>Runs</th>{head_cells}<th>Classes</th></tr></thead><tbody>{body}</tbody></table></div>
 {skipped_note}
 <p class="note">Warm-up: <em>yes</em> for the results of the older runs, measured offline after a first build that downloaded the dependencies;
 <em>no</em> means one build, whose time includes the downloads that are not cached.</p>
-<p class="note">Runs: javac / ECJ builds measured. The builds run with
+<p class="note">Runs: javac / {NAME} builds measured. The builds run with
 <code>-Xms4g -Xmx4g -XX:+UseG1GC</code>. Compile time is the time spent in the compiler plugin alone. Classes: the number of class files produced
 (⚠️: more than 10 % apart; ECJ makes a few less than javac, javac adds synthetic classes).</p>
 <p class="note">Shared CI runners are noisy: differences under {TIE:.0%} are a tie, read the rest as a trend.</p>

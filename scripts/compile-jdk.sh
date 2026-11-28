@@ -18,7 +18,9 @@ for m in $MODULES; do
   echo "== $m ($(wc -l < "files-$m.txt") files)"
   [ -s "files-$m.txt" ] || { echo "no sources found for $m" >&2; exit 1; }
   # -proceedOnError keeps going after the first error; the default limit of 100 problems per unit would hide errors
-  if [ -z "${ECJ_JAR:-}" ]; then
+  if [ -n "${MERAPI_JAVAC:-}" ]; then
+    "$MERAPI_JAVAC" -nowarn -Xmaxerrs 1000000 -proc:none --patch-module "$m=src/$m" -d "out-$m" "@files-$m.txt" || status=1
+  elif [ -z "${ECJ_JAR:-}" ]; then
     # reference run with javac (the same JVM flags as for ECJ); -d to a scratch directory as javac has no "-d none".
     # No --release: it only gives the exported API, so a patched module would not see the internal packages that
     # other modules export to it (java.net.http: jdk.internal.util, sun.net; java.desktop: 1429 errors)

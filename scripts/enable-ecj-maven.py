@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Makes a Maven build compile with ECJ (plexus-compiler-eclipse) by adding the compiler plugin to the root pom.
 
-usage: enable-ecj-maven.py <pom.xml> <ecj version>
+usage: enable-ecj-maven.py <pom.xml> <ecj version, or merapi>
 """
 import json
 import os
@@ -12,6 +12,10 @@ import xml.etree.ElementTree as ET
 POM, ECJ_VERSION = sys.argv[1], sys.argv[2]
 PLEXUS_ECLIPSE = "2.15.0"
 COMPILER_PLUGIN = "3.13.0"
+MERAPI = ECJ_VERSION == 'merapi'
+MERAPI_JAVAC = os.environ.get('MERAPI_JAVAC', '')
+if MERAPI and not MERAPI_JAVAC:
+    sys.exit('MERAPI_JAVAC must give the javac executable of Merapi')
 
 # keep the comments: some builds read them (Camel's camel-package-maven-plugin looks for "<!-- camel ...: START -->"
 # markers in parent/pom.xml and fails with a NullPointerException without them)
@@ -218,6 +222,17 @@ def add_ecj(plugin):
     if ECJ_ARGS and plugin not in MANAGED:
         add_ecj_args(plugin, configuration)
 
+def add_merapi(plugin):
+    configuration = child(plugin, 'configuration')
+    settings = (('compilerId', 'javac'), ('fork', 'true'), ('executable', MERAPI_JAVAC))
+    for config in [configuration] + plugin.findall(f"{q('executions')}/{q('execution')}/{q('configuration')}"):
+        if config is not configuration and not any(config.find(q(tag)) is not None for tag, _ in settings):
+            continue
+        for tag, value in settings:
+            for old in config.findall(q(tag)):
+                config.remove(old)
+            text(config, tag, value)
+
 def override_effective_args(plugin, level):
     for execution_id, values in EFFECTIVE_EXECUTIONS.items():
         if os.environ.get('ECJ_OVERRIDE_COMPILER_ARGS') and execution_id in ('default-compile', 'default-testCompile'):
@@ -337,11 +352,12 @@ def new_compiler(plugins):
 
 # every maven-compiler-plugin of the pom: build, pluginManagement and profiles
 declared = [p for p in project.iter(q('plugin')) if p.findtext(q('artifactId')) == 'maven-compiler-plugin']
+enable = add_merapi if MERAPI else add_ecj
 for plugin in declared:
-    add_ecj(plugin)
+    enable(plugin)
     # an execution (or a profile) that sets its own compiler would win over the plugin level setting
     for compiler in plugin.iter(q('compilerId')):
-        compiler.text = 'eclipse'
+        compiler.text = 'javac' if MERAPI else 'eclipse'
 # A pom packaging (a parent or an aggregator) compiles nothing: a compiler plugin in its build would run the compiler
 # executions it inherits (PMD's pmd-scala-common, whose sources the pmd-scala_2.1x modules compile), so the plugin goes
 # to its pluginManagement, which its children inherit (and every pom of the build is rewritten anyway).
@@ -349,11 +365,11 @@ if (project.findtext(q('packaging')) or '').strip() == 'pom':
     if all(plugin in IN_PROFILES for plugin in declared):
         plugin = new_compiler(child(child(build, 'pluginManagement'), 'plugins'))
         MANAGED.add(plugin)  # not a plugin of the build: no ECJ arguments
-        add_ecj(plugin)
+        enable(plugin)
 else:
     plugins = child(build, 'plugins')
     if not compiler_plugins(plugins):
-        add_ecj(new_compiler(plugins))
+        enable(new_compiler(plugins))
 # ElementTree drops what comes before and after the root element (the license header that apache-rat and the copyright
 # plugins check, the XML declaration that sortpom compares) and writes its own declaration: keep the original ones.
 # The prolog: a byte order mark, the declaration, comments, processing instructions and a DOCTYPE (with its internal
@@ -385,4 +401,4 @@ if prolog is not None and epilogue is not None:
 else:
     # an encoding that Python does not know, or no end tag found: the pom compiles with ECJ all the same
     tree.write(POM, encoding='UTF-8', xml_declaration=True)
-print(f'{POM}: compiling with ECJ {ECJ_VERSION}')
+print(f'{POM}: compiling with Merapi {MERAPI_JAVAC}' if MERAPI else f'{POM}: compiling with ECJ {ECJ_VERSION}')

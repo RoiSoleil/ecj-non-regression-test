@@ -9,13 +9,20 @@ expected=""
 if [ -n "${2:-}" ]; then
   expected="$(jq -r --arg sel "$(tr -d ' ' <<< "${3:-}")" '.[] | select($sel == "" or (.name as $n | $sel | split(",") | index($n))) | .name' "$2")"
 fi
-echo "| Project | Released ECJ | Head ECJ | javac |"
-echo "|---|---|---|---|"
+labels="baseline head javac"
+if [ -n "$(find "$results" -name '*-merapi.status' -print -quit 2>/dev/null)" ]; then
+  labels="$labels merapi"
+  echo "| Project | Released ECJ | Head ECJ | javac | Merapi |"
+  echo "|---|---|---|---|---|"
+else
+  echo "| Project | Released ECJ | Head ECJ | javac |"
+  echo "|---|---|---|---|"
+fi
 # (no results directory when no build uploaded anything: every project is then "not run")
-{ { find "$results" -name '*.status' -printf '%f\n' 2>/dev/null || true; } | sed -E 's/-(baseline|head|javac)\.status$//'; echo "$expected"; } | grep . | sort -u |
+{ { find "$results" -name '*.status' -printf '%f\n' 2>/dev/null || true; } | sed -E 's/-(baseline|head|javac|merapi)\.status$//'; echo "$expected"; } | grep . | sort -u |
 while IFS= read -r project; do
   row="| $project"
-  for label in baseline head javac; do
+  for label in $labels; do
     status="not run"
     [ -f "$results/$project-$label.status" ] && status="$(tr -d '\n' < "$results/$project-$label.status")"
     errors=0

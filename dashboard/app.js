@@ -2,8 +2,10 @@
 // Dashboard of the ECJ non-regression builds: data/runs.json, data/runs/<run>/summary.json,
 // data/runs/<run>/projects/<P>.json, data/projects/<P>.json and the raw files of raw/<run>/ (see scripts/dashboard-data.py).
 
-const LABELS = ['baseline', 'head', 'javac'];
-const LABEL_NAMES = { baseline: 'Released ECJ', head: 'Head ECJ', javac: 'javac' };
+const LABELS = ['baseline', 'head', 'javac', 'merapi'];
+const LABEL_NAMES = { baseline: 'Released ECJ', head: 'Head ECJ', javac: 'javac', merapi: 'Merapi' };
+const OPTIONAL_LABELS = ['merapi'];
+const labelsOf = (...sets) => LABELS.filter(l => !OPTIONAL_LABELS.includes(l) || sets.some(set => set?.[l]));
 const METRICS = [
 	['wall_s', 'Wall time', 's'], ['compile_s', 'Compile time', 's'], ['cpu_s', 'CPU time', 's'],
 	['rss_mb', 'Peak memory (RSS)', 'MB'], ['alloc_mb', 'Allocated', 'MB'], ['gc_count', 'GC count', ''],
@@ -11,7 +13,7 @@ const METRICS = [
 	['heap_before_gc_peak_mb', 'Heap peak', 'MB'], ['classes', 'Classes loaded', ''], ['class_kb', 'Class files', 'KB'],
 ];
 const RATIO_METRICS = ['wall_s', 'compile_s', 'cpu_s', 'rss_mb', 'alloc_mb'];
-const COLORS = { baseline: '#8e7cc3', head: '#2f6fde', javac: '#e0892b' };
+const COLORS = { baseline: '#8e7cc3', head: '#2f6fde', javac: '#e0892b', merapi: '#3f9d6b' };
 const app = document.getElementById('app');
 const cache = new Map();
 let runs = [];
@@ -253,7 +255,7 @@ async function viewOverview() {
 		<h1>All the projects</h1>
 		${runHeader(run, summaryPath)}
 		<div class="tiles">
-			${LABELS.map(l => tile(`${fmt(t[l].success, 0)} / ${fmt(t[l].success + t[l].failed + t[l].other + (t[l].inconclusive || 0), 0)}`, `${LABEL_NAMES[l]}: projects that compile`, { path: summaryPath, key: 'totals' })).join('')}
+			${labelsOf(t).map(l => tile(`${fmt(t[l].success, 0)} / ${fmt(t[l].success + t[l].failed + t[l].other + (t[l].inconclusive || 0), 0)}`, `${LABEL_NAMES[l]}: projects that compile`, { path: summaryPath, key: 'totals' })).join('')}
 			${tile(`<span class="${run.regressions ? 'worse' : ''}">${fmt(run.regressions, 0)}</span>`, 'Regressions (head against released)', { path: summaryPath, key: 'regressions' })}
 			${tile(fmt(run.fixes, 0), 'Projects with gone errors and no new one', { path: summaryPath, key: 'fixes' })}
 			${run.test_suites ? tile(`<span class="${run.test_regressions ? 'worse' : ''}">${fmt(run.test_regressions, 0)}</span> / ${fmt(run.test_suites, 0)}`, 'Test suites that fail only with head ECJ / run', { path: summaryPath, key: 'test_regressions' }) : ''}
@@ -291,7 +293,7 @@ async function viewOverview() {
 		tooltip: { trigger: 'axis' }, legend: { bottom: 0 }, grid: { left: 50, right: 16, top: 34, bottom: 60 },
 		xAxis: { type: 'category', data: trend.map(r => (r.date || r.id).slice(0, 10)) },
 		yAxis: { type: 'value', name: 'projects' },
-		series: [...LABELS.map(l => ({ name: LABEL_NAMES[l], type: 'line', color: COLORS[l], data: trend.map(r => r.totals[l].failed + r.totals[l].other + (r.totals[l].inconclusive || 0)) })),
+		series: [...labelsOf(...trend.map(r => r.totals)).map(l => ({ name: LABEL_NAMES[l], type: 'line', color: COLORS[l], data: trend.map(r => r.totals[l] ? r.totals[l].failed + r.totals[l].other + (r.totals[l].inconclusive || 0) : null) })),
 			// the gap to close: projects that javac compiles and the head ECJ does not (counted since November 2026)
 			{ name: 'javac yes, head ECJ no', type: 'line', lineStyle: { type: 'dashed' }, connectNulls: false, data: trend.map(r => r.javac_only ?? null) }],
 	}).on('click', p => { location.hash = href('overview', null, { run: trend[p.dataIndex].id }); });
@@ -344,13 +346,13 @@ async function viewOverview() {
 		rows.sort((a, b) => (value(a, sort.key) > value(b, sort.key) ? 1 : value(a, sort.key) < value(b, sort.key) ? -1 : 0) * sort.dir);
 		document.getElementById('count').textContent = `${rows.length} projects`;
 		const th = (key, text, cls = '') => `<th class="${cls}" data-sort="${key}">${text}${sort.key === key ? (sort.dir > 0 ? ' ▲' : ' ▼') : ''}</th>`;
-		table.innerHTML = `<thead><tr>${th('name', 'Project')}${LABELS.map(l => th('err_' + l, LABEL_NAMES[l])).join('')}
+		table.innerHTML = `<thead><tr>${th('name', 'Project')}${labelsOf(run.totals).map(l => th('err_' + l, LABEL_NAMES[l])).join('')}
 			${th('new', 'New errors', 'num')}${th('fixed', 'Gone errors', 'num')}
 			${th('ratio_head_javac_wall_s', 'Wall time vs javac', 'num')}${th('ratio_head_javac_rss_mb', 'Memory vs javac', 'num')}</tr></thead>
 			<tbody>${rows.map(p => `<tr>
 				<td><a href="${href('project', p.name)}">${esc(p.name)}</a>${p.regression ? ' <span class="chip ko">regression</span>' : ''}${confirmationChip(p)}${testsChip(p)}
 					${p.cause ? `<div class="muted small" title="Probable cause: javac compiles it, the head ECJ does not">${esc(p.cause)}</div>` : ''}</td>
-				${LABELS.map(l => { const s = p.labels[l]; return `<td>${s ? rawButton(statusChip(s, s.errors), s.errors ? rawPath(run, p.name, l, 'errors') : rawPath(run, p.name, l, 'status'), { fallback: p.artifacts?.[l] || p.jobs?.[l] }) : statusChip(null)}
+				${labelsOf(run.totals).map(l => { const s = p.labels[l]; return `<td>${s ? rawButton(statusChip(s, s.errors), s.errors ? rawPath(run, p.name, l, 'errors') : rawPath(run, p.name, l, 'status'), { fallback: p.artifacts?.[l] || p.jobs?.[l] }) : statusChip(null)}
 					${p.jobs?.[l] ? ` <a class="muted" href="${esc(p.jobs[l])}" target="_blank" rel="noopener" title="Job log on GitHub">log</a>` : ''}</td>`; }).join('')}
 				<td class="num">${p.new ? `<a href="${href('project', p.name, { tab: 'diff' })}">${fmt(p.new, 0)}</a>` : ''}</td>
 				<td class="num">${p.fixed ? `<a href="${href('project', p.name, { tab: 'diff' })}">${fmt(p.fixed, 0)}</a>` : ''}</td>
@@ -470,6 +472,7 @@ async function viewPerf() {
 		<p class="muted">Builds that succeeded with both compilers. Each project is built once: its wall time includes the download of the dependencies that are not cached, its compile time does not. Below 0 %, head ECJ uses less than javac.</p>
 		<div class="tiles">
 			${RATIO_METRICS.map(k => tile(pct(run.median?.[`head_javac_${k}`]), `Median ${METRICS.find(m => m[0] === k)[1].toLowerCase()}, head ECJ vs javac`, { path: summaryPath, key: `head_javac_${k}` })).join('')}
+			${RATIO_METRICS.filter(k => run.median?.[`merapi_javac_${k}`] != null).map(k => tile(pct(run.median[`merapi_javac_${k}`]), `Median ${METRICS.find(m => m[0] === k)[1].toLowerCase()}, Merapi vs javac`, { path: summaryPath, key: `merapi_javac_${k}` })).join('')}
 			${tile(fmt(measured.length, 0), 'Projects measured')}
 		</div>
 		<div class="grid2">
@@ -559,7 +562,7 @@ async function viewProject(name) {
 		${entry.hint ? `<p>Note:${hintChip(entry.hint)} <span class="muted">${esc(HINT_TITLES[entry.hint] || '')}</span></p>` : ''}
 		${entry.confirmation ? `<p>Second build of this suspect project:${confirmationChip(entry)}
 			<span class="muted">${esc(CONFIRMATION_TITLES[entry.confirmation] || '')}</span></p>` : ''}
-		<div class="tiles">${LABELS.map(l => {
+		<div class="tiles">${labelsOf(entry.labels).map(l => {
 			const s = entry.labels[l];
 			return `<div class="tile"><div class="label">${LABEL_NAMES[l]}</div><div class="value">${statusChip(s, s?.errors)}</div>
 				<div class="label">${s ? [
@@ -604,12 +607,14 @@ function projectDiff(run, name, entry, detail) {
 
 function projectPerf(el, run, name, entry) {
 	const measured = l => entry.labels[l]?.measured;
-	el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Metric</th>${LABELS.map(l => `<th class="num">${LABEL_NAMES[l]}</th>`).join('')}<th class="num">Head vs javac</th></tr></thead>
-		<tbody>${METRICS.map(([key, title, unit]) => `<tr><td>${title}</td>${LABELS.map(l => {
+	const shown = labelsOf(entry.labels);
+	const merapi = Object.keys(entry.ratios).some(k => k.startsWith('merapi_javac_'));
+	el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Metric</th>${shown.map(l => `<th class="num">${LABEL_NAMES[l]}</th>`).join('')}<th class="num">Head vs javac</th>${merapi ? '<th class="num">Merapi vs javac</th>' : ''}</tr></thead>
+		<tbody>${METRICS.map(([key, title, unit]) => `<tr><td>${title}</td>${shown.map(l => {
 			const v = entry.labels[l]?.metrics?.[key];
 			return `<td class="num">${v == null ? '' : rawButton(`${fmt(v)} ${unit}`, rawPath(run, name, l, 'metrics'), { key, small: true, fallback: entry.artifacts?.[l] })}</td>`;
-		}).join('')}<td class="num">${entry.ratios[`head_javac_${key}`] != null ? ratioCell(run, entry, key) : ''}</td></tr>`).join('')}</tbody></table></div>
-		<p class="muted">${LABELS.filter(l => entry.labels[l] && !measured(l)).map(l => LABEL_NAMES[l]).join(', ') ? `Not measured (so not compared): ${LABELS.filter(l => entry.labels[l] && !measured(l)).map(l => LABEL_NAMES[l]).join(', ')}.` : ''}</p>
+		}).join('')}<td class="num">${entry.ratios[`head_javac_${key}`] != null ? ratioCell(run, entry, key) : ''}</td>${merapi ? `<td class="num">${pct(entry.ratios[`merapi_javac_${key}`])}</td>` : ''}</tr>`).join('')}</tbody></table></div>
+		<p class="muted">${shown.filter(l => entry.labels[l] && !measured(l)).map(l => LABEL_NAMES[l]).join(', ') ? `Not measured (so not compared): ${shown.filter(l => entry.labels[l] && !measured(l)).map(l => LABEL_NAMES[l]).join(', ')}.` : ''}</p>
 		<div class="card"><div class="chart" id="perf-bars"></div></div>`;
 	const keys = ['wall_s', 'compile_s', 'cpu_s', 'gc_cpu_s'];
 	const mem = ['rss_mb', 'alloc_mb', 'heap_before_gc_peak_mb'];
@@ -618,7 +623,7 @@ function projectPerf(el, run, name, entry) {
 		grid: [{ left: 50, right: '55%', top: 40, bottom: 40 }, { left: '55%', right: 16, top: 40, bottom: 40 }],
 		xAxis: [{ type: 'category', data: keys.map(k => METRICS.find(m => m[0] === k)[1]), gridIndex: 0 }, { type: 'category', data: mem.map(k => METRICS.find(m => m[0] === k)[1]), gridIndex: 1 }],
 		yAxis: [{ type: 'value', name: 's', gridIndex: 0 }, { type: 'value', name: 'MB', gridIndex: 1 }],
-		series: LABELS.flatMap(l => [
+		series: shown.flatMap(l => [
 			{ name: LABEL_NAMES[l], type: 'bar', color: COLORS[l], xAxisIndex: 0, yAxisIndex: 0, data: keys.map(k => entry.labels[l]?.metrics?.[k] ?? null) },
 			{ name: LABEL_NAMES[l], type: 'bar', color: COLORS[l], xAxisIndex: 1, yAxisIndex: 1, data: mem.map(k => entry.labels[l]?.metrics?.[k] ?? null) },
 		]),
@@ -632,10 +637,11 @@ function historyRuns(history) {
 function projectHistory(el, name, history) {
 	const h = (history.history || []).slice().reverse();
 	if (!h.length) { el.innerHTML = '<p class="muted">No history.</p>'; return; }
+	const shown = labelsOf(...h.map(e => e.labels));
 	el.innerHTML = `<p class="muted">${rawButton('History data', `data/projects/${name}.json`)} · a click on a point opens the run.</p>
-		<div class="table-wrap"><table><thead><tr><th>Run</th>${LABELS.map(l => `<th>${LABEL_NAMES[l]}</th>`).join('')}</tr></thead>
+		<div class="table-wrap"><table><thead><tr><th>Run</th>${shown.map(l => `<th>${LABEL_NAMES[l]}</th>`).join('')}</tr></thead>
 			<tbody>${h.slice().reverse().map(e => `<tr><td><a href="${href('project', name, { run: e.run })}">${esc((e.date || e.run).slice(0, 10))}</a>${e.partial ? ' *' : ''}</td>
-				${LABELS.map(l => `<td>${statusChip(e.labels[l], e.labels[l]?.errors)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+				${shown.map(l => `<td>${statusChip(e.labels[l], e.labels[l]?.errors)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
 		<div class="grid2"><div class="card"><h2>Compile errors</h2><div class="chart" id="h-errors"></div></div>
 		<div class="card"><h2>Wall time</h2><div class="chart" id="h-wall"></div></div>
 		<div class="card"><h2>Peak memory (RSS)</h2><div class="chart" id="h-rss"></div></div>
@@ -644,7 +650,7 @@ function projectHistory(el, name, history) {
 	const line = (id, key, unit) => chart(document.getElementById(id), {
 		tooltip: { trigger: 'axis' }, legend: { bottom: 0 }, grid: { left: 60, right: 16, top: 34, bottom: 60 },
 		xAxis: { type: 'category', data: x }, yAxis: { type: 'value', name: unit },
-		series: LABELS.map(l => ({ name: LABEL_NAMES[l], type: 'line', color: COLORS[l], connectNulls: true, data: h.map(e => e.labels[l]?.[key] ?? null) })),
+		series: shown.map(l => ({ name: LABEL_NAMES[l], type: 'line', color: COLORS[l], connectNulls: true, data: h.map(e => e.labels[l]?.[key] ?? null) })),
 	}).on('click', p => { location.hash = href('project', name, { run: h[p.dataIndex].run, tab: 'errors' }); });
 	line('h-errors', 'errors', 'errors');
 	line('h-wall', 'wall_s', 's');

@@ -29,6 +29,7 @@ import causes  # noqa: E402
 import test_runs  # noqa: E402
 
 LABELS = ('baseline', 'head', 'javac')
+OPTIONAL_LABELS = ('merapi',)
 DEFAULT_JDK = '27'  # keep in sync with ecj-build.yml
 NO_RESULT = 3  # exit status
 DOWNLOAD_FAILED = 'download failed'
@@ -243,6 +244,7 @@ def main():
     run_dir = site / 'data' / 'runs' / run_id
     raw_dir = site / 'raw' / run_id
     names = {path.name.rsplit('-', 1)[0] for path in results.glob('*.status')}
+    run_labels = LABELS + tuple(label for label in OPTIONAL_LABELS if any(results.glob(f'*-{label}.status')))
     confirmation_file = results / 'confirmation.json'
     confirmation = json.loads(confirmation_file.read_text()) if confirmation_file.exists() else {}
     known_file = results / 'known.json'
@@ -329,13 +331,14 @@ def main():
     summary_projects = []
     families = {}  # family -> {label: count, projects: {label: set}}
     ratios = {'wall_s': [], 'compile_s': [], 'cpu_s': [], 'rss_mb': [], 'alloc_mb': []}
+    merapi_ratios = {key: [] for key in ratios}
     head_vs_base = []
-    totals = {label: {'success': 0, 'failed': 0, 'other': 0, 'inconclusive': 0, 'missing': 0, 'errors': 0} for label in LABELS}
+    totals = {label: {'success': 0, 'failed': 0, 'other': 0, 'inconclusive': 0, 'missing': 0, 'errors': 0} for label in run_labels}
     regressions = fixes = inconclusive_count = 0
     test_suites = test_regressions = 0  # the projects that ran their tests, those whose tests regressed
 
     for name in names:
-        labels = {label: load_label(sources(name, label)[0], name, label) for label in LABELS}
+        labels = {label: load_label(sources(name, label)[0], name, label) for label in run_labels}
         base, head = labels['baseline'], labels['head']
         new = fixed = []
         regression = False
@@ -410,7 +413,7 @@ def main():
                 if len(kept) < EXAMPLES:
                     kept.append({'file': error['file'], 'line': error['line'], 'message': error['message'], 'index': data['lines'][index]})
             for fam, count in label_families.items():
-                entry = families.setdefault(fam, {label: 0 for label in LABELS} | {'projects': {label: [] for label in LABELS}})
+                entry = families.setdefault(fam, {label: 0 for label in run_labels} | {'projects': {label: [] for label in run_labels}})
                 entry[label] += count
                 entry['projects'][label].append(name)
             metrics = data['metrics'] or {}
@@ -462,6 +465,13 @@ def main():
                 project_ratios[f'head_javac_{key}'] = value
                 if value is not None:
                     ratios[key].append(value)
+        merapi_metrics = perf('merapi')
+        if javac_metrics and merapi_metrics:
+            for key in merapi_ratios:
+                value = ratio(merapi_metrics.get(key), javac_metrics.get(key))
+                project_ratios[f'merapi_javac_{key}'] = value
+                if value is not None:
+                    merapi_ratios[key].append(value)
         if base_metrics and head_metrics:
             value = ratio(head_metrics.get('wall_s'), base_metrics.get('wall_s'))
             project_ratios['head_baseline_wall_s'] = value
@@ -473,8 +483,8 @@ def main():
             'tested': tested, 'ratios': project_ratios, 'jfr': jfr_artifact(name),
             **({'tests': {'verdict': test_verdict, 'reason': test_reason, 'new': len(test_new)}}
                if ran_tests else {}),
-            'jobs': {label: link for label in LABELS if (link := job_link(name, label))},
-            'artifacts': {label: link for label in LABELS if (link := result_artifact(name, label))},
+            'jobs': {label: link for label in run_labels if (link := job_link(name, label))},
+            'artifacts': {label: link for label in run_labels if (link := result_artifact(name, label))},
         })
         write_json(run_dir / 'projects' / f'{name}.json', {
             'name': name, 'run': run_id, 'url': definition.get('url', ''), 'ref': definition.get('ref', ''),
@@ -483,11 +493,11 @@ def main():
             'regression': regression, 'raw': raw, 'jfr': jfr_artifact(name), 'confirmation': confirmation.get(name, ''),
             'cause': cause, 'inconclusive': inconclusive, 'hint': hint,
             'tests': {'verdict': test_verdict, 'reason': test_reason, 'new': test_new[:MAX_DIFF], 'new_count': len(test_new)},
-            'result_artifacts': {label: result_artifact(name, label) for label in LABELS},
+            'result_artifacts': {label: result_artifact(name, label) for label in run_labels},
         })
 
-    family_list = sorted(({'family': fam, **{label: entry[label] for label in LABELS},
-                           'projects': {label: sorted(entry['projects'][label]) for label in LABELS}}
+    family_list = sorted(({'family': fam, **{label: entry[label] for label in run_labels},
+                           'projects': {label: sorted(entry['projects'][label]) for label in run_labels}}
                           for fam, entry in families.items()), key=lambda item: (-item['head'], -item['baseline']))
     run['totals'] = totals
     run['projects'] = len(names)
@@ -503,6 +513,8 @@ def main():
     run['javac_only'] = sum(cause_counts.values()) if has_javac else None
     run['median'] = {f'head_javac_{key}': median(values) for key, values in ratios.items()}
     run['median']['head_baseline_wall_s'] = median(head_vs_base)
+    if any(merapi_ratios.values()):
+        run['median'].update({f'merapi_javac_{key}': median(values) for key, values in merapi_ratios.items()})
     write_json(run_dir / 'summary.json', {'run': run, 'projects': summary_projects, 'families': family_list})
 
     # the list of runs, newest first

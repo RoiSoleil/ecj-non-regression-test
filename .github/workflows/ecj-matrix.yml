@@ -26,7 +26,10 @@ on:
         description: "JDK feature release of the builds, unless a project gives its own one; jdks.json gives its exact update (default: 27)"
         required: false
       labels:
-        description: "Comma separated labels to build: baseline, head, javac (default: all three; javac alone tries new projects)"
+        description: "Comma separated labels to build: baseline, head, javac, merapi (default: the first three; javac alone tries new projects; merapi alone, or javac,merapi, tests Merapi on MERAPI_PROJECTS unless projects is given)"
+        required: false
+      merapi_ref:
+        description: "RoiSoleil/merapi commit, branch or tag for the merapi label (default: main)"
         required: false
       failed_from:
         description: "Id of an earlier run on the dashboard: build only its projects whose build failed or is missing with one of the labels (default: every project)"
@@ -39,6 +42,9 @@ on:
       ecj_ref:
         type: string
         required: false
+
+env:
+  MERAPI_PROJECTS: CommonsCli,CommonsCsv,CommonsExec
 
 jobs:
   setup:
@@ -95,6 +101,10 @@ jobs:
           INPUT_FAILED_FROM: ${{ github.event.inputs.failed_from }}
           INPUT_LABELS: ${{ github.event.inputs.labels || 'baseline,head,javac' }}
         run: |
+          if [ -z "$INPUT_PROJECTS" ] && [ -z "$INPUT_FAILED_FROM" ] && [[ ",${INPUT_LABELS// /}," == *,merapi,* ]]; then
+            echo "merapi label: $MERAPI_PROJECTS" | tee -a "$GITHUB_STEP_SUMMARY"
+            INPUT_PROJECTS="$MERAPI_PROJECTS"
+          fi
           if [ -z "$INPUT_FAILED_FROM" ]; then echo "projects=$INPUT_PROJECTS" >> "$GITHUB_OUTPUT"; exit 0; fi
           [[ "$INPUT_FAILED_FROM" =~ ^[0-9]+$ ]] || { echo "failed_from is no run id: $INPUT_FAILED_FROM"; exit 1; }
           SITE="https://${GITHUB_REPOSITORY_OWNER,,}.github.io/${GITHUB_REPOSITORY#*/}"
@@ -212,6 +222,26 @@ jobs:
             echo "base_sha=$(git -C ecj rev-parse HEAD)" >> "$GITHUB_OUTPUT"
             bash scripts/build-ecj.sh ecj ecj-BASE.jar
           fi
+      - id: merapi
+        name: Build Merapi
+        if: contains(github.event.inputs.labels, 'merapi')
+        env:
+          MERAPI_REF: ${{ github.event.inputs.merapi_ref || 'main' }}
+        run: |
+          for attempt in 1 2 3; do
+            rm -rf merapi-src
+            git clone -q --filter=blob:none https://github.com/RoiSoleil/merapi.git merapi-src && break
+            [ "$attempt" = 3 ] && exit 1
+            sleep 30
+          done
+          git -C merapi-src fetch -q origin "$MERAPI_REF" && git -C merapi-src checkout -q FETCH_HEAD
+          echo "sha=$(git -C merapi-src rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          rustup toolchain install stable --profile minimal --no-self-update
+          rustup default stable
+          bash scripts/build-merapi.sh merapi-src merapi | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        if: steps.merapi.outcome == 'success'
+        with: { name: merapi, path: merapi }
       - uses: actions/upload-artifact@v7
         with: { name: ecj-HEAD.jar, path: ecj-HEAD.jar }
       - uses: actions/upload-artifact@v7
@@ -413,11 +443,16 @@ jobs:
       - name: Performance, javac against ECJ
         if: always()
         run: python3 scripts/perf-compare.py artifacts/results javac head --html perf-report.html | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Performance, javac against Merapi
+        if: always() && contains(github.event.inputs.labels, 'merapi')
+        run: python3 scripts/perf-compare.py artifacts/results javac merapi --html perf-report-merapi.html | tee -a "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: performance-report
-          path: perf-report.html
+          path: |
+            perf-report.html
+            perf-report-merapi.html
           if-no-files-found: ignore
       - uses: actions/upload-artifact@v7
         if: always()

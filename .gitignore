@@ -3,3 +3,4 @@ logs/
 results/
 *.jar
 __pycache__/
+/merapi

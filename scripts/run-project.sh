@@ -40,7 +40,7 @@ fi
 
 rm -rf "$DIR"
 # the next projects of the job need the disk space, also after an early exit (clone or patch failed)
-trap 'cd "$ROOT" && rm -rf "$DIR" "$DIR.jvm-args" "$DIR.effective-pom.xml" "$DIR.effective-start" "$DIR.attempt-start"' EXIT
+trap 'cd "$ROOT" && rm -rf "$DIR" "$DIR.jvm-args" "$DIR.effective-pom.xml" "$DIR.effective-start" "$DIR.attempt-start" "$DIR.merapi-jdk" "$DIR.merapi-invocations"' EXIT
 if [ -n "$URL" ]; then
   git init -q "$DIR"
   git -C "$DIR" remote add origin "$URL"
@@ -67,7 +67,7 @@ REPO_ARGS="$REPO_ARGS -Daether.syncContext.named.time=120 -Daether.syncContext.n
 # two builds at a time on the runner (SHARED_RUNNER): the Maven processes lock the local repository between them
 [ -z "${SHARED_RUNNER:-}" ] || REPO_ARGS="$REPO_ARGS -Daether.syncContext.named.factory=file-lock -Daether.syncContext.named.nameMapper=file-hgav"
 # the ECJ jar itself, for projects that run the batch compiler directly
-if [ "$ECJ_VERSION" = javac ]; then
+if [ "$ECJ_VERSION" = javac ] || [ "$ECJ_VERSION" = merapi ]; then
   ECJ_JAR=""
 else
   ECJ_JAR="$HOME/.m2/repository/org/eclipse/jdt/ecj/$ECJ_VERSION/ecj-$ECJ_VERSION.jar"
@@ -81,6 +81,17 @@ fi
 [ -z "$OVERRIDE_ARGS" ] || export ECJ_OVERRIDE_COMPILER_ARGS=1
 [ -z "$NO_MODULE_PATH" ] || export ECJ_NO_MODULE_PATH=1
 export ECJ_COMPILER_ARGS="$ECJ_ARGS"   # always set: a value left in the environment must not reach another project
+export MERAPI_JAVAC="" MERAPI_INVOCATIONS=""
+if [ "$ECJ_VERSION" = merapi ]; then
+  JDK_HOME="${JAVA_HOME:-$(dirname "$(dirname "$(realpath "$(command -v java)")")")}"
+  if ! MERAPI_JAVAC="$(bash "$ROOT/scripts/merapi-jdk.sh" "${MERAPI:-$ROOT/merapi}" "$JDK_HOME" "$DIR.merapi-jdk" 2>>"$LOG")"; then
+    echo "merapi missing" > "$ROOT/results/$NAME-$LABEL.status"
+    exit 0
+  fi
+  MERAPI_INVOCATIONS="$DIR.merapi-invocations"
+  : > "$MERAPI_INVOCATIONS"
+  echo "== Merapi $("$MERAPI_JAVAC" -version 2>&1 | head -1): $MERAPI_JAVAC" >>"$LOG"
+fi
 # projects that ask for a toolchain (HttpComponents wants a JDK 8) get the running JDK
 if [ -n "${CI:-}" ] && [ -n "${JAVA_HOME:-}" ]; then # only on CI: this file also tells Tycho which JDK to use on a developer machine
   mkdir -p "$HOME/.m2"
@@ -105,7 +116,7 @@ if [ -n "${CI:-}" ]; then
 fi
 cd "$DIR/${SUBDIR:-.}"
 
-if [ "$ECJ_VERSION" = javac ]; then
+if [ "$ECJ_VERSION" = javac ] || [ "$ECJ_VERSION" = merapi ]; then
   : # untouched project: javac is the default compiler of every build
 elif [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; then
   # hand written patches name the ECJ version SNAPSHOT
@@ -161,7 +172,7 @@ fi
 LOMBOK=""
 LOMBOK_JAR=""
 CP_AGENT=""
-if [ "$ECJ_VERSION" != javac ] && { grep -rlq --include=pom.xml 'org.projectlombok' "$DIR" 2>/dev/null \
+if [ "$ECJ_VERSION" != javac ] && [ "$ECJ_VERSION" != merapi ] && { grep -rlq --include=pom.xml 'org.projectlombok' "$DIR" 2>/dev/null \
     || grep -rlqE --include='*.java' '^import (static )?lombok\.|@lombok\.' "$DIR" 2>/dev/null; }; then
   LOMBOK=1
   LOMBOK_JAR=$(bash "$ROOT/scripts/lombok-agent.sh" "$HOME/.cache/lombok-agent" 2 2>>"$LOG") || LOMBOK_JAR=""
@@ -173,7 +184,17 @@ export ECJ_LOMBOK="${CP_AGENT:+1}"
 export ECJ_JVM_ARGS_FILE="$DIR.jvm-args"
 rm -f "$ECJ_JVM_ARGS_FILE" "$DIR.effective-pom.xml"
 export ECJ_EFFECTIVE_POM=""
-if [ "$ECJ_VERSION" != javac ] && ! { [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; } && [ -f pom.xml ]; then
+if [ "$ECJ_VERSION" = merapi ]; then
+  find . -name pom.xml -not -path '*/src/*' -not -path '*/target/*' | while read -r pom; do
+    python3 "$ROOT/scripts/enable-ecj-maven.py" "$pom" merapi >>"$LOG" 2>&1
+  done
+  if [ -n "$(find . -maxdepth 1 \( -name 'build.gradle*' -o -name 'settings.gradle*' \) -print -quit)" ]; then
+    MERAPI_INIT_SCRIPT="${GRADLE_USER_HOME:-$HOME/.gradle}/init.d/merapi.init.gradle.kts"
+    mkdir -p "$(dirname "$MERAPI_INIT_SCRIPT")"
+    cp "$ROOT/settings/merapi.init.gradle.kts" "$MERAPI_INIT_SCRIPT.$$"
+    mv -f "$MERAPI_INIT_SCRIPT.$$" "$MERAPI_INIT_SCRIPT"
+  fi
+elif [ "$ECJ_VERSION" != javac ] && ! { [ -n "$PATCH" ] && [ -f "$ROOT/patches/$PATCH" ]; } && [ -f pom.xml ]; then
   EFFECTIVE_ARGS=$(grep -oE '(^| )(-(P|D)[^ ]+|(-f|--file) [^ ]+)' <<<"$CMD" | tr '\n' ' ')
   touch "$DIR.effective-start"
   if MAVEN_OPTS="${MAVEN_OPTS:-} -Xmx3g" timeout 300 mvn -B -q $REPO_ARGS $EFFECTIVE_ARGS -Dsort.skip=true -Daether.connector.http.retryHandler.count=6 -Daether.connector.http.retryHandler.interval=15000 -Daether.connector.http.retryHandler.serviceUnavailable=429,503 help:effective-pom -Doutput="$DIR.effective-pom.xml" >>"$LOG" 2>&1; then
@@ -353,7 +374,7 @@ fi
 # '[ERROR] /path/File.java:[line,col]', count here; for ECJ its own 'N. ERROR in ...' lines are the compiler's.
 if [ "$STATUS" = 0 ]; then
   SILENT_COMPILE_ERRORS=0
-  if [ "$ECJ_VERSION" = javac ]; then
+  if [ "$ECJ_VERSION" = javac ] || [ "$ECJ_VERSION" = merapi ]; then
     grep -qE "^([0-9:.]+ )?\[ERROR\] $DIR/?[^:]*\.java:\[[0-9]+,[0-9]+\]" "$LOG" && SILENT_COMPILE_ERRORS=1
   else
     grep -qE '^[0-9]+\. ERROR in ' "$LOG" && SILENT_COMPILE_ERRORS=1
@@ -366,9 +387,17 @@ if [ "$STATUS" = 0 ]; then
 fi
 
 # A Maven build that never says it compiled with ECJ was silently built with javac and would prove nothing.
-if [ "$ECJ_VERSION" != javac ] && [ -z "$PATCH" ] && [ -f "$DIR/${SUBDIR:-.}/pom.xml" ] && ! grep -q "Compiling with eclipse" "$LOG" \
+if [ "$ECJ_VERSION" != javac ] && [ "$ECJ_VERSION" != merapi ] && [ -z "$PATCH" ] && [ -f "$DIR/${SUBDIR:-.}/pom.xml" ] && ! grep -q "Compiling with eclipse" "$LOG" \
     && [ "$(cat "$ROOT/results/$NAME-$LABEL.status")" != "download failed" ]; then
   echo "ecj not used" > "$ROOT/results/$NAME-$LABEL.status"
+fi
+if [ "$ECJ_VERSION" = merapi ]; then
+  MERAPI_RUNS="$(grep -s -c -v -x -e '-version' -e '-fullversion' "$MERAPI_INVOCATIONS" || true)"
+  echo "== Merapi compiled ${MERAPI_RUNS:-0} times" >>"$LOG"
+  sed 's/^/== merapi /' "$MERAPI_INVOCATIONS" >>"$LOG" 2>/dev/null
+  if [ "${MERAPI_RUNS:-0}" = 0 ] && [ "$(cat "$ROOT/results/$NAME-$LABEL.status")" != "download failed" ]; then
+    echo "merapi not used" > "$ROOT/results/$NAME-$LABEL.status"
+  fi
 fi
 
 # One normalized line per compile error: "<path relative to the project>:<line> <message>".
