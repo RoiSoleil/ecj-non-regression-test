@@ -613,7 +613,7 @@ function projectPerf(el, run, name, entry) {
 		<tbody>${METRICS.map(([key, title, unit]) => `<tr><td>${title}</td>${shown.map(l => {
 			const v = entry.labels[l]?.metrics?.[key];
 			return `<td class="num">${v == null ? '' : rawButton(`${fmt(v)} ${unit}`, rawPath(run, name, l, 'metrics'), { key, small: true, fallback: entry.artifacts?.[l] })}</td>`;
-		}).join('')}<td class="num">${entry.ratios[`head_javac_${key}`] != null ? ratioCell(run, entry, key) : ''}</td>${merapi ? `<td class="num">${pct(entry.ratios[`merapi_javac_${key}`])}</td>` : ''}</tr>`).join('')}</tbody></table></div>
+		}).join('')}<td class="num">${entry.ratios[`head_javac_${key}`] != null ? ratioCell(run, entry, key) : ''}</td>${merapi ? `<td class="num">${entry.ratios[`merapi_javac_${key}`] != null ? pct(entry.ratios[`merapi_javac_${key}`]) : ''}</td>` : ''}</tr>`).join('')}</tbody></table></div>
 		<p class="muted">${shown.filter(l => entry.labels[l] && !measured(l)).map(l => LABEL_NAMES[l]).join(', ') ? `Not measured (so not compared): ${shown.filter(l => entry.labels[l] && !measured(l)).map(l => LABEL_NAMES[l]).join(', ')}.` : ''}</p>
 		<div class="card"><div class="chart" id="perf-bars"></div></div>`;
 	const keys = ['wall_s', 'compile_s', 'cpu_s', 'gc_cpu_s'];

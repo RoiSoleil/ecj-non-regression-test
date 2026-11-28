@@ -26,10 +26,10 @@ on:
         description: "JDK feature release of the builds, unless a project gives its own one; jdks.json gives its exact update (default: 27)"
         required: false
       labels:
-        description: "Comma separated labels to build: baseline, head, javac, merapi (default: the first three; javac alone tries new projects; merapi alone, or javac,merapi, tests Merapi on MERAPI_PROJECTS unless projects is given)"
+        description: "Comma separated labels to build: baseline, head, javac, merapi (default: the first three; javac alone tries new projects; with merapi, only the projects of MERAPI_PROJECTS are built unless projects is given, failed_from included)"
         required: false
       merapi_ref:
-        description: "RoiSoleil/merapi commit, branch or tag for the merapi label (default: main)"
+        description: "RoiSoleil/merapi branch, tag or commit (full SHA, or a short one of a branch) for the merapi label (default: main)"
         required: false
       failed_from:
         description: "Id of an earlier run on the dashboard: build only its projects whose build failed or is missing with one of the labels (default: every project)"
@@ -101,7 +101,7 @@ jobs:
           INPUT_FAILED_FROM: ${{ github.event.inputs.failed_from }}
           INPUT_LABELS: ${{ github.event.inputs.labels || 'baseline,head,javac' }}
         run: |
-          if [ -z "$INPUT_PROJECTS" ] && [ -z "$INPUT_FAILED_FROM" ] && [[ ",${INPUT_LABELS// /}," == *,merapi,* ]]; then
+          if [ -z "$INPUT_PROJECTS" ] && [[ ",${INPUT_LABELS// /}," == *,merapi,* ]]; then
             echo "merapi label: $MERAPI_PROJECTS" | tee -a "$GITHUB_STEP_SUMMARY"
             INPUT_PROJECTS="$MERAPI_PROJECTS"
           fi
@@ -225,6 +225,7 @@ jobs:
       - id: merapi
         name: Build Merapi
         if: contains(github.event.inputs.labels, 'merapi')
+        continue-on-error: true
         env:
           MERAPI_REF: ${{ github.event.inputs.merapi_ref || 'main' }}
         run: |
@@ -234,7 +235,11 @@ jobs:
             [ "$attempt" = 3 ] && exit 1
             sleep 30
           done
-          git -C merapi-src fetch -q origin "$MERAPI_REF" && git -C merapi-src checkout -q FETCH_HEAD
+          if git -C merapi-src fetch -q origin "$MERAPI_REF"; then
+            git -C merapi-src checkout -q FETCH_HEAD
+          else
+            git -C merapi-src checkout -q --detach "$MERAPI_REF^{commit}"
+          fi
           echo "sha=$(git -C merapi-src rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           rustup toolchain install stable --profile minimal --no-self-update
           rustup default stable
@@ -471,7 +476,7 @@ jobs:
         # nor a run of some labels only (the trial of new projects with javac): it is no comparison of ECJ, except a
         # calibration of the test commands (tests=all, a partial run)
         # nor a run against a baseline built from a ref: the dashboard compares with releases
-        if: always() && needs.build-ecj.result == 'success' && github.ref == 'refs/heads/main' && (!github.event.inputs.labels || github.event.inputs.tests == 'all') && !github.event.inputs.baseline_ref
+        if: always() && needs.build-ecj.result == 'success' && github.ref == 'refs/heads/main' && (!github.event.inputs.labels || github.event.inputs.tests == 'all' || contains(github.event.inputs.labels, 'merapi')) && !github.event.inputs.baseline_ref
         env:
           GH_TOKEN: ${{ github.token }}
           ECJ_SHA: ${{ needs.build-ecj.outputs.sha }}

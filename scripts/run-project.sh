@@ -394,6 +394,8 @@ fi
 if [ "$ECJ_VERSION" = merapi ]; then
   MERAPI_RUNS="$(grep -s -c -v -x -e '-version' -e '-fullversion' "$MERAPI_INVOCATIONS" || true)"
   echo "== Merapi compiled ${MERAPI_RUNS:-0} times" >>"$LOG"
+  MERAPI_SKIPPED="$(grep -c '^merapi skipped ' "$LOG" || true)"
+  [ "${MERAPI_SKIPPED:-0}" = 0 ] || echo "== Merapi skipped ${MERAPI_SKIPPED} compile tasks, whose toolchain is another JDK" >>"$LOG"
   sed 's/^/== merapi /' "$MERAPI_INVOCATIONS" >>"$LOG" 2>/dev/null
   if [ "${MERAPI_RUNS:-0}" = 0 ] && [ "$(cat "$ROOT/results/$NAME-$LABEL.status")" != "download failed" ]; then
     echo "merapi not used" > "$ROOT/results/$NAME-$LABEL.status"

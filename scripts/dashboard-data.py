@@ -331,7 +331,7 @@ def main():
     summary_projects = []
     families = {}  # family -> {label: count, projects: {label: set}}
     ratios = {'wall_s': [], 'compile_s': [], 'cpu_s': [], 'rss_mb': [], 'alloc_mb': []}
-    merapi_ratios = {key: [] for key in ratios}
+    merapi_ratios = {key: [] for key in ('wall_s', 'compile_s', 'cpu_s')}
     head_vs_base = []
     totals = {label: {'success': 0, 'failed': 0, 'other': 0, 'inconclusive': 0, 'missing': 0, 'errors': 0} for label in run_labels}
     regressions = fixes = inconclusive_count = 0

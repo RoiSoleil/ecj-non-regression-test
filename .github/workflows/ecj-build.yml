@@ -96,10 +96,13 @@ jobs:
           echo "<project xmlns=\"http://maven.apache.org/POM/4.0.0\"><modelVersion>4.0.0</modelVersion><groupId>org.eclipse.jdt</groupId><artifactId>ecj</artifactId><version>$JAR-SNAPSHOT</version></project>" > "$D/ecj-$JAR-SNAPSHOT.pom"
       - uses: actions/download-artifact@v8.0.2
         if: matrix.label == 'merapi'
+        continue-on-error: true
         with: { name: merapi }
       - name: Install Merapi
         if: matrix.label == 'merapi'
-        run: chmod +x merapi && echo "MERAPI=$PWD/merapi" >> "$GITHUB_ENV"
+        run: |
+          if [ -f merapi ]; then chmod +x merapi; else echo "::warning::no Merapi binary: the builds are reported as merapi missing"; fi
+          echo "MERAPI=$PWD/merapi" >> "$GITHUB_ENV"
       # the class files to keep for the javap diff, in the second builds of the projects whose class files differ
       # (the keep field that the suspects job of ecj-matrix.yml adds to their job)
       - name: List the class files to keep

@@ -28,6 +28,8 @@ TIE = 0.05
 METRICS = [('wall_s', 'Wall time', 's', 1), ('compile_s', 'Compile time', 's', 1), ('cpu_s', 'CPU time', 's', 1),
            ('rss_mb', 'Peak memory', 'MB', 0), ('gc_pause_total_ms', 'GC pauses', 'ms', 0),
            ('gc_cpu_s', 'GC CPU', 's', 1), ('alloc_mb', 'Allocated', 'MB', 0)]
+if NAME == 'Merapi':
+    METRICS = [metric for metric in METRICS if metric[0] in ('wall_s', 'compile_s', 'cpu_s')]
 
 
 def load(name, label):

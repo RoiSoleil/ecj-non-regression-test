@@ -62,17 +62,22 @@ fail with "... is not implemented yet" errors, so the label is off by default an
   profiles, executions) and only sets `<compilerId>javac</compilerId>`, `<fork>true</fork>` and
   `<executable>` to the wrapper; Gradle builds get `settings/merapi.init.gradle.kts` in `init.d`, which sets
   `options.fork = true` and `options.forkOptions.executable` on every `JavaCompile` task when `MERAPI_JAVAC` is set (it
-  does nothing for the other labels); the JDK project runs the wrapper instead of the `javac` of the JDK.
-* A build where Merapi never compiled anything (only `-version`, the probe of `plexus-compiler-javac`) is reported as
-  `merapi not used`; the log ends with the number of compilations and their arguments (`== merapi ...` lines). A
-  missing binary gives `merapi missing`.
+  does nothing for the other labels); the JDK project runs the wrapper instead of the `javac` of the JDK. The toolchain
+  of `java { toolchain { ... } }` gives way to the executable (Gradle 8.10: Merapi compiles), but a task whose
+  `javaCompiler` is set explicitly to another JDK would fail ("Toolchain from `executable` property on `ForkOptions`
+  does not match toolchain from `javaCompiler` property"): such a task compiles with its own toolchain, and the log
+  says so (`merapi skipped <task>: its toolchain is <JDK>` and `== Merapi skipped N compile tasks`).
+* A build where Merapi never compiled anything (only `-version`, the probe of `plexus-compiler-javac` and Gradle) is
+  reported as `merapi not used`; the log ends with the number of compilations and their arguments (`== merapi ...`
+  lines). A missing binary (Merapi did not build: the `Build Merapi` step does not fail the run) gives `merapi missing`.
 * The compile errors are read as for `javac` (Merapi prints the format of `javac` when its output is not a terminal),
   and the compile time comes from the time stamps of the Maven log, as for the other labels. Merapi runs in a process
-  of its own: the GC figures and the allocated memory are those of the Maven JVM only, so they do not compare with
-  `javac`, which runs inside it; the wall, compile and CPU times and the peak memory do.
+  of its own: the GC figures, the allocated memory and the peak memory are those of the Maven JVM, so they do not
+  compare with `javac`, which runs inside it. Merapi is compared with `javac` on the wall, compile and CPU times only
+  (`perf-compare.py`, the dashboard).
 
 The dashboard shows a Merapi column, and the median ratios of Merapi against `javac`, only for a run that has `merapi`
-results.
+results. A run of main with the `merapi` label is published as a partial run: it does not change the trends.
 
 ## Status
 
@@ -221,13 +226,13 @@ A run must only fail for the compiler. Besides the second build of the suspect p
   projects, add them to `projects.json` on a branch and run the workflow on that branch (`labels=javac` first, then
   all three), so that main only has projects that build.
 * `jdk`: JDK of the builds, unless a project gives its own (`"jdk"` in `projects.json`). Default: 27.
-* `labels`: `baseline`, `head`, `javac`, `merapi` (default: the first three; a run with a selection of labels does not publish the dashboard). `javac` alone tries new
+* `labels`: `baseline`, `head`, `javac`, `merapi` (default: the first three; a run with a selection of labels does not publish the dashboard, except as a partial run when it has `merapi`). `javac` alone tries new
   projects. `merapi` builds Merapi in the `build-ecj` job and builds the projects with it; without `projects`, a run
   with the `merapi` label builds only the projects of `MERAPI_PROJECTS` (in `ecj-matrix.yml`: CommonsCli, CommonsCsv,
-  CommonsExec), with all its labels: `labels=javac,merapi` compares Merapi with `javac` on them. The nightly runs never
+  CommonsExec; with `failed_from`, its failed projects among them), with all its labels: `labels=javac,merapi` compares Merapi with `javac` on them. The nightly runs never
   build it.
 * `merapi_ref`: branch, tag or commit of [RoiSoleil/merapi](https://github.com/RoiSoleil/merapi) for the `merapi`
-  label. Default: `main`.
+  label: a branch, a tag, a full commit SHA, or a short one of a commit of a branch. Default: `main`.
 * `tests`: `all` runs the test command of every build (each project in a job of its own), to calibrate new `test`
   commands with `labels=baseline,head`; such a run of main is published on the dashboard as a partial run, which shows
   the results of the tests and the projects whose tests fail only with the head ECJ. Default: only the second builds
